@@ -8,9 +8,10 @@ Il suffit d'ouvrir `index.html` dans un navigateur.
 
 | Mode | Contenu |
 |---|---|
-| 🎴 **Flashcards** | 43 entrées de vocabulaire (anglais ↔ français, sens choisissable ou aléatoire) + 45 fiches de méthodologie. Carte à retourner, boutons « Je sais » / « À revoir », filtrage par catégorie ou par thème. |
+| 🎴 **Flashcards** | 43 entrées de vocabulaire (anglais ↔ français, sens choisissable ou aléatoire) + 45 fiches de méthodologie. Au verso : la traduction, **une mini-illustration SVG** (courbe qui s'envole, camembert, timeline, process, map avant/après…), une note « quand l'utiliser » et **un exemple de phrase IELTS traduit**. Boutons « Je sais » / « À revoir », filtrage par catégorie ou par thème. |
 | ❓ **Quiz** | QCM généré à la volée sur le **vocabulaire** (distracteurs pris dans la même catégorie pour forcer la précision) **et** sur la **méthodologie** (structure, minutage, type de graphique, sélection des données, grammaire, exemple annoté). |
 | 🗂️ **Classement rapide** | Ranger chaque expression dans sa catégorie (hausse, baisse, stabilité, degré, comparaison, approximation, temps, process, maps, introduction, overview, nom de tendance), avec chrono de 10 s et bonus de rapidité (mode sans chrono disponible). |
+| 🖼️ **Illustrations** | 51 schémas SVG dessinés dans la page (aucune image externe) : ils apparaissent au verso des cartes, dans la correction des quiz, dans celle du classement rapide et dans le mémo. |
 | 📘 **Mémo** | La fiche complète : structure et minutage, méthodologie par type de graphique, règle des 4 à 6 éléments, grammaire spécifique, exemple annoté bon vs mauvais overview, et tout le vocabulaire en tableaux. |
 | 📈 **Progrès** | Score, série, précision, meilleure série, maîtrise globale, barre de maîtrise par catégorie et liste « à revoir en priorité ». |
 

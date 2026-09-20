@@ -74,10 +74,25 @@ select,.chip{background:var(--card);color:var(--txt);border:1px solid var(--line
 .flip.flipped{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;overflow:auto}
+  padding:18px 16px;overflow:auto}
+.face .inner{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;gap:10px}
 .face.back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--card2),var(--card))}
 .face .term{font-size:23px;font-weight:800;line-height:1.3}
 .face .term.long{font-size:17.5px;line-height:1.35}
+svg.ill{width:100%;max-width:240px;height:auto;display:block;margin:2px auto}
+.ill-cap{font-size:11px;color:var(--muted);margin-top:-4px}
+.tip{font-size:13px;line-height:1.45;color:var(--txt);background:var(--card2);border:1px solid var(--line);
+  border-radius:10px;padding:9px 11px;text-align:left;width:100%}
+.tip b{color:var(--acc)}
+.ex{font-size:13px;line-height:1.45;text-align:left;width:100%;border-left:3px solid var(--acc2);padding-left:10px}
+.ex i{color:var(--txt);font-weight:600}
+.ex span{display:block;color:var(--muted);font-size:12px}
+.fb svg.ill{max-width:210px;margin-top:8px}
+.memoart{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
+@media(min-width:620px){.memoart{grid-template-columns:repeat(3,1fr)}}
+.memoart figure{margin:0;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.memoart figcaption{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.3}
 .face .sub.small{font-size:12px;line-height:1.45}
 .face .sub{font-size:13px;color:var(--muted)}
 .hint{font-size:11px;color:var(--muted);position:absolute;bottom:10px;left:0;right:0;text-align:center}
@@ -185,16 +200,21 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
   <div class="flipwrap">
     <div class="flip" id="flip">
       <div class="face front">
-        <span class="tagcat" id="fCat">—</span>
-        <div class="term" id="fFront">…</div>
-        <div class="sub" id="fSubFront"></div>
-        <div class="hint">Touchez la carte pour la retourner</div>
+        <div class="inner" id="frontInner">
+          <span class="tagcat" id="fCat">—</span>
+          <div class="term" id="fFront">…</div>
+          <div class="sub" id="fSubFront"></div>
+          <div class="sub" style="font-size:11px;opacity:.7">Touchez la carte pour la retourner</div>
+        </div>
       </div>
       <div class="face back">
-        <span class="tagcat" id="fCatB">—</span>
-        <div class="term" id="fBack">…</div>
-        <div class="sub" id="fSubBack"></div>
-        <div class="hint">Touchez pour revenir</div>
+        <div class="inner" id="backInner">
+          <span class="tagcat" id="fCatB">—</span>
+          <div class="term" id="fBack">…</div>
+          <div id="fArt"></div>
+          <div class="tip" id="fTip" style="display:none"></div>
+          <div class="ex" id="fEx" style="display:none"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -256,6 +276,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
         <li><b>Jamais d&rsquo;opinion</b>, <b>jamais de spéculation sur les causes</b>.</li>
         <li><b>150 mots minimum.</b></li>
       </ul>
+      <div id="memoTiming"></div>
       <div class="box warn"><h4>Minutage sur 20 minutes</h4>
         <b>2 min</b> analyse des données → <b>3 min</b> préparation mentale de l&rsquo;overview → <b>13 min</b> rédaction → <b>2 min</b> relecture.
       </div>
@@ -273,6 +294,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
         <tr><td class="en">Map (avant / après)</td><td>Transformations spatiales, <b>voix passive</b> : <i>was replaced by, was converted into, was demolished, was constructed, was widened, was extended</i>. Structurer <b>par zone géographique</b>.</td></tr>
         <tr><td class="en">Graphiques multiples / mixtes</td><td>L&rsquo;overview doit <b>faire le lien entre les deux graphiques</b> — jamais les traiter séparément.</td></tr>
       </table>
+      <div class="memoart" id="memoCharts"></div>
     </div>
   </details>
 
@@ -286,6 +308,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
         <li>une <b>exception notable</b> ;</li>
         <li>une <b>comparaison frappante</b> entre deux séries.</li>
       </ul>
+      <div id="memoSelection"></div>
       <div class="box bad"><h4>Erreur classique</h4>Décrire chaque chiffre du graphique.</div>
     </div>
   </details>
@@ -297,7 +320,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
         <li><b>Présent simple</b> → process général sans dates : <i>the water is filtered</i>.</li>
         <li><b>is projected to / is expected to</b> → données de prévision future.</li>
         <li><b>Voix passive</b> → quasi systématique pour les <b>process</b> et les <b>maps</b>.</li>
-        <li><b>Comparatifs / superlatifs</b> : <i>higher than, the highest, twice as high as, marginally / considerably higher</i>.</li>
+        <li id="memoGrammarSlot"><b>Comparatifs / superlatifs</b> : <i>higher than, the highest, twice as high as, marginally / considerably higher</i>.</li>
       </ul>
     </div>
   </details>
@@ -368,66 +391,396 @@ const CATS = {
   maps:    {label:"Maps",                         emoji:"🗺️"}
 };
 
-/* [anglais, français, catégorie] */
+/* ============================================================
+   MINI-ILLUSTRATIONS (SVG inline, sans dépendance)
+   ============================================================ */
+
+function ill(inner, vb){
+  return '<svg class="ill" viewBox="'+(vb||"0 0 200 96")+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+inner+'</svg>';
+}
+const AX = '<path d="M14 8 V78 H192" stroke="var(--line)" stroke-width="2" fill="none" stroke-linecap="round"/>';
+function ln(d,c,w,dash){
+  return '<path d="'+d+'" fill="none" stroke="'+(c||"var(--acc)")+'" stroke-width="'+(w||3.5)
+       +'" stroke-linecap="round" stroke-linejoin="round"'+(dash?' stroke-dasharray="'+dash+'"':"")+'/>';
+}
+function pt(x,y,c,r){ return '<circle cx="'+x+'" cy="'+y+'" r="'+(r||4.5)+'" fill="'+(c||"var(--acc)")+'"/>'; }
+function tx(x,y,t,c,sz,an){
+  return '<text x="'+x+'" y="'+y+'" fill="'+(c||"var(--muted)")+'" font-size="'+(sz||9.8)
+       +'" font-weight="700" text-anchor="'+(an||"middle")+'" font-family="system-ui,-apple-system,sans-serif">'+t+'</text>';
+}
+function bx(x,y,w,h,c,f,r){
+  return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(r==null?4:r)
+       +'" fill="'+(f||"none")+'" stroke="'+(c||"var(--line)")+'" stroke-width="2"/>';
+}
+function bar(x,yTop,w,c){ return '<rect x="'+x+'" y="'+yTop+'" width="'+w+'" height="'+(78-yTop)+'" rx="2.5" fill="'+c+'"/>'; }
+function arrow(x,y,dir,c){
+  const f = c||"var(--acc)";
+  const p = dir==="up"   ? (x-5)+","+y+" "+(x+5)+","+y+" "+x+","+(y-9)
+          : dir==="down" ? (x-5)+","+y+" "+(x+5)+","+y+" "+x+","+(y+9)
+          : dir==="left" ? x+","+(y-5)+" "+x+","+(y+5)+" "+(x-9)+","+y
+          :                x+","+(y-5)+" "+x+","+(y+5)+" "+(x+9)+","+y;
+  return '<polygon points="'+p+'" fill="'+f+'"/>';
+}
+const C1="var(--acc)", C2="var(--acc2)", CB="var(--bad)", CM="var(--muted)", CW="var(--warn)";
+
+const ART = {};
+
+/* — courbes de tendance — */
+ART.rise     = ill(AX + ln("M22 66 L62 57 L102 45 L142 33 L172 22") + arrow(174,21,"right") + tx(100,92,"hausse régulière"));
+ART.climb    = ill(AX + ln("M22 36 L56 62 L94 60 L134 40 L172 22") + arrow(174,21,"right") + tx(75,92,"baisse, puis ça repart") );
+ART.surge    = ill(AX + ln("M22 66 L74 62 L118 58 L142 24 L172 16") + arrow(174,15,"right") + tx(100,92,"hausse brutale"));
+ART.soar     = ill(AX + ln("M22 72 C86 74 128 70 148 36 C156 22 164 16 172 12") + arrow(174,11,"right") + tx(100,92,"hausse très forte"));
+ART.fall     = ill(AX + ln("M22 18 L62 30 L102 44 L142 58 L172 68",CB) + arrow(174,69,"right",CB) + tx(100,92,"baisse régulière"));
+ART.plummet  = ill(AX + ln("M22 14 L70 22 L112 30 L138 36 L160 70 L172 73",CB) + arrow(174,74,"right",CB) + tx(100,92,"chute brutale"));
+ART.dip      = ill(AX + ln("M22 32 L68 32 L100 50 L134 34 L172 32",CB) + pt(100,50,CB) + tx(100,92,"petit creux passager"));
+ART.plateau  = ill(AX + ln("M22 68 L58 44 L98 30 L172 30") + ln("M98 30 L188 30",CM,2,"4 5") + pt(98,30) + tx(140,22,"level off",CM,10) + tx(100,92,"monte puis se stabilise"));
+ART.fluct    = ill(AX + ln("M22 48 L46 30 L70 54 L94 32 L118 56 L142 32 L166 52 L180 42") + tx(100,92,"va-et-vient régulier"));
+ART.erratic  = ill(AX + ln("M22 52 L42 16 L62 68 L88 26 L108 70 L134 18 L158 62 L180 34") + tx(100,92,"aucune tendance nette"));
+ART.nounUp   = ill(AX + bar(34,60,26,C2) + bar(76,42,26,C2) + bar(118,22,26,C1) + arrow(160,30,"up",C1) + tx(100,92,"there was a rise in…"));
+ART.nounDown = ill(AX + bar(34,22,26,C2) + bar(76,42,26,C2) + bar(118,60,26,CB) + arrow(160,52,"down",CB) + tx(100,92,"there was a decline in…"));
+
+/* — degré — */
+const DEG = [["slightly",74,CM],["steadily",56,C2],["considerably",32,C1],["dramatically",10,CW]];
+function degrees(hl){
+  let g = '<path d="M20 86 V6" stroke="var(--line)" stroke-width="2" fill="none"/>';
+  DEG.forEach(function(d,i){
+    const on = i===hl;
+    g += ln("M20 86 L112 "+d[1], on?d[2]:CM, on?4:2, on?null:"4 4")
+       + tx(118, d[1]+4, d[0], on?d[2]:CM, on?10.5:9, "start");
+  });
+  return ill(g);
+}
+ART.degSlight = degrees(0);
+ART.degSteady = degrees(1);
+ART.degSub    = degrees(2);
+ART.degDram   = degrees(3);
+
+/* — comparaison — */
+ART.compare  = ill(AX + ln("M22 60 L70 50 L120 38 L172 26",C1) + ln("M22 40 L70 46 L120 52 L172 62",C2)
+  + pt(172,26,C1,4) + pt(172,62,C2,4) + tx(40,20,"X",C1,12) + tx(40,72,"Y",C2,12) + tx(110,92,"deux séries en une phrase"));
+ART.contrast = ill(AX + ln("M22 64 L100 44 L172 20",C1) + ln("M22 22 L100 46 L172 70",CB)
+  + tx(150,14,"renewables",C1,10) + tx(150,82,"coal",CB,10) + tx(100,92,"whereas / while / unlike"));
+ART.exceed   = ill(AX + bar(46,26,34,C1) + bar(112,50,34,C2)
+  + ln("M86 26 L106 26",CW,2) + ln("M86 50 L106 50",CW,2) + ln("M96 26 L96 50",CW,2)
+  + tx(96,20,"+ 24 pts",CW,10) + tx(63,92,"X") + tx(129,92,"Y"));
+ART.double   = ill(AX + bar(52,18,32,C1) + bar(116,48,32,C2) + tx(68,92,"X") + tx(132,92,"Y")
+  + tx(100,34,"X = 2 × Y",CW,11));
+ART.gap      = ill(AX + ln("M22 42 L100 30 L172 14",C1) + ln("M22 52 L100 58 L172 70",C2)
+  + ln("M172 16 L172 68",CW,2,"4 4") + arrow(172,18,"up",CW) + arrow(172,66,"down",CW)
+  + tx(60,20,"the gap widened",CW,10) + tx(100,92,"l’écart se creuse"));
+
+/* — approximation — */
+ART.approx   = ill('<path d="M20 52 H180" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>'
+  + ln("M100 42 V62",CM,2) + tx(100,78,"50%",CM,11)
+  + '<ellipse cx="100" cy="52" rx="34" ry="14" fill="none" stroke="'+C1+'" stroke-width="2.5" stroke-dasharray="5 4"/>'
+  + tx(100,26,"≈ approximately 50%",C1,11));
+ART.justOver = ill('<path d="M20 52 H180" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>'
+  + ln("M100 40 V64",CM,2) + tx(100,80,"50%",CM,11)
+  + pt(126,52,C1) + tx(140,42,"just over",C1,10) + pt(74,52,C2) + tx(60,42,"just under",C2,10));
+ART.nearly   = ill(bx(24,34,152,30,"var(--line)","none",6)
+  + '<rect x="27" y="37" width="118" height="24" rx="4" fill="'+C1+'"/>'
+  + ln("M176 28 V70",CW,2.5) + tx(150,24,"nearly 80%",C1,11) + tx(100,92,"presque, sans atteindre"));
+
+/* — temps — */
+function timeline(shadeFrom, shadeTo, label, marks){
+  let g = '<path d="M18 56 H182" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>';
+  if(shadeFrom!=null) g = '<rect x="'+shadeFrom+'" y="44" width="'+(shadeTo-shadeFrom)+'" height="24" rx="5" fill="'+C1+'" opacity=".25"/>' + g;
+  (marks||[]).forEach(function(m){ g += ln("M"+m[0]+" 48 V64",CM,2) + tx(m[0], 80, m[1], CM, 10); });
+  g += tx(100, 26, label, C1, 11);
+  return ill(g);
+}
+ART.tAfter   = timeline(96,182,"in the following years",[[40,"2010"],[96,"2015"],[170,"2025"]]);
+ART.tSame    = ill('<rect x="40" y="16" width="120" height="16" rx="5" fill="'+C1+'" opacity=".3"/>'
+  + '<rect x="40" y="56" width="120" height="16" rx="5" fill="'+C2+'" opacity=".35"/>'
+  + tx(24,29,"X",C1,11) + tx(24,69,"Y",C2,11)
+  + ln("M40 44 H160",CM,2,"4 4") + tx(100,92,"over the same period"));
+ART.tBy      = timeline(20,150,"by 2030 (d’ici 2030)",[[20,"2005"],[150,"2030"]]);
+ART.tFrom    = timeline(96,182,"from 2015 onwards",[[40,"2005"],[96,"2015"],[178,"2030"]]);
+ART.tThrough = timeline(22,178,"throughout the period",[[22,"début"],[178,"fin"]]);
+
+/* — process — */
+function pbox(x,label,fill,stroke){ return bx(x,34,44,30,stroke||"var(--line)",fill||"none",7) + tx(x+22,53,label,stroke||CM,11); }
+ART.pSeq   = ill(pbox(14,"1") + arrow(66,49,"right",CM) + pbox(78,"2") + arrow(130,49,"right",CM) + pbox(142,"3")
+  + tx(36,26,"first",CM,10) + tx(100,26,"then",CM,10) + tx(164,26,"finally",CM,10)
+  + tx(100,88,"voix passive + présent simple",C1,11));
+ART.pOnce  = ill(pbox(14,"X",null,C1) + arrow(66,49,"right",CM) + '<circle cx="100" cy="49" r="13" fill="none" stroke="'+CW+'" stroke-width="2.5"/>'
+  + ln("M94 49 L99 55 L107 43",CW,2.5) + arrow(126,49,"right",CM) + pbox(142,"Y")
+  + tx(100,24,"once X has occurred",CW,11) + tx(100,88,"X terminé avant de passer à Y"));
+ART.pFinal = ill(pbox(14,"1") + arrow(66,49,"right",CM) + pbox(78,"2") + arrow(130,49,"right",CM) + pbox(142,"3",null,C1)
+  + tx(164,26,"final stage",C1,10) + tx(100,88,"at the final stage…"));
+
+/* — maps — */
+function panel(x,label){ return bx(x,20,66,50,"var(--line)","none",8) + tx(x+33,88,label,CM,10.5); }
+const house = function(x,y,c){ return '<path d="M'+x+' '+y+' l12 -10 l12 10 v12 h-24 z" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linejoin="round"/>'; };
+const tower = function(x,y,c){ return '<rect x="'+x+'" y="'+(y-16)+'" width="16" height="28" rx="2" fill="none" stroke="'+c+'" stroke-width="2.5"/>'
+  + '<path d="M'+(x+4)+' '+(y-8)+' h8 M'+(x+4)+' '+(y-1)+' h8" stroke="'+c+'" stroke-width="2"/>'; };
+const tree  = function(x,y,c){ return '<circle cx="'+x+'" cy="'+(y-6)+'" r="7" fill="none" stroke="'+c+'" stroke-width="2.5"/><path d="M'+x+' '+(y+1)+' v7" stroke="'+c+'" stroke-width="2.5"/>'; };
+ART.mReplace = ill(panel(10,"avant") + house(28,56,CM) + arrow(96,45,"right",C1) + panel(124,"après") + tower(148,56,C1)
+  + tx(100,16,"was replaced by",C1,11));
+ART.mConvert = ill(panel(10,"avant") + house(28,56,CM) + arrow(96,45,"right",C1) + panel(124,"après")
+  + '<rect x="142" y="36" width="30" height="24" rx="3" fill="none" stroke="'+C1+'" stroke-width="2.5"/>'
+  + '<path d="M150 42 h4 M160 42 h4 M150 52 h4 M160 52 h4" stroke="'+C1+'" stroke-width="2"/>'
+  + tx(100,16,"was converted into",C1,11));
+ART.mBuild   = ill(panel(10,"avant") + '<rect x="28" y="38" width="30" height="22" rx="3" fill="none" stroke="'+CM+'" stroke-width="2" stroke-dasharray="4 4"/>'
+  + arrow(96,45,"right",C1) + panel(124,"après") + tower(148,56,C1) + tree(172,60,C1)
+  + tx(100,16,"a new … was constructed",C1,11));
+ART.mExpand  = ill(panel(10,"avant") + bx(30,36,24,22,CM,"none",3) + arrow(96,45,"right",C1) + panel(124,"après")
+  + bx(134,30,46,34,C1,"none",3) + bx(140,38,24,22,CM,"none",3)
+  + arrow(184,47,"right",C1) + tx(100,16,"the area was expanded",C1,11));
+ART.mSame    = ill(panel(10,"avant") + house(28,56,CM) + tx(100,50,"=",CM,20) + panel(124,"après") + house(142,56,CM)
+  + tx(100,16,"no significant change",CM,11));
+
+/* — types de graphiques — */
+ART.line   = ill(AX + ln("M22 62 L60 50 L100 54 L140 30 L176 20",C1) + ln("M22 40 L60 44 L100 36 L140 44 L176 40",C2)
+  + tx(100,92,"tendances dans le temps"));
+ART.bars   = ill(AX + bar(30,30,22,C1) + bar(62,52,22,C2) + bar(94,20,22,C1) + bar(126,44,22,C2) + bar(158,36,22,C1)
+  + tx(100,92,"comparer des catégories"));
+ART.pie    = ill('<circle cx="70" cy="44" r="32" fill="none" stroke="var(--line)" stroke-width="2"/>'
+  + '<path d="M70 44 L70 12 A32 32 0 0 1 99 58 Z" fill="'+C1+'" opacity=".85"/>'
+  + '<path d="M70 44 L99 58 A32 32 0 0 1 46 72 Z" fill="'+C2+'" opacity=".75"/>'
+  + '<path d="M70 44 L46 72 A32 32 0 0 1 70 12 Z" fill="'+CM+'" opacity=".35"/>'
+  + tx(142,30,"parts d’un tout",CM,10) + tx(142,48,"a third, nearly half…",CM,9) + tx(142,66,"écart = points de %",CW,9));
+ART.table  = ill(bx(16,12,168,66,"var(--line)","none",6)
+  + ln("M16 30 H184",CM,1.5) + ln("M16 46 H184",CM,1.5) + ln("M16 62 H184",CM,1.5)
+  + ln("M72 12 V78",CM,1.5) + ln("M128 12 V78",CM,1.5)
+  + '<rect x="17" y="31" width="166" height="15" fill="'+C1+'" opacity=".28"/>'
+  + '<rect x="17" y="63" width="166" height="14" fill="'+CB+'" opacity=".22"/>'
+  + tx(100,92,"regrouper avant d’écrire"));
+ART.multi  = ill(bx(10,16,80,52,"var(--line)","none",8) + ln("M20 58 L44 44 L66 50 L82 28",C1,3)
+  + bx(110,16,80,52,"var(--line)","none",8) + '<rect x="122" y="40" width="14" height="22" rx="2" fill="'+C2+'"/>' + '<rect x="142" y="28" width="14" height="34" rx="2" fill="'+C2+'"/>' + '<rect x="162" y="48" width="14" height="14" rx="2" fill="'+C2+'"/>'
+  + arrow(100,42,"right",CW) + arrow(100,42,"left",CW)
+  + tx(100,88,"relier les DEUX graphiques",CW,11));
+ART.pp     = ill('<circle cx="46" cy="42" r="26" fill="none" stroke="var(--line)" stroke-width="2"/>'
+  + '<path d="M46 42 L46 16 A26 26 0 0 1 69 54 Z" fill="'+C1+'" opacity=".8"/>' + tx(46,84,"coal 40%",CM,10)
+  + '<circle cx="154" cy="42" r="26" fill="none" stroke="var(--line)" stroke-width="2"/>'
+  + '<path d="M154 42 L154 16 A26 26 0 0 1 169 25 Z" fill="'+CB+'" opacity=".8"/>' + tx(154,84,"coal 10%",CM,10)
+  + arrow(96,42,"right",CW) + tx(100,22,"− 30 percentage points",CW,10.5));
+
+/* — méthode générale — */
+ART.structure = ill('<rect x="20" y="8" width="160" height="14" rx="4" fill="'+C2+'" opacity=".85"/>' + tx(100,19,"Introduction — 1 phrase","#06202b",9)
+  + '<rect x="20" y="26" width="160" height="18" rx="4" fill="'+C1+'" opacity=".9"/>' + tx(100,39,"Overview — SANS aucun chiffre","#06202b",9.5)
+  + '<rect x="20" y="48" width="160" height="16" rx="4" fill="'+CM+'" opacity=".35"/>' + tx(100,60,"Corps 1 — chiffres groupés",CM,9)
+  + '<rect x="20" y="68" width="160" height="16" rx="4" fill="'+CM+'" opacity=".35"/>' + tx(100,80,"Corps 2 — chiffres groupés",CM,9));
+ART.timing = ill('<rect x="14" y="30" width="17.2" height="26" rx="3" fill="'+C2+'"/>'
+  + '<rect x="31.2" y="30" width="25.8" height="26" fill="'+C1+'"/>'
+  + '<rect x="57" y="30" width="111.8" height="26" fill="'+CM+'" opacity=".45"/>'
+  + '<rect x="168.8" y="30" width="17.2" height="26" rx="3" fill="'+CW+'"/>'
+  + tx(22,24,"2",C2,11) + tx(44,24,"3",C1,11) + tx(112,24,"13",CM,11) + tx(177,24,"2",CW,11)
+  + tx(22,70,"analyse",CM,9) + tx(44,82,"overview",CM,9) + tx(112,70,"rédaction",CM,9) + tx(177,82,"relecture",CM,9)
+  + tx(100,94,"20 minutes",CM,10));
+ART.selection = ill(AX + bar(26,26,18,CM) + bar(52,58,18,CM) + bar(78,40,18,CM) + bar(104,64,18,CM) + bar(130,34,18,CM) + bar(156,48,18,CM)
+  + '<circle cx="35" cy="26" r="9" fill="none" stroke="'+C1+'" stroke-width="2.5"/>'
+  + '<circle cx="113" cy="64" r="9" fill="none" stroke="'+CB+'" stroke-width="2.5"/>'
+  + '<circle cx="139" cy="34" r="9" fill="none" stroke="'+CW+'" stroke-width="2.5"/>'
+  + tx(100,92,"4 à 6 éléments seulement"));
+ART.grammar = ill('<path d="M14 50 H186" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>'
+  + ln("M20 42 V58",CM,2) + ln("M100 42 V58",CM,2) + ln("M176 42 V58",CM,2)
+  + tx(52,36,"increased",C2,10) + tx(52,72,"passé simple (dates)",CM,9)
+  + tx(100,26,"is filtered",C1,10) + tx(100,86,"présent simple (process)",CM,9)
+  + tx(158,36,"is projected to",CW,10) + tx(158,72,"prévision",CM,9));
+ART.goodBad = ill(bx(8,10,86,74,CB,"none",8) + tx(51,24,"❌ chiffres bruts",CB,9)
+  + ln("M18 38 H84",CM,2) + ln("M18 48 H84",CM,2) + ln("M18 58 H70",CM,2) + tx(51,74,"40% … 10% … 50%",CM,7.5)
+  + bx(106,10,86,74,C1,"none",8) + tx(149,24,"✅ la tendance",C1,9)
+  + ln("M116 62 L146 46 L182 34",C1,3) + arrow(184,33,"right",C1) + tx(149,70,"shifted · collapsed",CM,7.5) + tx(149,79,"· overtook",CM,7.5));
+ART.intro = ill(bx(10,20,64,48,"var(--line)","none",8) + ln("M20 58 L36 44 L52 50 L66 30",C2,3)
+  + arrow(90,44,"right",C1)
+  + bx(112,20,78,48,C1,"none",8) + ln("M122 36 H180",CM,2.5) + ln("M122 46 H180",CM,2.5) + ln("M122 56 H158",CM,2.5)
+  + tx(100,88,"reformuler en 1 phrase",C1,11));
+ART.overview = ill(AX + ln("M22 66 L60 58 L100 46 L140 34 L172 22",CM,2.5,"5 4") + ln("M26 68 L174 20",C1,4) + arrow(176,19,"right",C1)
+  + tx(70,26,"123",CB,13) + ln("M52 32 L90 18",CB,2.5)
+  + tx(100,92,"la tendance, sans chiffres"));
+ART.striking = ill(AX + ln("M22 60 L58 56 L94 62 L130 18 L172 52",C2,3) + '<circle cx="130" cy="18" r="10" fill="none" stroke="'+CW+'" stroke-width="3"/>'
+  + tx(100,92,"l’élément le plus frappant"));
+
+/* [anglais, français, catégorie, illustration, quand l’utiliser, exemple EN, traduction FR] */
 const RAW_VOCAB = [
-  ["illustrates / depicts / shows / presents", "illustre / représente / montre / présente", "intro"],
-  ["comparing / relating to / regarding", "comparant / relatif à / concernant", "intro"],
+  ["illustrates / depicts / shows / presents", "illustre / représente / montre / présente", "intro", "intro",
+   "Verbe de l’<b>introduction</b>. Une seule phrase, qui reformule la consigne sans jamais la recopier.",
+   "The line graph illustrates changes in electricity production between 2005 and 2025.",
+   "Le graphique illustre l’évolution de la production d’électricité entre 2005 et 2025."],
+  ["comparing / relating to / regarding", "comparant / relatif à / concernant", "intro", "intro",
+   "Relie le verbe d’introduction à l’objet des données : <i>gives information regarding…</i>, <i>data comparing…</i>",
+   "The table gives information comparing average salaries in five sectors.",
+   "Le tableau donne des informations comparant les salaires moyens dans cinq secteurs."],
 
-  ["overall, it is clear that…", "globalement, il est clair que…", "overview"],
-  ["a notable trend is…", "une tendance notable est…", "overview"],
-  ["the most striking feature is…", "l’élément le plus frappant est…", "overview"],
-  ["one general pattern is that…", "une tendance générale est que…", "overview"],
+  ["overall, it is clear that…", "globalement, il est clair que…", "overview", "overview",
+   "Ouvre l’<b>overview</b> (obligatoire, 2–3 phrases). Après cette formule : <b>aucun chiffre précis</b>.",
+   "Overall, it is clear that car ownership rose in every country surveyed.",
+   "Globalement, il est clair que le taux de motorisation a augmenté dans tous les pays étudiés."],
+  ["a notable trend is…", "une tendance notable est…", "overview", "overview",
+   "Variante pour l’overview quand vous annoncez une tendance de fond, pas un pic isolé.",
+   "A notable trend is the steady decline of coal throughout the period.",
+   "Une tendance notable est le recul régulier du charbon sur toute la période."],
+  ["the most striking feature is…", "l’élément le plus frappant est…", "overview", "striking",
+   "Pour pointer <b>l’élément le plus spectaculaire</b> : le record, le renversement, l’écart énorme.",
+   "The most striking feature is that renewables overtook every other source.",
+   "L’élément le plus frappant est que les renouvelables ont dépassé toutes les autres sources."],
+  ["one general pattern is that…", "une tendance générale est que…", "overview", "overview",
+   "Pour une régularité qui vaut pour <b>plusieurs séries à la fois</b> — parfait pour les graphiques multiples.",
+   "One general pattern is that urban populations grew while rural ones shrank.",
+   "Une tendance générale est que les populations urbaines ont augmenté tandis que les rurales ont diminué."],
 
-  ["increase / rise / grow", "augmenter", "hausse"],
-  ["climb / pick up", "grimper / repartir à la hausse", "hausse"],
-  ["surge", "bondir (hausse brutale)", "hausse"],
-  ["soar", "s’envoler (hausse très forte)", "hausse"],
+  ["increase / rise / grow", "augmenter", "hausse", "rise",
+   "Verbes <b>neutres</b> : c’est l’adverbe qui donne l’intensité (<i>rose sharply</i>, <i>grew steadily</i>).",
+   "The number of visitors increased steadily over the following decade.",
+   "Le nombre de visiteurs a augmenté régulièrement au cours de la décennie suivante."],
+  ["climb / pick up", "grimper / repartir à la hausse", "hausse", "climb",
+   "<b>pick up</b> = <b>re</b>partir à la hausse après une baisse ou un plat. Ne l’utilisez pas pour une hausse depuis le début.",
+   "After a slow start, sales picked up in 2018 and climbed to 40 million.",
+   "Après un début poussif, les ventes sont reparties en 2018 et ont grimpé à 40 millions."],
+  ["surge", "bondir (hausse brutale)", "hausse", "surge",
+   "Hausse <b>brutale et soudaine</b>, souvent sur un intervalle court. Jamais pour une progression régulière.",
+   "Online orders surged in the final quarter of 2021.",
+   "Les commandes en ligne ont bondi au dernier trimestre 2021."],
+  ["soar", "s’envoler (hausse très forte)", "hausse", "soar",
+   "Le plus fort de tous. Réservez-le aux courbes qui <b>explosent</b> (doublement, triplement).",
+   "Property prices soared between 2015 and 2020.",
+   "Les prix de l’immobilier se sont envolés entre 2015 et 2020."],
 
-  ["decrease / decline / fall / drop", "diminuer / chuter", "baisse"],
-  ["plummet", "s’effondrer (chute très forte)", "baisse"],
-  ["dip", "baisser légèrement", "baisse"],
+  ["decrease / decline / fall / drop", "diminuer / chuter", "baisse", "fall",
+   "Verbes neutres de baisse. <i>drop</i> est un peu plus marqué que <i>decline</i>.",
+   "Coal consumption fell steadily after 2010.",
+   "La consommation de charbon a diminué régulièrement après 2010."],
+  ["plummet", "s’effondrer (chute très forte)", "baisse", "plummet",
+   "Le pendant exact de <b>soar</b> : effondrement spectaculaire.",
+   "Unemployment plummeted from 12% to 4% in just three years.",
+   "Le chômage s’est effondré de 12 % à 4 % en seulement trois ans."],
+  ["dip", "baisser légèrement", "baisse", "dip",
+   "Baisse <b>légère et souvent temporaire</b> : un petit creux, suivi d’un retour à la normale.",
+   "The figure dipped slightly in 2013 before recovering.",
+   "Le chiffre a légèrement baissé en 2013 avant de repartir."],
 
-  ["remain stable / level off / plateau", "se stabiliser", "stable"],
-  ["fluctuate", "fluctuer", "stable"],
-  ["vary erratically", "varier de façon irrégulière", "stable"],
+  ["remain stable / level off / plateau", "se stabiliser", "stable", "plateau",
+   "<b>level off / plateau</b> = se stabiliser <b>après</b> une évolution. <b>remain stable</b> = rester stable tout du long.",
+   "After rising until 2015, the figure levelled off at around 60%.",
+   "Après avoir augmenté jusqu’en 2015, le chiffre s’est stabilisé autour de 60 %."],
+  ["fluctuate", "fluctuer", "stable", "fluct",
+   "Va-et-vient <b>régulier</b> autour d’un niveau : précisez la fourchette (<i>between … and …</i>).",
+   "Rainfall fluctuated between 40 and 60 mm throughout the period.",
+   "Les précipitations ont fluctué entre 40 et 60 mm tout au long de la période."],
+  ["vary erratically", "varier de façon irrégulière", "stable", "erratic",
+   "Quand <b>aucune tendance nette</b> ne se dégage : c’est l’observation à faire, et elle a de la valeur.",
+   "Sales varied erratically, with no clear trend over the period.",
+   "Les ventes ont varié de façon irrégulière, sans tendance nette sur la période."],
 
-  ["an increase / a rise / a growth / a surge", "une augmentation / une hausse / une croissance / une envolée", "nom"],
-  ["a decrease / a decline / a fall / a drop", "une diminution / un déclin / une chute / une baisse", "nom"],
+  ["an increase / a rise / a growth / a surge", "une augmentation / une hausse / une croissance / une envolée", "nom", "nounUp",
+   "Forme <b>nominale</b> : <i>There was a + adjectif + nom + in…</i> — indispensable pour varier vos structures.",
+   "There was a sharp increase in tourist numbers between 2012 and 2016.",
+   "Il y a eu une forte augmentation du nombre de touristes entre 2012 et 2016."],
+  ["a decrease / a decline / a fall / a drop", "une diminution / un déclin / une chute / une baisse", "nom", "nounDown",
+   "Même logique : <i>the period saw a gradual decline in…</i> évite de répéter les verbes.",
+   "The period saw a gradual decline in manufacturing jobs.",
+   "La période a connu un déclin progressif des emplois industriels."],
 
-  ["dramatically / sharply / significantly", "de façon spectaculaire / brusquement / significativement", "degre"],
-  ["substantially / considerably", "substantiellement / considérablement", "degre"],
-  ["steadily / gradually / moderately", "régulièrement / graduellement / modérément", "degre"],
-  ["slightly / marginally", "légèrement / marginalement", "degre"],
+  ["dramatically / sharply / significantly", "de façon spectaculaire / brusquement / significativement", "degre", "degDram",
+   "Le <b>degré le plus fort</b> : à réserver aux variations vraiment marquées.",
+   "Emissions fell dramatically after 2015.",
+   "Les émissions ont chuté de façon spectaculaire après 2015."],
+  ["substantially / considerably", "substantiellement / considérablement", "degre", "degSub",
+   "Fort, mais un cran <b>en dessous</b> de <i>dramatically</i>.",
+   "Incomes rose considerably in the second half of the period.",
+   "Les revenus ont considérablement augmenté dans la seconde moitié de la période."],
+  ["steadily / gradually / moderately", "régulièrement / graduellement / modérément", "degre", "degSteady",
+   "Évolution <b>régulière, sans à-coups</b> : la courbe est une droite.",
+   "The population grew steadily throughout the period.",
+   "La population a augmenté régulièrement tout au long de la période."],
+  ["slightly / marginally", "légèrement / marginalement", "degre", "degSlight",
+   "Le <b>degré le plus faible</b> : un ou deux points d’écart, pas plus.",
+   "The figure rose only marginally, from 21% to 23%.",
+   "Le chiffre n’a augmenté que marginalement, de 21 % à 23 %."],
 
-  ["compared to / in contrast to", "comparé à / contrairement à", "compar"],
-  ["whereas / while / unlike", "alors que / tandis que / à la différence de", "compar"],
-  ["X exceeded Y by [n] points", "X a dépassé Y de [n] points", "compar"],
-  ["X was roughly double / triple Y", "X était environ le double / triple de Y", "compar"],
-  ["the gap widened / narrowed", "l’écart s’est creusé / réduit", "compar"],
+  ["compared to / in contrast to", "comparé à / contrairement à", "compar", "compare",
+   "Met deux séries <b>dans la même phrase</b> : c’est exactement ce que l’examinateur attend du corps du texte.",
+   "Compared to Japan, Brazil recorded far higher growth.",
+   "Comparé au Japon, le Brésil a enregistré une croissance bien plus forte."],
+  ["whereas / while / unlike", "alors que / tandis que / à la différence de", "compar", "contrast",
+   "Connecteurs de <b>contraste</b> : une phrase, deux évolutions opposées. Très valorisé.",
+   "Coal declined, whereas renewables expanded rapidly.",
+   "Le charbon a reculé, alors que les renouvelables ont progressé rapidement."],
+  ["X exceeded Y by [n] points", "X a dépassé Y de [n] points", "compar", "exceed",
+   "Pour chiffrer un écart. Entre deux <b>pourcentages</b>, on dit <b>percentage points</b>, jamais <i>percent</i>.",
+   "In 2020, exports exceeded imports by 15 percentage points.",
+   "En 2020, les exportations ont dépassé les importations de 15 points de pourcentage."],
+  ["X was roughly double / triple Y", "X était environ le double / triple de Y", "compar", "double",
+   "Exprime un <b>rapport</b> plutôt qu’une soustraction. <i>that on…</i> évite de répéter le nom.",
+   "Spending on housing was roughly double that on transport.",
+   "Les dépenses de logement représentaient environ le double de celles de transport."],
+  ["the gap widened / narrowed", "l’écart s’est creusé / réduit", "compar", "gap",
+   "Décrit l’<b>évolution de l’écart</b> entre deux séries — typiquement la « comparaison frappante » à retenir.",
+   "The gap between the two countries widened after 2012.",
+   "L’écart entre les deux pays s’est creusé après 2012."],
 
-  ["approximately / roughly / around", "approximativement / environ / autour de", "approx"],
-  ["just over / just under", "juste au-dessus / juste en dessous de", "approx"],
-  ["nearly / almost", "presque", "approx"],
+  ["approximately / roughly / around", "approximativement / environ / autour de", "approx", "approx",
+   "Lire un graphique, c’est <b>arrondir</b> : n’affichez pas une précision que la source n’a pas.",
+   "Approximately one third of respondents chose public transport.",
+   "Environ un tiers des personnes interrogées ont choisi les transports en commun."],
+  ["just over / just under", "juste au-dessus / juste en dessous de", "approx", "justOver",
+   "Pour une valeur qui frôle un seuil rond : <i>just over 50%</i> est plus précis et plus élégant que <i>51%</i>.",
+   "Just over half the population lived in cities in 2020.",
+   "Un peu plus de la moitié de la population vivait en ville en 2020."],
+  ["nearly / almost", "presque", "approx", "nearly",
+   "La valeur <b>approche</b> le seuil sans l’atteindre — donc toujours en dessous.",
+   "Nearly 80% of energy came from fossil fuels in 2005.",
+   "Près de 80 % de l’énergie provenait des énergies fossiles en 2005."],
 
-  ["in the following years", "au cours des années suivantes", "temps"],
-  ["over the same period", "sur la même période", "temps"],
-  ["by [année]", "d’ici [année]", "temps"],
-  ["from [année] onwards", "à partir de [année]", "temps"],
-  ["throughout the period", "tout au long de la période", "temps"],
+  ["in the following years", "au cours des années suivantes", "temps", "tAfter",
+   "Enchaîne sur ce qui vient d’être dit : évite de répéter les dates à chaque phrase.",
+   "In the following years, the trend reversed completely.",
+   "Au cours des années suivantes, la tendance s’est complètement inversée."],
+  ["over the same period", "sur la même période", "temps", "tSame",
+   "Relie <b>deux séries</b> sur le même intervalle : le connecteur roi du corps du texte.",
+   "Over the same period, imports more than doubled.",
+   "Sur la même période, les importations ont plus que doublé."],
+  ["by [année]", "d’ici [année]", "temps", "tBy",
+   "Donne l’état <b>atteint</b> à une date. Avec une prévision : <i>by 2030, it is projected to…</i>",
+   "By 2030, the figure is projected to reach 70%.",
+   "D’ici 2030, le chiffre devrait atteindre 70 %."],
+  ["from [année] onwards", "à partir de [année]", "temps", "tFrom",
+   "Marque un <b>point de bascule</b> : tout change à partir de cette date.",
+   "From 2015 onwards, the decline accelerated.",
+   "À partir de 2015, la baisse s’est accélérée."],
+  ["throughout the period", "tout au long de la période", "temps", "tThrough",
+   "Couvre <b>tout l’intervalle</b> : idéal avec <i>remained stable</i> ou <i>fluctuated</i>.",
+   "Demand remained stable throughout the period.",
+   "La demande est restée stable tout au long de la période."],
 
-  ["first / subsequently / following this", "d’abord / par la suite / à la suite de cela", "process"],
-  ["once X has occurred", "une fois que X s’est produit", "process"],
-  ["at the final stage", "à la dernière étape", "process"],
+  ["first / subsequently / following this", "d’abord / par la suite / à la suite de cela", "process", "pSeq",
+   "Connecteurs de <b>process diagram</b> : pas de dates, présent simple, voix passive.",
+   "First, the raw material is collected. Following this, it is washed and sorted.",
+   "D’abord, la matière première est collectée. À la suite de cela, elle est lavée et triée."],
+  ["once X has occurred", "une fois que X s’est produit", "process", "pOnce",
+   "Marque qu’une étape doit être <b>terminée</b> avant la suivante — structure valorisée à l’écrit.",
+   "Once the mixture has cooled, it is poured into moulds.",
+   "Une fois que le mélange a refroidi, il est versé dans des moules."],
+  ["at the final stage", "à la dernière étape", "process", "pFinal",
+   "Clôt le process. Synonymes : <i>finally</i>, <i>in the last stage</i>.",
+   "At the final stage, the product is packaged and distributed.",
+   "À la dernière étape, le produit est emballé et distribué."],
 
-  ["was replaced by", "a été remplacé par", "maps"],
-  ["was converted into", "a été transformé en", "maps"],
-  ["a new [élément] was constructed", "un nouveau [élément] a été construit", "maps"],
-  ["the area was expanded", "la zone a été agrandie", "maps"],
-  ["no significant change was made to…", "aucun changement significatif n’a été apporté à…", "maps"]
+  ["was replaced by", "a été remplacé par", "maps", "mReplace",
+   "L’ancien élément <b>disparaît</b> au profit d’un nouveau. Voix passive, passé simple.",
+   "The car park was replaced by a shopping centre.",
+   "Le parking a été remplacé par un centre commercial."],
+  ["was converted into", "a été transformé en", "maps", "mConvert",
+   "Le bâtiment <b>existe toujours</b> mais change d’usage — à ne pas confondre avec <i>was replaced by</i>.",
+   "The old factory was converted into apartments.",
+   "L’ancienne usine a été transformée en appartements."],
+  ["a new [élément] was constructed", "un nouveau [élément] a été construit", "maps", "mBuild",
+   "Construction sur un espace <b>vide</b>. Ajoutez la position : <i>to the north of…</i>, <i>on the site of…</i>",
+   "A new bridge was constructed to the east of the town.",
+   "Un nouveau pont a été construit à l’est de la ville."],
+  ["the area was expanded", "la zone a été agrandie", "maps", "mExpand",
+   "L’élément existait déjà et s’est <b>étendu</b>. Voisins utiles : <i>was widened</i>, <i>was extended</i>.",
+   "The residential area was expanded towards the north.",
+   "La zone résidentielle a été agrandie vers le nord."],
+  ["no significant change was made to…", "aucun changement significatif n’a été apporté à…", "maps", "mSame",
+   "Signalez aussi ce qui <b>n’a pas changé</b> : les examinateurs valorisent une description complète.",
+   "No significant change was made to the town centre.",
+   "Aucun changement significatif n’a été apporté au centre-ville."]
 ];
 
 const VOCAB = RAW_VOCAB.map(function(v,i){
-  return {id:"v"+i, kind:"vocab", en:v[0], fr:v[1], cat:v[2]};
+  return {id:"v"+i, kind:"vocab", en:v[0], fr:v[1], cat:v[2], art:v[3], tip:v[4], exEn:v[5], exFr:v[6]};
 });
 
 /* Questions de méthodologie : {id, topic, q, opts, a, exp} */
@@ -582,6 +935,26 @@ const METHOD = RAW_METHOD.map(function(m,i){
   return {id:"m"+i, kind:"method", topic:m[0], q:m[1], opts:m[2], a:m[3], exp:m[4]};
 });
 
+/* Illustration associée à chaque question de méthodologie */
+function artForMethod(m){
+  const t = (m.q + " " + m.exp).toLowerCase();
+  if(t.indexOf("percentage point")>-1 || t.indexOf("40 %")>-1) return ART.pp;
+  if(t.indexOf("pie")>-1 || t.indexOf("camembert")>-1) return ART.pie;
+  if(t.indexOf("table")>-1 || t.indexOf("tableau")>-1) return ART.table;
+  if(t.indexOf("process")>-1) return ART.pSeq;
+  if(t.indexOf("map")>-1) return ART.mReplace;
+  if(t.indexOf("deux graphiques")>-1 || t.indexOf("multiples")>-1) return ART.multi;
+  if(t.indexOf("bar chart")>-1 || t.indexOf("line graph")>-1) return ART.bars;
+  if(m.topic==="timing") return ART.timing;
+  if(m.topic==="selection") return ART.selection;
+  if(m.topic==="grammar") return ART.grammar;
+  if(m.topic==="example") return ART.goodBad;
+  if(t.indexOf("overview")>-1) return ART.overview;
+  if(t.indexOf("introduction")>-1) return ART.intro;
+  return ART.structure;
+}
+METHOD.forEach(function(m){ m.art = artForMethod(m); });
+
 const ALL = VOCAB.concat(METHOD);
 const BY_ID = {}; ALL.forEach(function(it){ BY_ID[it.id]=it; });
 
@@ -677,6 +1050,7 @@ document.querySelectorAll("#nav .tab").forEach(function(b){
     $("p-"+b.dataset.p).classList.add("on");
     stopTimer();
     if(b.dataset.p==="prog") renderProgress();
+    if(b.dataset.p==="sort"){ if(sortAnswered) nextSort(); else startTimer(); }
     window.scrollTo({top:0, behavior:"smooth"});
   });
 });
@@ -720,6 +1094,11 @@ function deckPool(){
 }
 
 let fCard = null, fFlipped = false;
+
+function fitCard(){
+  const h = Math.max($("frontInner").scrollHeight, $("backInner").scrollHeight) + 38;
+  $("flip").style.minHeight = Math.max(250, h) + "px";
+}
 function nextCard(){
   const pool = deckPool();
   fCard = pickWeighted(pool);
@@ -738,19 +1117,28 @@ function nextCard(){
     const enFirst = dir==="en";
     $("fFront").textContent = enFirst ? fCard.en : fCard.fr;
     $("fSubFront").textContent = enFirst ? "🇬🇧 anglais → 🇫🇷 français ?" : "🇫🇷 français → 🇬🇧 anglais ?";
-    $("fBack").textContent = enFirst ? fCard.fr : fCard.en;
-    $("fSubBack").textContent = enFirst ? fCard.en : fCard.fr;
+    $("fBack").innerHTML = enFirst
+      ? fCard.fr + '<div class="sub" style="margin-top:4px">' + fCard.en + "</div>"
+      : fCard.en + '<div class="sub" style="margin-top:4px">' + fCard.fr + "</div>";
+    $("fArt").innerHTML = ART[fCard.art] || "";
+    $("fTip").style.display = "block";
+    $("fTip").innerHTML = "💡 " + fCard.tip;
+    $("fEx").style.display = "block";
+    $("fEx").innerHTML = "<i>" + fCard.exEn + "</i><span>" + fCard.exFr + "</span>";
   }else{
     $("fFront").textContent = fCard.q;
     $("fSubFront").textContent = "Question de méthodologie";
     $("fBack").textContent = fCard.opts[fCard.a];
-    $("fSubBack").textContent = fCard.exp;
+    $("fArt").innerHTML = fCard.art || "";
+    $("fTip").style.display = "block";
+    $("fTip").innerHTML = "💡 " + fCard.exp;
+    $("fEx").style.display = "none";
   }
   $("fFront").className = "term" + ($("fFront").textContent.length > 58 ? " long" : "");
   $("fBack").className  = "term" + ($("fBack").textContent.length  > 58 ? " long" : "");
-  $("fSubBack").className = "sub" + ($("fSubBack").textContent.length > 70 ? " small" : "");
   const r = S.srs[fCard.id];
   $("fCount").textContent = pool.length+" cartes · vue "+(r?r.s:0)+" fois"+(mastered(fCard.id)?" · maîtrisée ✅":"");
+  requestAnimationFrame(fitCard);
 }
 function flipCard(){
   fFlipped = !fFlipped;
@@ -835,6 +1223,13 @@ function nextQuestion(){
     box.appendChild(b);
   });
 }
+function quizArt(){
+  const a = qItem.kind==="vocab" ? ART[qItem.art] : qItem.art;
+  const ex = qItem.kind==="vocab"
+    ? '<div class="ex" style="margin-top:8px"><i>'+qItem.exEn+"</i><span>"+qItem.exFr+"</span></div>"
+    : "";
+  return (a||"") + ex;
+}
 function answerQuiz(i, btn){
   if(qAnswered) return;
   qAnswered = true;
@@ -854,9 +1249,10 @@ function answerQuiz(i, btn){
     const bonus = Math.min(10, streak*2);
     addScore(10 + bonus);
     fb.innerHTML = "<b>✅ "+CHEERS[Math.floor(Math.random()*CHEERS.length)]+"</b> +"+(10+bonus)+" pts"
-      + (streak>2 ? " · série de "+streak+" 🔥" : "") + "<br>" + q.exp;
+      + (streak>2 ? " · série de "+streak+" 🔥" : "") + "<br>" + q.exp + quizArt();
   }else{
-    fb.innerHTML = "<b>❌ Réponse : "+q.opts[q.a]+"</b><br>"+q.exp+"<br><span class=\"muted\">Cette notion reviendra vite.</span>";
+    fb.innerHTML = "<b>❌ Réponse : "+q.opts[q.a]+"</b><br>"+q.exp+quizArt()
+      +"<span class=\"muted\">Cette notion reviendra vite.</span>";
   }
   $("qNext").style.display = "block";
 }
@@ -907,7 +1303,10 @@ function nextSort(){
     b.addEventListener("click", function(){ answerSort(k, b); });
     box.appendChild(b);
   });
-  startTimer();
+  if($("p-sort").classList.contains("on")) startTimer();
+}
+function sortArt(){
+  return (ART[sortItem.art]||"") + '<div class="ex" style="margin-top:8px">💡 '+sortItem.tip+"</div>";
 }
 function answerSort(k, btn){
   if(sortAnswered) return;
@@ -927,10 +1326,10 @@ function answerSort(k, btn){
     const speed = sortLimit ? Math.round(tLeft/(sortLimit*1000)*8) : 0;
     addScore(10 + speed);
     fb.innerHTML = "<b>✅ "+CHEERS[Math.floor(Math.random()*CHEERS.length)]+"</b> +"+(10+speed)+" pts"
-      + (speed>4 ? " (bonus rapidité ⚡)" : "") + "<br>« "+sortItem.en+" » = "+sortItem.fr;
+      + (speed>4 ? " (bonus rapidité ⚡)" : "") + "<br>« "+sortItem.en+" » = "+sortItem.fr + sortArt();
   }else{
     fb.innerHTML = "<b>"+(k===null ? "⏱️ Temps écoulé !" : "❌ Raté")+"</b> → catégorie : "
-      + CATS[sortItem.cat].label + "<br>« "+sortItem.en+" » = "+sortItem.fr;
+      + CATS[sortItem.cat].label + "<br>« "+sortItem.en+" » = "+sortItem.fr + sortArt();
   }
   $("sortNext").style.display = "block";
 }
@@ -953,6 +1352,26 @@ $("sortNext").addEventListener("click", nextSort);
     html += "</table>";
   });
   $("memoVocab").innerHTML = html;
+})();
+
+(function memoArts(){
+  const charts = [
+    [ART.line,"Line graph / bar chart : tendances et comparaisons"],
+    [ART.pie,"Pie chart : des parts d’un tout, en points de %"],
+    [ART.table,"Table : regrouper avant d’écrire"],
+    [ART.pSeq,"Process : passif, présent simple, connecteurs"],
+    [ART.mReplace,"Map : passif, zone par zone"],
+    [ART.multi,"Graphiques multiples : relier les deux"]
+  ];
+  $("memoCharts").innerHTML = charts.map(function(c){
+    return "<figure>"+c[0]+"<figcaption>"+c[1]+"</figcaption></figure>";
+  }).join("");
+  $("memoTiming").innerHTML = ART.timing;
+  $("memoSelection").innerHTML = ART.selection;
+  const g = $("memoGrammarSlot");
+  if(g) g.insertAdjacentHTML("afterend", '<li style="list-style:none;margin-left:-20px">'+ART.grammar+"</li>");
+  const ex = document.querySelector("#p-memo .box.good");
+  if(ex) ex.insertAdjacentHTML("afterend", ART.goodBad);
 })();
 
 /* ============================================================
