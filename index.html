@@ -87,6 +87,14 @@ svg.ill{width:100%;max-width:240px;height:auto;display:block;margin:2px auto}
 .tip b{color:var(--acc)}
 .ex{font-size:13px;line-height:1.45;text-align:left;width:100%;border-left:3px solid var(--acc2);padding-left:10px}
 .ex i{color:var(--txt);font-weight:600}
+.ex.ko{border-left-color:var(--bad)}
+.ex.ko i{color:var(--bad);font-weight:600}
+.exwrap{display:grid;gap:8px;width:100%}
+.exrow{font-size:12.5px;line-height:1.45;padding-top:0}
+.exrow div{margin:2px 0}
+.exrow .k{color:var(--bad)}
+.exrow .o{color:var(--acc)}
+.exrow em{color:var(--muted);font-style:normal}
 .ex span{display:block;color:var(--muted);font-size:12px}
 .fb svg.ill{max-width:210px;margin-top:8px}
 .memoart{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
@@ -213,7 +221,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
           <div class="term" id="fBack">…</div>
           <div id="fArt"></div>
           <div class="tip" id="fTip" style="display:none"></div>
-          <div class="ex" id="fEx" style="display:none"></div>
+          <div class="exwrap" id="fEx"></div>
         </div>
       </div>
     </div>
@@ -783,6 +791,351 @@ const VOCAB = RAW_VOCAB.map(function(v,i){
   return {id:"v"+i, kind:"vocab", en:v[0], fr:v[1], cat:v[2], art:v[3], tip:v[4], exEn:v[5], exFr:v[6]};
 });
 
+/* Exemples supplémentaires et contre-exemples, par expression anglaise.
+   ex2 = deuxième emploi (autre structure) · ko = formulation à éviter + pourquoi */
+const EXTRA = {
+  "illustrates / depicts / shows / presents": {
+    ex2:["The two pie charts show the proportion of each energy source in 2005 and in 2025.",
+         "Les deux camemberts montrent la part de chaque source d’énergie en 2005 et en 2025."],
+    ko:["The graph is about electricity production.",
+        "Trop vague et trop familier : nommez le type de graphique, ce qu’il montre et la période."]},
+  "comparing / relating to / regarding": {
+    ex2:["The bar chart provides information regarding literacy rates in six regions.",
+         "Le diagramme fournit des informations concernant les taux d’alphabétisation dans six régions."],
+    ko:["The bar chart gives informations about literacy rates.",
+        "« information » est indénombrable : gives information regarding / about, jamais « informations »."]},
+
+  "overall, it is clear that…": {
+    ex2:["Overall, it is clear that the two categories followed opposite trends.",
+         "Globalement, il est clair que les deux catégories ont suivi des tendances opposées."],
+    ko:["Overall, it is clear that coal fell from 40% to 10%.",
+        "Un chiffre précis n’a pas sa place dans l’overview : gardez-le pour les paragraphes de corps."]},
+  "a notable trend is…": {
+    ex2:["A notable trend is the shift from private cars towards public transport.",
+         "Une tendance notable est le report de la voiture individuelle vers les transports en commun."],
+    ko:["A notable trend is that the figure was 45% in 2015.",
+        "C’est une donnée isolée, pas une tendance : décrivez un mouvement sur toute la période."]},
+  "the most striking feature is…": {
+    ex2:["The most striking feature of the maps is the disappearance of the industrial zone.",
+         "L’élément le plus frappant des cartes est la disparition de la zone industrielle."],
+    ko:["The most striking feature is 62%.",
+        "Un chiffre n’est pas une caractéristique : dites ce que ce chiffre a de remarquable."]},
+  "one general pattern is that…": {
+    ex2:["One general pattern is that all four countries reached their peak in the same year.",
+         "Une tendance générale est que les quatre pays ont atteint leur maximum la même année."]},
+
+  "increase / rise / grow": {
+    ex2:["Sales rose by 12% in 2018, and the number of users grew to three million.",
+         "Les ventes ont augmenté de 12 % en 2018, et le nombre d’utilisateurs est passé à trois millions."],
+    ko:["The figure increased of 12%.",
+        "rise / increase BY 12 % (l’ampleur) ou TO 3 million (le niveau atteint) — jamais « of »."]},
+  "climb / pick up": {
+    ex2:["Demand fell until 2016 and then picked up sharply.",
+         "La demande a baissé jusqu’en 2016 puis est fortement repartie."],
+    ko:["Sales picked up steadily from the very beginning of the period.",
+        "pick up suppose une baisse ou un plat AVANT : sans cela, dites rose / grew."]},
+  "surge": {
+    ex2:["There was a surge in demand during the summer months.",
+         "Il y a eu une envolée de la demande pendant les mois d’été."],
+    ko:["Sales surged slightly.",
+        "surge est déjà brutal : incompatible avec slightly, gradually ou steadily."]},
+  "soar": {
+    ex2:["Prices soared to a peak of $400 in 2020.",
+         "Les prix se sont envolés jusqu’à un pic de 400 $ en 2020."],
+    ko:["The figure soared from 21% to 23%.",
+        "Deux points d’écart : dites rose marginally. soar se réserve aux hausses massives."]},
+
+  "decrease / decline / fall / drop": {
+    ex2:["The figure dropped to its lowest level in 2014 before a slight recovery.",
+         "Le chiffre est tombé à son niveau le plus bas en 2014 avant une légère reprise."],
+    ko:["Coal decreased of 30 percent.",
+        "fell / dropped BY 30 % (l’ampleur) ou TO 10 % (le niveau) — jamais « of »."]},
+  "plummet": {
+    ex2:["Between 2018 and 2020, tourist numbers plummeted by almost two thirds.",
+         "Entre 2018 et 2020, le nombre de touristes s’est effondré de près des deux tiers."],
+    ko:["The figure plummeted by two percentage points.",
+        "Deux points, c’est dipped / fell slightly. plummet = effondrement."]},
+  "dip": {
+    ex2:["There was a slight dip in 2013, followed by a steady recovery.",
+         "Il y a eu un léger creux en 2013, suivi d’une reprise régulière."],
+    ko:["The figure dipped from 80% to 20%.",
+        "Une chute de 60 points n’est pas un creux : dites plummeted."]},
+
+  "remain stable / level off / plateau": {
+    ex2:["Numbers remained stable at around 25 million throughout the period.",
+         "Les effectifs sont restés stables autour de 25 millions sur toute la période."],
+    ko:["The figure levelled off from the start of the period.",
+        "level off = se stabiliser APRÈS une évolution. Dès le départ, dites remained stable."]},
+  "fluctuate": {
+    ex2:["The figure fluctuated around 50%, with a low of 42% and a high of 58%.",
+         "Le chiffre a fluctué autour de 50 %, avec un minimum de 42 % et un maximum de 58 %."],
+    ko:["The figure fluctuated from 10% to 80%.",
+        "fluctuate = osciller autour d’un niveau : précisez la fourchette avec between … and …"]},
+  "vary erratically": {
+    ex2:["Unlike the other countries, Brazil varied erratically throughout the period.",
+         "À la différence des autres pays, le Brésil a varié de façon irrégulière sur toute la période."]},
+
+  "an increase / a rise / a growth / a surge": {
+    ex2:["A steady rise in demand was recorded between 2010 and 2015.",
+         "Une hausse régulière de la demande a été enregistrée entre 2010 et 2015."],
+    ko:["There was an increase of visitors.",
+        "an increase IN + ce qui augmente ; an increase OF + le chiffre (an increase of 12%)."]},
+  "a decrease / a decline / a fall / a drop": {
+    ex2:["A sharp drop in sales followed the 2008 peak.",
+         "Une chute brutale des ventes a suivi le pic de 2008."],
+    ko:["A decline of manufacturing jobs was recorded.",
+        "a decline IN manufacturing jobs ; « of » est réservé au chiffre (a decline of 12%)."]},
+
+  "dramatically / sharply / significantly": {
+    ex2:["There was a dramatic fall in emissions after 2015.",
+         "Il y a eu une chute spectaculaire des émissions après 2015."],
+    ko:["There was a dramatically fall in emissions.",
+        "Devant un NOM : adjectif (a dramatic fall). Après un VERBE : adverbe (fell dramatically)."]},
+  "substantially / considerably": {
+    ex2:["Wages were considerably higher in the capital than elsewhere.",
+         "Les salaires étaient considérablement plus élevés dans la capitale qu’ailleurs."],
+    ko:["Wages were considerably more high.",
+        "Comparatif court : higher, jamais « more high »."]},
+  "steadily / gradually / moderately": {
+    ex2:["The chart shows a steady increase in population over the period.",
+         "Le graphique montre une augmentation régulière de la population sur la période."],
+    ko:["The figure rose steadily from 10% to 80% in a single year.",
+        "Une multiplication par huit en un an n’a rien de régulier : dites soared."]},
+  "slightly / marginally": {
+    ex2:["Only a marginal difference separated the two countries.",
+         "Seule une différence marginale séparait les deux pays."],
+    ko:["The figure rose slightly, from 20% to 60%.",
+        "40 points d’écart : dites rose dramatically / soared."]},
+
+  "compared to / in contrast to": {
+    ex2:["In contrast to Germany, Spain saw a steady decline over the same period.",
+         "Contrairement à l’Allemagne, l’Espagne a connu un recul régulier sur la même période."],
+    ko:["Compared to Germany, Spain is better.",
+        "Aucun jugement en Task 1 : comparez des données, pas des mérites."]},
+  "whereas / while / unlike": {
+    ex2:["Unlike the other three countries, Japan recorded a fall throughout the period.",
+         "À la différence des trois autres pays, le Japon a enregistré une baisse sur toute la période."],
+    ko:["Coal declined. Whereas renewables grew.",
+        "whereas relie deux propositions DANS la même phrase : Coal declined, whereas renewables grew."]},
+  "X exceeded Y by [n] points": {
+    ex2:["The figure for men exceeded that for women by 15 percentage points.",
+         "Le chiffre des hommes a dépassé celui des femmes de 15 points de pourcentage."],
+    ko:["Exports exceeded imports by 15 percent.",
+        "« 15 percent » = 15 % de la valeur. Pour un écart entre deux pourcentages : percentage points."]},
+  "X was roughly double / triple Y": {
+    ex2:["The number of male students was three times higher than that of female students.",
+         "Le nombre d’étudiants était trois fois plus élevé que celui des étudiantes."],
+    ko:["Car use was two times higher as rail use.",
+        "Deux structures correctes : twice as high AS Y, ou twice higher THAN Y."]},
+  "the gap widened / narrowed": {
+    ex2:["By 2020, the gap between the two had narrowed to just five percentage points.",
+         "En 2020, l’écart entre les deux s’était réduit à seulement cinq points de pourcentage."],
+    ko:["The difference became bigger and bigger.",
+        "Correct mais pauvre : the gap widened steadily est plus précis et plus académique."]},
+
+  "approximately / roughly / around": {
+    ex2:["Around a quarter of respondents chose cycling.",
+         "Environ un quart des personnes interrogées ont choisi le vélo."],
+    ko:["Exactly 33.3% of respondents chose cycling.",
+        "On lit un graphique : n’affichez pas une précision au dixième que la source ne donne pas."]},
+  "just over / just under": {
+    ex2:["Just under 30% of energy came from gas in 2015.",
+         "Un peu moins de 30 % de l’énergie provenait du gaz en 2015."],
+    ko:["Just over 48% of the population lived in cities.",
+        "48 % est en dessous de 50 : dites just under half (ou nearly half)."]},
+  "nearly / almost": {
+    ex2:["Almost all respondents in the oldest group chose television.",
+         "Presque toutes les personnes du groupe le plus âgé ont choisi la télévision."],
+    ko:["Nearly 80%, when the figure is in fact 84%.",
+        "nearly reste EN DESSOUS du seuil. Au-dessus, dites just over 80%."]},
+
+  "in the following years": {
+    ex2:["The figure peaked in 2012; in the following years it declined steadily.",
+         "Le chiffre a culminé en 2012 ; au cours des années suivantes, il a reculé régulièrement."]},
+  "over the same period": {
+    ex2:["Rail use doubled over the same period, while car use remained stable.",
+         "L’usage du train a doublé sur la même période, tandis que celui de la voiture est resté stable."]},
+  "by [année]": {
+    ex2:["By the end of the period, renewables had become the leading source.",
+         "À la fin de la période, les renouvelables étaient devenues la première source."],
+    ko:["Until 2030, the figure is projected to reach 70%.",
+        "until = jusqu’à (la durée). Pour l’état atteint à une date : by 2030."]},
+  "from [année] onwards": {
+    ex2:["From 2000 onwards, the two figures moved in opposite directions.",
+         "À partir de 2000, les deux courbes ont évolué en sens inverse."],
+    ko:["Since 2015 onwards, the decline accelerated.",
+        "On ne cumule pas since et onwards : from 2015 onwards ✅."]},
+  "throughout the period": {
+    ex2:["Throughout the period, coal remained the dominant source of electricity.",
+         "Tout au long de la période, le charbon est resté la première source d’électricité."],
+    ko:["During all the period, coal remained dominant.",
+        "On dit throughout the period (ou over the whole period), pas « during all the period »."]},
+
+  "first / subsequently / following this": {
+    ex2:["First, the glass is collected. It is subsequently crushed into small pieces.",
+         "D’abord, le verre est collecté. Il est ensuite broyé en petits morceaux."],
+    ko:["In 2015, the glass is collected.",
+        "Un process diagram ne comporte ni date ni chiffre."]},
+  "once X has occurred": {
+    ex2:["Once the bottles have been sterilised, they are refilled and sealed.",
+         "Une fois que les bouteilles ont été stérilisées, elles sont remplies puis scellées."],
+    ko:["After the bottles were sterilised, they were refilled.",
+        "Un process général se décrit au présent, pas au passé."]},
+  "at the final stage": {
+    ex2:["Finally, the finished product is transported to retailers.",
+         "Enfin, le produit fini est transporté vers les détaillants."],
+    ko:["At the end, the product go to the shops.",
+        "Registre trop familier et verbe mal accordé : at the final stage, the product is transported…"]},
+
+  "was replaced by": {
+    ex2:["The woodland to the north was replaced by a large car park.",
+         "Le bois au nord a été remplacé par un grand parking."],
+    ko:["They replaced the car park by a shopping centre.",
+        "Sur une map, aucun acteur n’est nommé : voix passive obligatoire (was replaced by / with)."]},
+  "was converted into": {
+    ex2:["The library was converted into a community centre.",
+         "La bibliothèque a été transformée en centre communautaire."],
+    ko:["The library was converted in a community centre.",
+        "converted INTO, jamais « converted in »."]},
+  "a new [élément] was constructed": {
+    ex2:["A new marina was constructed on the site of the old harbour.",
+         "Une nouvelle marina a été construite à l’emplacement de l’ancien port."],
+    ko:["They built a new bridge in the east.",
+        "Voix passive : a new bridge was built / was constructed to the east."]},
+  "the area was expanded": {
+    ex2:["The main road was widened and the housing estate was extended eastwards.",
+         "La route principale a été élargie et le lotissement a été étendu vers l’est."],
+    ko:["The area became more big.",
+        "Comparatif incorrect et trop vague : was expanded / was extended / was widened."]},
+  "no significant change was made to…": {
+    ex2:["The church and the main square remained unchanged.",
+         "L’église et la place principale sont restées inchangées."],
+    ko:["Nothing happened in the town centre.",
+        "Trop familier : no significant change was made to the town centre."]}
+};
+
+/* Phrases modèles pour les questions de méthodologie (clé = id de la question) */
+const MEXTRA = {
+  "m3":  ["Overall, the electricity mix shifted away from coal towards renewable sources.",
+          "Overall, coal represented 40% of the mix in 2005 and only 10% in 2025.",
+          "Des chiffres précis dans l’overview : ils appartiennent aux paragraphes de corps."],
+  "m14": ["Car ownership rose steadily, whereas bus use fell over the same period.",
+          "There are four different lines on the graph.",
+          "On décrit les données, jamais l’apparence du graphique."],
+  "m16": ["Nearly half of the budget went on housing, while a quarter was spent on transport.",
+          "Housing was 48.2% and transport was 25.3%.",
+          "Un camembert se lit en proportions : nearly half, a quarter, one third…"],
+  "m18": ["Coal fell by 30 percentage points, from 40% to 10%.",
+          "Coal fell by 30 percent, from 40% to 10%.",
+          "« 30 percent » signifierait 30 % de 40, soit 12 points seulement."],
+  "m19": ["The three southern regions all exceeded 60%, whereas the north remained below 30%.",
+          "Region A was 62%. Region B was 65%. Region C was 68%. Region D was 28%.",
+          "Un tableau se décrit par regroupements, pas ligne après ligne."],
+  "m24": ["First, the fruit is washed. Next, it is crushed. Once the juice has been extracted, it is pasteurised. Finally, it is bottled.",
+          "Firstly I will explain the process. Secondly I will describe the machines.",
+          "Pas de « I » et pas d’annonce de plan : on enchaîne les étapes."],
+  "m27": ["The cinema was demolished and a hotel was constructed on the site.",
+          "They destroyed the cinema and made a hotel.",
+          "Voix passive et verbes précis : was demolished, was constructed."],
+  "m30": ["The sharpest change occurred between 2015 and 2018.",
+          "The sharpest change occurred because of the financial crisis.",
+          "La cause n’est jamais dans les données : ne la mentionnez pas."],
+  "m31": ["Only three categories changed significantly; the rest remained broadly stable.",
+          "In 2010 it was 21%, in 2011 22%, in 2012 24%, in 2013 25%…",
+          "Énumérer chaque valeur n’est pas décrire : sélectionnez."],
+  "m32": ["At its peak, spending on housing was more than three times that on transport.",
+          "All six categories are shown in the chart.",
+          "Ce n’est pas une comparaison, juste une description du graphique."],
+  "m36": ["The beans are dried and then exported. / The park was extended towards the river.",
+          "Workers dry the beans. / The council extended the park.",
+          "Process et maps : aucun acteur, donc voix passive."],
+  "m39": ["Norway recorded the highest figure, at just over 60%.",
+          "Norway recorded the most high figure.",
+          "Adjectif court : the highest (et higher than au comparatif)."],
+  "m41": ["Overall, the electricity mix shifted dramatically away from fossil fuels towards renewable sources.",
+          "Coal was 40% in 2005 and 10% in 2025.",
+          "Tendance d’ensemble et verbes forts d’un côté ; chiffres recopiés de l’autre."],
+  "m42": ["Coal collapsed, while renewables overtook every other category.",
+          "Coal was less and renewables were more.",
+          "Verbes plats : préférez collapsed, overtook, shifted."],
+  "m43": ["Coal collapsed from the dominant source in 2005 to a minor one by 2025.",
+          "Coal went from 40% to 10% between 2005 and 2025.",
+          "Le bon overview qualifie la place du charbon, sans donner de valeur."],
+  "m44": ["…while renewables overtook every other category to become the leading source.",
+          "…while renewables reached 50% in 2025.",
+          "Comparaison globale plutôt qu’une valeur chiffrée."],
+  "m0":  ["The line graph illustrates how electricity was generated in Germany between 2005 and 2025.",
+          "The graph below shows the electricity generation in Germany between 2005 and 2025.",
+          "Consigne recopiée mot pour mot : il faut la reformuler."],
+  "m2":  ["Overall, renewables replaced coal as the leading source of electricity.",
+          "Overall, coal fell from 40% to 10% while renewables rose from 10% to 50%.",
+          "Des chiffres précis dans l’overview : ils appartiennent au corps du texte."],
+  "m5":  ["The three southern regions all recorded figures above 60%, whereas the northern ones remained below 30%.",
+          "Region A was 62%. Region B was 65%. Region C was 68%. Region D was 28%.",
+          "Liste plate : aucune logique de regroupement."],
+  "m6":  ["Renewables overtook coal in 2020.",
+          "Renewables overtook coal in 2020, which is a very positive development.",
+          "« which is positive » est une opinion : interdite en Task 1."],
+  "m7":  ["Coal declined steadily over the period.",
+          "Coal declined because of new environmental policies.",
+          "Spéculation sur les causes : le graphique ne dit rien des politiques publiques."],
+  "m15": ["Cars accounted for nearly half of all journeys, compared with a quarter for buses.",
+          "Cars increased a lot between the two pie charts.",
+          "Un camembert compare des parts d’un tout, pas des tendances."],
+  "m17": ["Coal accounted for 40% in 2005, compared with just 10% in 2025 — a fall of 30 percentage points.",
+          "…a fall of 30 percent.",
+          "30 percent voudrait dire 30 % de la valeur de départ, soit 12 points seulement."],
+  "m20": ["The three southern regions all exceeded 60%, whereas the north remained below 30%.",
+          "Region A was 62%, region B was 65%, region C was 68%…",
+          "Description ligne par ligne : c’est exactement ce qu’il faut éviter."],
+  "m21": ["The water is filtered and then bottled.",
+          "The water was filtered and then bottled.",
+          "Process général : présent simple, pas de passé."],
+  "m22": ["The beans are then roasted and ground.",
+          "Then workers roast and grind the beans.",
+          "On ne nomme pas d’acteur dans un process : voix passive."],
+  "m23": ["First, the raw material is delivered to the factory.",
+          "In 2015, the raw material is delivered to the factory.",
+          "Ni dates ni chiffres dans un process diagram."],
+  "m25": ["The farmland in the west was replaced by a residential area.",
+          "They replaced the farmland with houses.",
+          "Map = voix passive, sans acteur."],
+  "m26": ["In the north of the town, a new hospital was built. To the south, the woodland was cleared.",
+          "First the school changed, then the shop, then the road, then the park…",
+          "Structurez par zone géographique, pas élément par élément."],
+  "m28": ["Overall, while total visitor numbers rose steadily, the proportion travelling by air fell — a contrast visible in both charts.",
+          "The first chart shows visitor numbers. The second chart shows transport modes.",
+          "Les deux graphiques sont traités séparément : l’overview doit les relier."],
+  "m29": ["The highest figure was recorded in Spain, while Japan remained the lowest throughout; the sharpest change occurred in Brazil.",
+          "Spain was 62%, Japan 28%, Brazil 45%, Italy 51%, Chile 39%, Norway 57%…",
+          "Tout décrire, c’est ne rien sélectionner."],
+  "m33": ["The figure increased between 2010 and 2020.",
+          "The figure increases between 2010 and 2020.",
+          "Données datées et passées : passé simple obligatoire."],
+  "m34": ["At the first stage, the water is filtered.",
+          "At the first stage, the water was filtered.",
+          "Process général sans dates : présent simple."],
+  "m35": ["The population is projected to reach nine billion by 2050.",
+          "The population will be nine billion in 2050.",
+          "Une prévision se marque : is projected to / is expected to."],
+  "m37": ["Car ownership was twice as high as bicycle ownership.",
+          "Car ownership was two times higher as bicycle ownership.",
+          "twice as high AS, ou twice higher THAN — jamais « higher as »."],
+  "m38": ["The figure for men was marginally higher than that for women.",
+          "The figure for men was dramatically higher than that for women (21% vs 23%).",
+          "Deux points d’écart : dramatically est disproportionné."],
+  "m40": ["Overall, the electricity mix shifted away from fossil fuels towards renewable sources.",
+          "Coal was 40% in 2005 and 10% in 2025.",
+          "Chiffres recopiés, aucune synthèse."]
+};
+
+VOCAB.forEach(function(v){
+  const e = EXTRA[v.en];
+  if(!e) return;
+  if(e.ex2){ v.ex2En = e.ex2[0]; v.ex2Fr = e.ex2[1]; }
+  if(e.ko){ v.koEn = e.ko[0]; v.koWhy = e.ko[1]; }
+});
+
 /* Questions de méthodologie : {id, topic, q, opts, a, exp} */
 const TOPICS = {
   structure:"Structure",
@@ -953,10 +1306,31 @@ function artForMethod(m){
   if(t.indexOf("introduction")>-1) return ART.intro;
   return ART.structure;
 }
-METHOD.forEach(function(m){ m.art = artForMethod(m); });
+METHOD.forEach(function(m){
+  m.art = artForMethod(m);
+  const e = MEXTRA[m.id];
+  if(e){ m.okEn = e[0]; m.koEn = e[1]; m.koWhy = e[2]; }
+});
 
 const ALL = VOCAB.concat(METHOD);
 const BY_ID = {}; ALL.forEach(function(it){ BY_ID[it.id]=it; });
+
+/* Bloc d’exemples : ✅ emplois corrects, ❌ formulation à éviter */
+function exBlock(cls, mark, en, note){
+  return '<div class="ex '+cls+'"><i>'+mark+" "+en+"</i>" + (note ? "<span>"+note+"</span>" : "") + "</div>";
+}
+function examplesHTML(it){
+  let h = "";
+  if(it.kind==="vocab"){
+    h += exBlock("", "✅", it.exEn, it.exFr);
+    if(it.ex2En) h += exBlock("", "✅", it.ex2En, it.ex2Fr);
+    if(it.koEn)  h += exBlock("ko", "❌", it.koEn, it.koWhy);
+  }else{
+    if(it.okEn) h += exBlock("", "✅", it.okEn, "");
+    if(it.koEn) h += exBlock("ko", "❌", it.koEn, it.koWhy);
+  }
+  return h ? '<div class="exwrap">'+h+"</div>" : "";
+}
 
 /* ============================================================
    ÉTAT + RÉPÉTITION ESPACÉE
@@ -1123,8 +1497,7 @@ function nextCard(){
     $("fArt").innerHTML = ART[fCard.art] || "";
     $("fTip").style.display = "block";
     $("fTip").innerHTML = "💡 " + fCard.tip;
-    $("fEx").style.display = "block";
-    $("fEx").innerHTML = "<i>" + fCard.exEn + "</i><span>" + fCard.exFr + "</span>";
+    $("fEx").innerHTML = examplesHTML(fCard);
   }else{
     $("fFront").textContent = fCard.q;
     $("fSubFront").textContent = "Question de méthodologie";
@@ -1132,7 +1505,7 @@ function nextCard(){
     $("fArt").innerHTML = fCard.art || "";
     $("fTip").style.display = "block";
     $("fTip").innerHTML = "💡 " + fCard.exp;
-    $("fEx").style.display = "none";
+    $("fEx").innerHTML = examplesHTML(fCard);
   }
   $("fFront").className = "term" + ($("fFront").textContent.length > 58 ? " long" : "");
   $("fBack").className  = "term" + ($("fBack").textContent.length  > 58 ? " long" : "");
@@ -1225,10 +1598,7 @@ function nextQuestion(){
 }
 function quizArt(){
   const a = qItem.kind==="vocab" ? ART[qItem.art] : qItem.art;
-  const ex = qItem.kind==="vocab"
-    ? '<div class="ex" style="margin-top:8px"><i>'+qItem.exEn+"</i><span>"+qItem.exFr+"</span></div>"
-    : "";
-  return (a||"") + ex;
+  return (a||"") + examplesHTML(qItem);
 }
 function answerQuiz(i, btn){
   if(qAnswered) return;
@@ -1306,7 +1676,9 @@ function nextSort(){
   if($("p-sort").classList.contains("on")) startTimer();
 }
 function sortArt(){
-  return (ART[sortItem.art]||"") + '<div class="ex" style="margin-top:8px">💡 '+sortItem.tip+"</div>";
+  return (ART[sortItem.art]||"")
+    + '<div class="tip" style="margin-top:8px">💡 '+sortItem.tip+"</div>"
+    + examplesHTML(sortItem);
 }
 function answerSort(k, btn){
   if(sortAnswered) return;
@@ -1347,7 +1719,13 @@ $("sortNext").addEventListener("click", nextSort);
     html += "<h4 style=\"margin:16px 0 4px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:var(--acc2)\">"
          + CATS[k].emoji+" "+CATS[k].label+"</h4><table>";
     rows.forEach(function(v){
-      html += "<tr><td class=\"en\">"+v.en+"</td><td>"+v.fr+"</td></tr>";
+      html += "<tr><td class=\"en\" style=\"border-bottom:none;padding-bottom:2px\">"+v.en+"</td>"
+           +  "<td style=\"border-bottom:none;padding-bottom:2px\">"+v.fr+"</td></tr>"
+           +  "<tr><td colspan=\"2\" class=\"exrow\">"
+           +  '<div><span class="o">✅</span> '+v.exEn+" <em>— "+v.exFr+"</em></div>"
+           +  (v.ex2En ? '<div><span class="o">✅</span> '+v.ex2En+" <em>— "+v.ex2Fr+"</em></div>" : "")
+           +  (v.koEn ? '<div><span class="k">❌</span> '+v.koEn+" <em>— "+v.koWhy+"</em></div>" : "")
+           +  "</td></tr>";
     });
     html += "</table>";
   });
