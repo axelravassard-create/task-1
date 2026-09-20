@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>IELTS Writing Task 1 — Entraînement</title>
+<style>
+:root{
+  --bg:#0f172a; --bg2:#131f3a; --card:#1b2744; --card2:#22304f;
+  --txt:#eef2ff; --muted:#9fb0d0; --line:#2e3d60;
+  --acc:#6ee7b7; --acc2:#38bdf8; --warn:#fbbf24; --bad:#fb7185; --good:#34d399;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --r:16px;
+}
+:root[data-theme="light"]{
+  --bg:#f4f7fb; --bg2:#ffffff; --card:#ffffff; --card2:#eef3fb;
+  --txt:#12203a; --muted:#5b6b88; --line:#dbe4f0;
+  --acc:#0f9d76; --acc2:#0284c7; --warn:#b45309; --bad:#e11d48; --good:#0f9d76;
+  --shadow:0 8px 24px rgba(16,34,64,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 600px at 20% -10%, var(--bg2), var(--bg)) fixed;
+  color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.5; -webkit-text-size-adjust:100%;
+  padding-bottom:40px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 0}
+.logo{font-weight:800;font-size:16px;letter-spacing:.2px;flex:1;min-width:0;line-height:1.25}
+.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.iconbtn{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;
+  padding:8px 10px;font-size:14px;cursor:pointer}
+.iconbtn:active{transform:scale(.96)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 8px;text-align:center}
+.stat b{display:block;font-size:16px;line-height:1.2}
+.stat span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--muted);
+  padding:9px 13px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.panel{display:none;animation:fade .25s ease}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+select,.chip{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;
+  padding:8px 10px;font-size:13px;font-family:inherit}
+.chip{cursor:pointer;font-weight:600}
+.chip.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.btn{border:none;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer;
+  font-family:inherit;background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.btn.good{background:rgba(52,211,153,.18);border-color:var(--good);color:var(--good)}
+.btn.bad{background:rgba(251,113,133,.16);border-color:var(--bad);color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 140px}
+.muted{color:var(--muted);font-size:13px}
+.tagcat{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--acc2);background:color-mix(in srgb,var(--acc2) 14%,transparent);border-radius:999px;padding:3px 10px}
+
+/* Flashcards */
+.flipwrap{perspective:1200px;margin:6px 0 14px}
+.flip{position:relative;width:100%;min-height:250px;transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+.flip.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;overflow:auto}
+.face.back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--card2),var(--card))}
+.face .term{font-size:23px;font-weight:800;line-height:1.3}
+.face .term.long{font-size:17.5px;line-height:1.35}
+.face .sub.small{font-size:12px;line-height:1.45}
+.face .sub{font-size:13px;color:var(--muted)}
+.hint{font-size:11px;color:var(--muted);position:absolute;bottom:10px;left:0;right:0;text-align:center}
+
+/* Quiz */
+.q{font-size:18px;font-weight:700;margin:6px 0 14px;line-height:1.35}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--card2);border:1px solid var(--line);color:var(--txt);
+  border-radius:12px;padding:13px 14px;font-size:14.5px;font-family:inherit;cursor:pointer;line-height:1.35}
+.opt:hover{border-color:var(--acc2)}
+.opt.correct{background:rgba(52,211,153,.18);border-color:var(--good)}
+.opt.wrong{background:rgba(251,113,133,.16);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;padding:12px;border-radius:12px;font-size:14px;border:1px solid var(--line);background:var(--card2)}
+.fb b{color:var(--acc)}
+.fb.err b{color:var(--bad)}
+
+/* Classement */
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+@media(min-width:620px){.cats{grid-template-columns:repeat(3,1fr)}}
+.catbtn{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:12px;
+  padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;line-height:1.25}
+.catbtn.correct{background:rgba(52,211,153,.2);border-color:var(--good)}
+.catbtn.wrong{background:rgba(251,113,133,.18);border-color:var(--bad)}
+.timerbar{height:7px;border-radius:999px;background:var(--card2);overflow:hidden;margin-top:12px;border:1px solid var(--line)}
+.timerbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:100%}
+.bigterm{font-size:24px;font-weight:800;text-align:center;padding:18px 6px;line-height:1.3}
+
+/* Mémo */
+.acc{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;background:var(--card)}
+.acc>summary{cursor:pointer;padding:14px 16px;font-weight:700;font-size:15px;list-style:none;display:flex;gap:10px;align-items:center}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary::after{content:"+";margin-left:auto;color:var(--muted);font-size:20px}
+.acc[open]>summary::after{content:"–"}
+.accbody{padding:0 16px 16px;font-size:14.5px}
+.accbody ul{padding-left:20px;margin:8px 0}
+.accbody li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td.en{font-weight:700}
+.box{border-radius:12px;padding:12px 14px;margin:10px 0;font-size:14px;border-left:4px solid}
+.box.bad{background:rgba(251,113,133,.10);border-color:var(--bad)}
+.box.good{background:rgba(52,211,153,.10);border-color:var(--good)}
+.box.warn{background:rgba(251,191,36,.10);border-color:var(--warn)}
+.box h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+kbd{background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
+
+/* Progrès */
+.bar{height:9px;background:var(--card2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.plist{display:grid;gap:10px;margin-top:10px}
+.pitem{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:13.5px}
+.pitem .bar{grid-column:1/3}
+.revlist{display:grid;gap:8px;margin-top:10px}
+.revitem{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;font-weight:800;padding:10px 18px;
+  border-radius:999px;font-size:14px;pointer-events:none;transition:.3s;z-index:50;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:22px 0 10px}
+.center{text-align:center}
+.sp{height:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div class="logo">📊 IELTS Writing Task 1
+        <small>Entraînement mémoire — vocabulaire &amp; méthodologie</small>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="Thème clair / sombre">🌙</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sScore">0</b><span>Score</span></div>
+      <div class="stat"><b id="sStreak">0</b><span>Série</span></div>
+      <div class="stat"><b id="sAcc">—</b><span>Précision</span></div>
+      <div class="stat"><b id="sMast">0/0</b><span>Maîtrisé</span></div>
+    </div>
+    <nav id="nav">
+      <button class="tab on" data-p="flash">🎴 Flashcards</button>
+      <button class="tab" data-p="quiz">❓ Quiz</button>
+      <button class="tab" data-p="sort">🗂️ Classement rapide</button>
+      <button class="tab" data-p="memo">📘 Mémo</button>
+      <button class="tab" data-p="prog">📈 Progrès</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ===================== FLASHCARDS ===================== -->
+<section class="panel on" id="p-flash">
+  <div class="toolbar">
+    <select id="fDeck"></select>
+    <select id="fDir">
+      <option value="en">Anglais → Français</option>
+      <option value="fr">Français → Anglais</option>
+      <option value="mix" selected>Aléatoire</option>
+    </select>
+    <span class="muted" id="fCount"></span>
+  </div>
+
+  <div class="flipwrap">
+    <div class="flip" id="flip">
+      <div class="face front">
+        <span class="tagcat" id="fCat">—</span>
+        <div class="term" id="fFront">…</div>
+        <div class="sub" id="fSubFront"></div>
+        <div class="hint">Touchez la carte pour la retourner</div>
+      </div>
+      <div class="face back">
+        <span class="tagcat" id="fCatB">—</span>
+        <div class="term" id="fBack">…</div>
+        <div class="sub" id="fSubBack"></div>
+        <div class="hint">Touchez pour revenir</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button class="btn bad" id="fAgain">🔁 À revoir</button>
+    <button class="btn good" id="fKnow">✅ Je sais</button>
+  </div>
+  <div class="sp"></div>
+  <button class="btn" id="fFlipBtn" style="width:100%">🔄 Retourner la carte</button>
+  <p class="muted center" style="margin-top:14px">Les cartes marquées « à revoir » reviennent beaucoup plus souvent.</p>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section class="panel" id="p-quiz">
+  <div class="toolbar">
+    <button class="chip on" data-qm="all">Tout</button>
+    <button class="chip" data-qm="vocab">Vocabulaire</button>
+    <button class="chip" data-qm="method">Méthodologie</button>
+  </div>
+  <div class="card">
+    <span class="tagcat" id="qTag">—</span>
+    <div class="q" id="qText">…</div>
+    <div class="opts" id="qOpts"></div>
+    <div class="fb" id="qFb" style="display:none"></div>
+    <div class="sp"></div>
+    <button class="btn primary" id="qNext" style="width:100%;display:none">Question suivante →</button>
+  </div>
+</section>
+
+<!-- ===================== CLASSEMENT RAPIDE ===================== -->
+<section class="panel" id="p-sort">
+  <div class="toolbar">
+    <button class="chip on" data-sm="10">⏱️ Chrono 10 s</button>
+    <button class="chip" data-sm="0">🧘 Sans chrono</button>
+    <span class="muted" id="sortInfo"></span>
+  </div>
+  <div class="card">
+    <p class="muted center" style="margin:0">Dans quelle catégorie ranger cette expression ?</p>
+    <div class="bigterm" id="sortTerm">…</div>
+    <div class="timerbar"><i id="sortTimer"></i></div>
+    <div class="cats" id="sortCats"></div>
+    <div class="fb" id="sortFb" style="display:none"></div>
+    <div class="sp"></div>
+    <button class="btn primary" id="sortNext" style="width:100%;display:none">Suivant →</button>
+  </div>
+</section>
+
+<!-- ===================== MÉMO ===================== -->
+<section class="panel" id="p-memo">
+  <p class="muted">Toute la fiche de révision. Rien à mémoriser ici tout de suite : servez-vous-en pour vérifier vos réponses.</p>
+
+  <details class="acc" open><summary>⏱️ 1. Structure et minutage</summary>
+    <div class="accbody">
+      <ul>
+        <li><b>Introduction (1 phrase)</b> : reformuler la consigne avec ses propres mots.</li>
+        <li><b>Overview (2–3 phrases, OBLIGATOIRE)</b> : les tendances générales les plus frappantes, <b>sans aucun chiffre précis</b>.</li>
+        <li><b>Corps (2 paragraphes)</b> : les détails chiffrés, regroupés logiquement — <b>jamais une liste plate</b>.</li>
+        <li><b>Jamais d&rsquo;opinion</b>, <b>jamais de spéculation sur les causes</b>.</li>
+        <li><b>150 mots minimum.</b></li>
+      </ul>
+      <div class="box warn"><h4>Minutage sur 20 minutes</h4>
+        <b>2 min</b> analyse des données → <b>3 min</b> préparation mentale de l&rsquo;overview → <b>13 min</b> rédaction → <b>2 min</b> relecture.
+      </div>
+    </div>
+  </details>
+
+  <details class="acc"><summary>📊 2. Méthodologie par type de graphique</summary>
+    <div class="accbody">
+      <table>
+        <tr><th>Type</th><th>Ce qu&rsquo;il faut faire</th></tr>
+        <tr><td class="en">Bar chart / Line graph</td><td>Tendances et comparaisons entre catégories ou dans le temps.</td></tr>
+        <tr><td class="en">Pie chart (camembert)</td><td>Comparer des <b>parts d&rsquo;un tout</b>, pas des tendances. Utiliser fractions / proportions. Une différence entre deux pourcentages se dit en <b>percentage points</b>, jamais en <i>percent</i>.</td></tr>
+        <tr><td class="en">Table</td><td>Repérer les <b>regroupements</b> avant d&rsquo;écrire (plus haut, plus bas, stable, exception). Ne <b>jamais</b> décrire ligne par ligne dans l&rsquo;ordre.</td></tr>
+        <tr><td class="en">Process diagram</td><td>Pas de dates ni de chiffres. <b>Voix passive</b>, <b>présent simple</b> général, connecteurs séquentiels : <i>first, next, then, after this, once X has occurred, finally</i>.</td></tr>
+        <tr><td class="en">Map (avant / après)</td><td>Transformations spatiales, <b>voix passive</b> : <i>was replaced by, was converted into, was demolished, was constructed, was widened, was extended</i>. Structurer <b>par zone géographique</b>.</td></tr>
+        <tr><td class="en">Graphiques multiples / mixtes</td><td>L&rsquo;overview doit <b>faire le lien entre les deux graphiques</b> — jamais les traiter séparément.</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="acc"><summary>🎯 3. Sélection des données — la règle des 4 à 6</summary>
+    <div class="accbody">
+      <p>On sélectionne <b>4 à 6 éléments</b>, jamais tous les chiffres :</p>
+      <ul>
+        <li>la valeur <b>la plus haute</b> ;</li>
+        <li>la valeur <b>la plus basse</b> ;</li>
+        <li>le <b>changement le plus marqué</b> ;</li>
+        <li>une <b>exception notable</b> ;</li>
+        <li>une <b>comparaison frappante</b> entre deux séries.</li>
+      </ul>
+      <div class="box bad"><h4>Erreur classique</h4>Décrire chaque chiffre du graphique.</div>
+    </div>
+  </details>
+
+  <details class="acc"><summary>🔤 4. Grammaire spécifique</summary>
+    <div class="accbody">
+      <ul>
+        <li><b>Passé simple</b> → données datées historiques : <i>increased between 2010 and 2020</i>.</li>
+        <li><b>Présent simple</b> → process général sans dates : <i>the water is filtered</i>.</li>
+        <li><b>is projected to / is expected to</b> → données de prévision future.</li>
+        <li><b>Voix passive</b> → quasi systématique pour les <b>process</b> et les <b>maps</b>.</li>
+        <li><b>Comparatifs / superlatifs</b> : <i>higher than, the highest, twice as high as, marginally / considerably higher</i>.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="acc"><summary>✍️ 5. Exemple annoté : bon vs mauvais overview</summary>
+    <div class="accbody">
+      <div class="box bad"><h4>❌ Overview faible</h4>
+        <i>Coal was 40% in 2005 and 10% in 2025. Renewables was 10% in 2005 and 50% in 2025.</i>
+        <p style="margin:8px 0 0">→ Juste des chiffres recopiés, aucune synthèse.</p>
+      </div>
+      <div class="box good"><h4>✅ Overview réussi</h4>
+        <i>Overall, the country&rsquo;s electricity mix shifted dramatically away from fossil fuels towards renewable sources: coal collapsed from the dominant source in 2005 to a minor one by 2025, while renewables overtook every other category to become the leading source of electricity generation.</i>
+        <p style="margin:8px 0 0">→ Capture la tendance d&rsquo;ensemble <b>sans chiffres précis</b>, avec des <b>verbes de tendance forts</b> (<i>shifted, collapsed, overtook</i>).</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="acc"><summary>📚 6. Vocabulaire complet (anglais → français)</summary>
+    <div class="accbody" id="memoVocab"></div>
+  </details>
+</section>
+
+<!-- ===================== PROGRÈS ===================== -->
+<section class="panel" id="p-prog">
+  <div class="card">
+    <div class="row">
+      <div class="center"><b style="font-size:22px" id="gScore">0</b><div class="muted">Score total</div></div>
+      <div class="center"><b style="font-size:22px" id="gAns">0</b><div class="muted">Réponses</div></div>
+      <div class="center"><b style="font-size:22px" id="gAcc">—</b><div class="muted">Précision</div></div>
+      <div class="center"><b style="font-size:22px" id="gBest">0</b><div class="muted">Meilleure série</div></div>
+    </div>
+    <div class="sp"></div>
+    <div class="muted" style="margin-bottom:6px">Maîtrise globale — <span id="gMast">0/0</span> notions maîtrisées (3 bonnes réponses d&rsquo;affilée)</div>
+    <div class="bar"><i id="gBar" style="width:0%"></i></div>
+  </div>
+
+  <h2 class="sec">Maîtrise par catégorie</h2>
+  <div class="plist" id="progList"></div>
+
+  <h2 class="sec">À revoir en priorité</h2>
+  <div class="revlist" id="revList"></div>
+
+  <div class="sp"></div>
+  <button class="btn bad" id="resetBtn" style="width:100%">🗑️ Réinitialiser toute la progression</button>
+</section>
+
+</main>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+
+/* ============================================================
+   DONNÉES
+   ============================================================ */
+
+const CATS = {
+  intro:   {label:"Introduction / reformulation", emoji:"✍️"},
+  overview:{label:"Overview",                     emoji:"🔭"},
+  hausse:  {label:"Hausse",                       emoji:"📈"},
+  baisse:  {label:"Baisse",                       emoji:"📉"},
+  stable:  {label:"Stabilité / fluctuation",      emoji:"〰️"},
+  nom:     {label:"Nom de tendance",              emoji:"🏷️"},
+  degre:   {label:"Degré",                        emoji:"🎚️"},
+  compar:  {label:"Comparaison",                  emoji:"⚖️"},
+  approx:  {label:"Approximation",                emoji:"≈"},
+  temps:   {label:"Temps",                        emoji:"⏳"},
+  process: {label:"Process",                      emoji:"⚙️"},
+  maps:    {label:"Maps",                         emoji:"🗺️"}
+};
+
+/* [anglais, français, catégorie] */
+const RAW_VOCAB = [
+  ["illustrates / depicts / shows / presents", "illustre / représente / montre / présente", "intro"],
+  ["comparing / relating to / regarding", "comparant / relatif à / concernant", "intro"],
+
+  ["overall, it is clear that…", "globalement, il est clair que…", "overview"],
+  ["a notable trend is…", "une tendance notable est…", "overview"],
+  ["the most striking feature is…", "l’élément le plus frappant est…", "overview"],
+  ["one general pattern is that…", "une tendance générale est que…", "overview"],
+
+  ["increase / rise / grow", "augmenter", "hausse"],
+  ["climb / pick up", "grimper / repartir à la hausse", "hausse"],
+  ["surge", "bondir (hausse brutale)", "hausse"],
+  ["soar", "s’envoler (hausse très forte)", "hausse"],
+
+  ["decrease / decline / fall / drop", "diminuer / chuter", "baisse"],
+  ["plummet", "s’effondrer (chute très forte)", "baisse"],
+  ["dip", "baisser légèrement", "baisse"],
+
+  ["remain stable / level off / plateau", "se stabiliser", "stable"],
+  ["fluctuate", "fluctuer", "stable"],
+  ["vary erratically", "varier de façon irrégulière", "stable"],
+
+  ["an increase / a rise / a growth / a surge", "une augmentation / une hausse / une croissance / une envolée", "nom"],
+  ["a decrease / a decline / a fall / a drop", "une diminution / un déclin / une chute / une baisse", "nom"],
+
+  ["dramatically / sharply / significantly", "de façon spectaculaire / brusquement / significativement", "degre"],
+  ["substantially / considerably", "substantiellement / considérablement", "degre"],
+  ["steadily / gradually / moderately", "régulièrement / graduellement / modérément", "degre"],
+  ["slightly / marginally", "légèrement / marginalement", "degre"],
+
+  ["compared to / in contrast to", "comparé à / contrairement à", "compar"],
+  ["whereas / while / unlike", "alors que / tandis que / à la différence de", "compar"],
+  ["X exceeded Y by [n] points", "X a dépassé Y de [n] points", "compar"],
+  ["X was roughly double / triple Y", "X était environ le double / triple de Y", "compar"],
+  ["the gap widened / narrowed", "l’écart s’est creusé / réduit", "compar"],
+
+  ["approximately / roughly / around", "approximativement / environ / autour de", "approx"],
+  ["just over / just under", "juste au-dessus / juste en dessous de", "approx"],
+  ["nearly / almost", "presque", "approx"],
+
+  ["in the following years", "au cours des années suivantes", "temps"],
+  ["over the same period", "sur la même période", "temps"],
+  ["by [année]", "d’ici [année]", "temps"],
+  ["from [année] onwards", "à partir de [année]", "temps"],
+  ["throughout the period", "tout au long de la période", "temps"],
+
+  ["first / subsequently / following this", "d’abord / par la suite / à la suite de cela", "process"],
+  ["once X has occurred", "une fois que X s’est produit", "process"],
+  ["at the final stage", "à la dernière étape", "process"],
+
+  ["was replaced by", "a été remplacé par", "maps"],
+  ["was converted into", "a été transformé en", "maps"],
+  ["a new [élément] was constructed", "un nouveau [élément] a été construit", "maps"],
+  ["the area was expanded", "la zone a été agrandie", "maps"],
+  ["no significant change was made to…", "aucun changement significatif n’a été apporté à…", "maps"]
+];
+
+const VOCAB = RAW_VOCAB.map(function(v,i){
+  return {id:"v"+i, kind:"vocab", en:v[0], fr:v[1], cat:v[2]};
+});
+
+/* Questions de méthodologie : {id, topic, q, opts, a, exp} */
+const TOPICS = {
+  structure:"Structure",
+  timing:"Minutage",
+  chart:"Type de graphique",
+  selection:"Sélection des données",
+  grammar:"Grammaire",
+  example:"Exemple annoté"
+};
+
+const RAW_METHOD = [
+  ["structure","Combien de phrases doit faire l’introduction ?",
+    ["1 phrase qui reformule la consigne avec ses propres mots","2 à 3 phrases qui résument les tendances","Un paragraphe complet avec les chiffres clés","Aucune, on commence directement par les données"],0,
+    "L’introduction fait UNE phrase : on reformule la consigne (paraphrase), sans recopier l’énoncé."],
+  ["structure","L’overview est-il obligatoire ?",
+    ["Oui, il est OBLIGATOIRE (2–3 phrases)","Non, c’est un bonus si on a le temps","Seulement pour les process diagrams","Seulement si le graphique a plus de 4 séries"],0,
+    "L’overview est obligatoire et fait 2 à 3 phrases : sans lui, la note est plafonnée."],
+  ["structure","Que doit contenir l’overview ?",
+    ["Les tendances générales les plus frappantes, sans aucun chiffre précis","Les 3 chiffres les plus élevés du graphique","Une explication des causes du phénomène","Votre avis sur l’évolution observée"],0,
+    "Overview = synthèse des tendances les plus frappantes, SANS aucun chiffre précis."],
+  ["structure","Peut-on mettre des chiffres précis dans l’overview ?",
+    ["Non, aucun chiffre précis","Oui, deux ou trois maximum","Oui, mais seulement des pourcentages","Oui, uniquement la valeur la plus haute"],0,
+    "Aucun chiffre précis dans l’overview : les chiffres appartiennent aux paragraphes de corps."],
+  ["structure","Combien de paragraphes pour le corps du texte ?",
+    ["2 paragraphes","1 seul paragraphe","3 à 4 paragraphes","Autant que de séries de données"],0,
+    "Le corps se compose de 2 paragraphes de détails chiffrés."],
+  ["structure","Comment organiser les détails chiffrés dans le corps ?",
+    ["Regroupés logiquement, jamais en liste plate","Dans l’ordre d’apparition sur le graphique","Du plus petit chiffre au plus grand","Une phrase par valeur du graphique"],0,
+    "On regroupe les données logiquement — jamais une liste plate qui énumère chaque valeur."],
+  ["structure","Peut-on donner son opinion dans la Task 1 ?",
+    ["Jamais","Oui, dans la conclusion","Oui, si elle est justifiée par les données","Uniquement pour les maps"],0,
+    "Task 1 = description objective. Jamais d’opinion, jamais de spéculation sur les causes."],
+  ["structure","Peut-on expliquer les causes des évolutions observées ?",
+    ["Non, jamais de spéculation sur les causes","Oui, c’est valorisé par les examinateurs","Oui, si on utilise « probably »","Uniquement pour les line graphs"],0,
+    "Aucune spéculation sur les causes : on décrit ce que montrent les données, rien de plus."],
+  ["structure","Quel est le nombre de mots minimum ?",
+    ["150 mots","100 mots","200 mots","250 mots"],0,
+    "150 mots minimum pour la Task 1 (en dessous : pénalité)."],
+  ["timing","Sur les 20 minutes, combien de temps pour l’analyse des données ?",
+    ["2 min","5 min","8 min","30 secondes"],0,
+    "Minutage : 2 min analyse — 3 min préparation de l’overview — 13 min rédaction — 2 min relecture."],
+  ["timing","Combien de temps consacrer à la préparation mentale de l’overview ?",
+    ["3 min","1 min","6 min","10 min"],0,
+    "3 minutes de préparation mentale de l’overview : c’est la partie qui rapporte le plus de points."],
+  ["timing","Combien de temps pour la rédaction ?",
+    ["13 min","10 min","16 min","18 min"],0,
+    "13 minutes de rédaction sur les 20 minutes totales."],
+  ["timing","Combien de temps pour la relecture ?",
+    ["2 min","5 min","0 min, on n’a jamais le temps","30 secondes"],0,
+    "2 minutes de relecture en fin d’épreuve."],
+  ["timing","Quel est le minutage complet recommandé sur 20 minutes ?",
+    ["2 analyse / 3 overview / 13 rédaction / 2 relecture","5 analyse / 5 overview / 8 rédaction / 2 relecture","1 analyse / 1 overview / 16 rédaction / 2 relecture","4 analyse / 4 overview / 10 rédaction / 2 relecture"],0,
+    "2 min analyse → 3 min overview → 13 min rédaction → 2 min relecture."],
+  ["chart","Que montrent un bar chart et un line graph ?",
+    ["Des tendances et des comparaisons entre catégories ou dans le temps","Uniquement des parts d’un tout","Des étapes successives d’un processus","Des transformations spatiales"],0,
+    "Bar chart / line graph : tendances et comparaisons entre catégories ou dans le temps."],
+  ["chart","Que compare-t-on dans un pie chart ?",
+    ["Des parts d’un tout, pas des tendances","L’évolution dans le temps d’une série","Les étapes d’un processus","Les changements géographiques"],0,
+    "Le camembert compare des parts d’un tout — pas des tendances."],
+  ["chart","Quel vocabulaire privilégier pour un pie chart ?",
+    ["Les fractions et les proportions","Les verbes de tendance forts (soar, plummet)","Les connecteurs séquentiels","La voix passive"],0,
+    "Pie chart : on utilise fractions et proportions (a quarter, nearly half, one third…)."],
+  ["chart","Comment exprimer une différence entre deux pourcentages ?",
+    ["En « percentage points »","En « percent »","En « percentile »","En « points of percent »"],0,
+    "Passer de 40 % à 10 % = une baisse de 30 PERCENTAGE POINTS, jamais « 30 percent »."],
+  ["chart","« Coal fell by 30 ___ between 2005 and 2025 » (de 40 % à 10 %)",
+    ["percentage points","percent","percentiles","percentages"],0,
+    "Une différence entre deux pourcentages se dit toujours en percentage points."],
+  ["chart","Que faire AVANT d’écrire sur une table (tableau) ?",
+    ["Repérer les regroupements : plus haut, plus bas, stable, exception","Convertir toutes les valeurs en pourcentages","Compter le nombre de lignes et de colonnes","Calculer la moyenne de chaque colonne"],0,
+    "Table : on repère d’abord les regroupements (plus haut, plus bas, stable, exception)."],
+  ["chart","Quelle erreur ne jamais commettre avec une table ?",
+    ["Décrire ligne par ligne dans l’ordre du tableau","Regrouper les valeurs hautes ensemble","Signaler une exception","Comparer deux colonnes"],0,
+    "Ne jamais décrire ligne par ligne dans l’ordre : il faut regrouper."],
+  ["chart","Quel temps verbal pour un process diagram général ?",
+    ["Le présent simple","Le passé simple","Le futur avec « will »","Le present perfect"],0,
+    "Process sans dates = présent simple général : « the water is filtered »."],
+  ["chart","Quelle voix utiliser pour décrire un process diagram ?",
+    ["La voix passive","La voix active à la 1ère personne","La voix active avec « we »","Peu importe, les deux se valent"],0,
+    "Process = voix passive quasi systématique (« the mixture is heated »)."],
+  ["chart","Met-on des dates ou des chiffres dans un process diagram ?",
+    ["Non, ni dates ni chiffres","Oui, les dates uniquement","Oui, les chiffres uniquement","Oui, les deux systématiquement"],0,
+    "Un process diagram ne contient ni dates ni chiffres : il décrit des étapes."],
+  ["chart","Quels connecteurs pour un process diagram ?",
+    ["first, next, then, after this, once X has occurred, finally","however, moreover, therefore, in conclusion","whereas, while, unlike, in contrast","approximately, roughly, just over, nearly"],0,
+    "Connecteurs séquentiels : first, next, then, after this, once X has occurred, finally."],
+  ["chart","Quelle voix utiliser pour décrire une map (avant / après) ?",
+    ["La voix passive","La voix active au présent","Le conditionnel","Le present perfect actif"],0,
+    "Map = voix passive : was replaced by, was converted into, was demolished…"],
+  ["chart","Comment structurer la description d’une map ?",
+    ["Par zone géographique","Par ordre alphabétique des bâtiments","Du plus petit au plus grand changement","Élément par élément dans l’ordre de la légende"],0,
+    "On structure par zone géographique (nord / sud, centre / périphérie…)."],
+  ["chart","Quels verbes typiques pour une map ?",
+    ["was replaced by, was converted into, was demolished, was constructed, was widened, was extended","soared, plummeted, levelled off, fluctuated","is filtered, is heated, is transported","exceeded, doubled, narrowed, widened"],0,
+    "Verbes de map à la voix passive : was replaced by / converted into / demolished / constructed / widened / extended."],
+  ["chart","Comment traiter un sujet avec deux graphiques (multiples / mixtes) ?",
+    ["L’overview doit faire le lien entre les deux graphiques","On rédige deux textes séparés l’un après l’autre","On décrit seulement le graphique le plus riche","On fait deux overviews distincts"],0,
+    "Graphiques multiples : l’overview relie les deux graphiques, on ne les traite jamais séparément."],
+  ["selection","Combien d’éléments faut-il sélectionner ?",
+    ["4 à 6 éléments","2 à 3 éléments","8 à 10 éléments","Tous les chiffres du graphique"],0,
+    "Règle des 4 à 6 éléments : on sélectionne, on ne décrit jamais tout."],
+  ["selection","Lequel de ces éléments NE fait PAS partie des 4 à 6 à sélectionner ?",
+    ["La cause probable de l’évolution","La valeur la plus haute","Le changement le plus marqué","Une exception notable"],0,
+    "On sélectionne : valeur la plus haute, la plus basse, le changement le plus marqué, l’exception notable, la comparaison frappante entre deux séries. Jamais les causes."],
+  ["selection","Faut-il décrire chaque chiffre du graphique ?",
+    ["Non, jamais","Oui, pour montrer sa maîtrise du vocabulaire","Oui, si on a le temps","Oui, c’est ce qui fait atteindre 150 mots"],0,
+    "Ne jamais décrire chaque chiffre : on sélectionne 4 à 6 éléments significatifs."],
+  ["selection","Parmi ces éléments, lequel doit figurer dans la sélection ?",
+    ["Une comparaison frappante entre deux séries","La moyenne de toutes les valeurs","Le nombre total de catégories","Une hypothèse sur l’avenir du secteur"],0,
+    "Une comparaison frappante entre deux séries fait partie des 4 à 6 éléments à retenir."],
+  ["grammar","Quel temps pour « the figure ___ between 2010 and 2020 » ?",
+    ["increased (passé simple)","increases (présent simple)","is increasing (présent continu)","has increased (present perfect)"],0,
+    "Données datées historiques = passé simple : « increased between 2010 and 2020 »."],
+  ["grammar","Quel temps pour « the water ___ » dans un process général ?",
+    ["is filtered (présent simple passif)","was filtered (passé simple passif)","will be filtered (futur)","had been filtered (plus-que-parfait)"],0,
+    "Process général sans dates = présent simple, à la voix passive : « the water is filtered »."],
+  ["grammar","Comment exprimer une donnée de prévision future ?",
+    ["is projected to / is expected to","is used to","was going to","would have been"],0,
+    "Prévisions : « the figure is projected to reach… » / « is expected to rise… »."],
+  ["grammar","Pour quels types de sujets la voix passive est-elle quasi systématique ?",
+    ["Les process diagrams et les maps","Les pie charts et les tables","Les line graphs uniquement","Les graphiques mixtes uniquement"],0,
+    "Voix passive quasi systématique pour les process et les maps."],
+  ["grammar","Quelle formulation est correcte pour un rapport du simple au double ?",
+    ["twice as high as","two times higher as","the double than","twice higher than"],0,
+    "Comparatifs : higher than, the highest, twice as high as, marginally / considerably higher."],
+  ["grammar","Quel adverbe pour une différence minime ?",
+    ["marginally higher","considerably higher","dramatically higher","substantially higher"],0,
+    "marginally / slightly = légèrement ; considerably / substantially = considérablement."],
+  ["grammar","Quelle est la forme superlative correcte ?",
+    ["the highest","the most high","the higher","highest than"],0,
+    "Superlatif : the highest ; comparatif : higher than."],
+  ["example","Pourquoi « Coal was 40% in 2005 and 10% in 2025. Renewables was 10% in 2005 and 50% in 2025. » est-il un MAUVAIS overview ?",
+    ["Ce sont juste des chiffres recopiés, sans aucune synthèse","Il est trop long","Il contient une opinion personnelle","Il utilise la voix passive"],0,
+    "Overview faible : des chiffres recopiés, aucune synthèse de la tendance d’ensemble."],
+  ["example","Qu’est-ce qui fait la qualité de l’overview modèle sur l’électricité ?",
+    ["Il capture la tendance d’ensemble sans chiffres précis, avec des verbes de tendance forts","Il cite les pourcentages exacts de chaque source","Il explique pourquoi le charbon a reculé","Il annonce le plan du texte"],0,
+    "Le bon overview : tendance d’ensemble, aucun chiffre précis, verbes forts (shifted, collapsed, overtook)."],
+  ["example","Quels verbes rendent l’overview modèle efficace ?",
+    ["shifted dramatically / collapsed / overtook","was / were / had","increased / decreased / stayed","showed / presented / illustrated"],0,
+    "« shifted dramatically away from… », « coal collapsed… », « renewables overtook every other category »."],
+  ["example","Dans le bon overview, comment le charbon est-il décrit ?",
+    ["Il passe de source dominante à source mineure, sans chiffres","Il passe de 40 % à 10 %","Il baisse à cause des politiques climatiques","Il reste stable sur la période"],0,
+    "« coal collapsed from the dominant source in 2005 to a minor one by 2025 » : aucune valeur chiffrée."],
+  ["example","Que fait la deuxième moitié du bon overview ?",
+    ["Elle montre que les renouvelables dépassent toutes les autres catégories","Elle donne le pourcentage exact des renouvelables","Elle annonce les paragraphes suivants","Elle exprime un avis sur la transition énergétique"],0,
+    "« while renewables overtook every other category to become the leading source » : comparaison globale, sans chiffres."]
+];
+
+const METHOD = RAW_METHOD.map(function(m,i){
+  return {id:"m"+i, kind:"method", topic:m[0], q:m[1], opts:m[2], a:m[3], exp:m[4]};
+});
+
+const ALL = VOCAB.concat(METHOD);
+const BY_ID = {}; ALL.forEach(function(it){ BY_ID[it.id]=it; });
+
+/* ============================================================
+   ÉTAT + RÉPÉTITION ESPACÉE
+   ============================================================ */
+
+const LS = "ielts-t1-v1";
+let S = {
+  srs:{},            /* id -> {w:poids, s:vues, c:correct, k:série correcte} */
+  score:0, ans:0, ok:0, best:0, theme:"dark"
+};
+let streak = 0;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(LS);
+    if(raw){ const d = JSON.parse(raw); if(d && typeof d==="object") S = Object.assign(S, d); }
+  }catch(e){}
+}
+function save(){
+  try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){}
+}
+function rec(id){
+  if(!S.srs[id]) S.srs[id] = {w:1, s:0, c:0, k:0};
+  return S.srs[id];
+}
+function mark(id, ok){
+  const r = rec(id); r.s++;
+  if(ok){ r.c++; r.k++; r.w = Math.max(0.2, r.w*0.55); }
+  else  { r.k = 0;  r.w = Math.min(10, r.w*2.6 + 0.6); }
+  S.ans++; if(ok) S.ok++;
+  if(ok){ streak++; if(streak > S.best) S.best = streak; }
+  else streak = 0;
+  save(); renderStats();
+}
+function addScore(n){ S.score += n; save(); renderStats(); }
+function mastered(id){ const r=S.srs[id]; return !!r && r.k>=3; }
+
+const recent = [];
+function pickWeighted(pool){
+  if(!pool.length) return null;
+  const avail = pool.filter(function(it){ return recent.indexOf(it.id)===-1; });
+  const list = avail.length ? avail : pool;
+  let tot = 0;
+  const w = list.map(function(it){
+    const r = S.srs[it.id];
+    let x = r ? r.w : 1.15;          /* jamais vu = légèrement prioritaire */
+    if(r && r.k>=3) x *= 0.35;        /* maîtrisé = plus rare, mais jamais nul */
+    tot += x; return x;
+  });
+  let t = Math.random()*tot;
+  let chosen = list[list.length-1];
+  for(let i=0;i<list.length;i++){ t -= w[i]; if(t<=0){ chosen = list[i]; break; } }
+  recent.push(chosen.id); if(recent.length>4) recent.shift();
+  return chosen;
+}
+function shuffle(a){
+  const b = a.slice();
+  for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=b[i]; b[i]=b[j]; b[j]=t; }
+  return b;
+}
+function $(id){ return document.getElementById(id); }
+let toastT = null;
+function toast(msg){
+  const el = $("toast"); el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove("show"); }, 1400);
+}
+const CHEERS = ["Excellent !","Parfait 🎯","Bravo !","Tu gères 💪","Impeccable !","En feu 🔥"];
+
+/* ============================================================
+   EN-TÊTE / STATS
+   ============================================================ */
+
+function renderStats(){
+  $("sScore").textContent = S.score;
+  $("sStreak").textContent = streak;
+  $("sAcc").textContent = S.ans ? Math.round(S.ok/S.ans*100)+"%" : "—";
+  const m = ALL.filter(function(it){ return mastered(it.id); }).length;
+  $("sMast").textContent = m+"/"+ALL.length;
+  if($("p-prog").classList.contains("on")) renderProgress();
+}
+
+/* ============================================================
+   ONGLETS
+   ============================================================ */
+
+document.querySelectorAll("#nav .tab").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#nav .tab").forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("on"); });
+    $("p-"+b.dataset.p).classList.add("on");
+    stopTimer();
+    if(b.dataset.p==="prog") renderProgress();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+});
+
+/* Thème */
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme", S.theme==="light" ? "light" : "dark");
+  $("themeBtn").textContent = S.theme==="light" ? "☀️" : "🌙";
+}
+$("themeBtn").addEventListener("click", function(){
+  S.theme = S.theme==="light" ? "dark" : "light"; save(); applyTheme();
+});
+
+/* ============================================================
+   MODE 1 — FLASHCARDS
+   ============================================================ */
+
+const fDeck = $("fDeck");
+const fDirSel = $("fDir");
+(function buildDeck(){
+  let html = '<option value="all">Tout mélanger</option>'
+           + '<option value="vocab">Vocabulaire (tout)</option>'
+           + '<option value="method">Méthodologie (tout)</option>';
+  Object.keys(CATS).forEach(function(k){
+    html += '<option value="c:'+k+'">'+CATS[k].emoji+" "+CATS[k].label+"</option>";
+  });
+  Object.keys(TOPICS).forEach(function(k){
+    html += '<option value="t:'+k+'">📘 '+TOPICS[k]+"</option>";
+  });
+  fDeck.innerHTML = html;
+})();
+
+function deckPool(){
+  const v = fDeck.value;
+  if(v==="all") return ALL;
+  if(v==="vocab") return VOCAB;
+  if(v==="method") return METHOD;
+  if(v.indexOf("c:")===0) return VOCAB.filter(function(x){ return x.cat===v.slice(2); });
+  if(v.indexOf("t:")===0) return METHOD.filter(function(x){ return x.topic===v.slice(2); });
+  return ALL;
+}
+
+let fCard = null, fFlipped = false;
+function nextCard(){
+  const pool = deckPool();
+  fCard = pickWeighted(pool);
+  fFlipped = false;
+  $("flip").classList.remove("flipped");
+  if(!fCard) return;
+  const catLabel = fCard.kind==="vocab"
+    ? CATS[fCard.cat].emoji+" "+CATS[fCard.cat].label
+    : "📘 "+TOPICS[fCard.topic];
+  $("fCat").textContent = catLabel;
+  $("fCatB").textContent = catLabel;
+
+  if(fCard.kind==="vocab"){
+    let dir = fDirSel.value;
+    if(dir==="mix") dir = Math.random()<0.5 ? "en" : "fr";
+    const enFirst = dir==="en";
+    $("fFront").textContent = enFirst ? fCard.en : fCard.fr;
+    $("fSubFront").textContent = enFirst ? "🇬🇧 anglais → 🇫🇷 français ?" : "🇫🇷 français → 🇬🇧 anglais ?";
+    $("fBack").textContent = enFirst ? fCard.fr : fCard.en;
+    $("fSubBack").textContent = enFirst ? fCard.en : fCard.fr;
+  }else{
+    $("fFront").textContent = fCard.q;
+    $("fSubFront").textContent = "Question de méthodologie";
+    $("fBack").textContent = fCard.opts[fCard.a];
+    $("fSubBack").textContent = fCard.exp;
+  }
+  $("fFront").className = "term" + ($("fFront").textContent.length > 58 ? " long" : "");
+  $("fBack").className  = "term" + ($("fBack").textContent.length  > 58 ? " long" : "");
+  $("fSubBack").className = "sub" + ($("fSubBack").textContent.length > 70 ? " small" : "");
+  const r = S.srs[fCard.id];
+  $("fCount").textContent = pool.length+" cartes · vue "+(r?r.s:0)+" fois"+(mastered(fCard.id)?" · maîtrisée ✅":"");
+}
+function flipCard(){
+  fFlipped = !fFlipped;
+  $("flip").classList.toggle("flipped", fFlipped);
+}
+$("flip").addEventListener("click", flipCard);
+$("fFlipBtn").addEventListener("click", flipCard);
+fDeck.addEventListener("change", nextCard);
+fDirSel.addEventListener("change", nextCard);
+$("fKnow").addEventListener("click", function(){
+  if(!fCard) return;
+  mark(fCard.id, true); addScore(5);
+  toast(CHEERS[Math.floor(Math.random()*CHEERS.length)]);
+  nextCard();
+});
+$("fAgain").addEventListener("click", function(){
+  if(!fCard) return;
+  mark(fCard.id, false);
+  toast("Elle reviendra bientôt 🔁");
+  nextCard();
+});
+
+/* ============================================================
+   MODE 2 — QUIZ À CHOIX MULTIPLES
+   ============================================================ */
+
+let qMode = "all", qItem = null, qAnswered = false;
+document.querySelectorAll("[data-qm]").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("[data-qm]").forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on"); qMode = b.dataset.qm; nextQuestion();
+  });
+});
+
+function buildVocabQuestion(item){
+  const enFirst = Math.random() < 0.5;
+  const others = VOCAB.filter(function(x){
+    return x.id!==item.id && (enFirst ? x.fr!==item.fr : x.en!==item.en);
+  });
+  const same = shuffle(others.filter(function(x){ return x.cat===item.cat; }));
+  const diff = shuffle(others.filter(function(x){ return x.cat!==item.cat; }));
+  const distract = same.concat(diff).slice(0,3);
+  const opts = shuffle([item].concat(distract)).map(function(x){ return enFirst ? x.fr : x.en; });
+  return {
+    tag: CATS[item.cat].emoji+" "+CATS[item.cat].label,
+    q: enFirst ? "Que signifie « "+item.en+" » ?" : "Comment dit-on « "+item.fr+" » ?",
+    opts: opts,
+    a: opts.indexOf(enFirst ? item.fr : item.en),
+    exp: item.en+" = "+item.fr+"  ("+CATS[item.cat].label+")"
+  };
+}
+function buildMethodQuestion(item){
+  const order = shuffle(item.opts.map(function(t,i){ return {t:t,i:i}; }));
+  return {
+    tag:"📘 "+TOPICS[item.topic],
+    q:item.q,
+    opts:order.map(function(o){ return o.t; }),
+    a:order.findIndex(function(o){ return o.i===item.a; }),
+    exp:item.exp
+  };
+}
+function quizPool(){
+  if(qMode==="vocab") return VOCAB;
+  if(qMode==="method") return METHOD;
+  return ALL;
+}
+function nextQuestion(){
+  qAnswered = false;
+  qItem = pickWeighted(quizPool());
+  if(!qItem) return;
+  const q = qItem.kind==="vocab" ? buildVocabQuestion(qItem) : buildMethodQuestion(qItem);
+  qItem._q = q;
+  $("qTag").textContent = q.tag;
+  $("qText").textContent = q.q;
+  $("qFb").style.display = "none";
+  $("qNext").style.display = "none";
+  const box = $("qOpts"); box.innerHTML = "";
+  q.opts.forEach(function(txt, i){
+    const b = document.createElement("button");
+    b.className = "opt"; b.textContent = txt;
+    b.addEventListener("click", function(){ answerQuiz(i, b); });
+    box.appendChild(b);
+  });
+}
+function answerQuiz(i, btn){
+  if(qAnswered) return;
+  qAnswered = true;
+  const q = qItem._q;
+  const ok = i===q.a;
+  const btns = $("qOpts").querySelectorAll(".opt");
+  btns.forEach(function(b, j){
+    b.disabled = true;
+    if(j===q.a) b.classList.add("correct");
+    else if(j===i) b.classList.add("wrong");
+  });
+  mark(qItem.id, ok);
+  const fb = $("qFb");
+  fb.style.display = "block";
+  fb.className = "fb" + (ok ? "" : " err");
+  if(ok){
+    const bonus = Math.min(10, streak*2);
+    addScore(10 + bonus);
+    fb.innerHTML = "<b>✅ "+CHEERS[Math.floor(Math.random()*CHEERS.length)]+"</b> +"+(10+bonus)+" pts"
+      + (streak>2 ? " · série de "+streak+" 🔥" : "") + "<br>" + q.exp;
+  }else{
+    fb.innerHTML = "<b>❌ Réponse : "+q.opts[q.a]+"</b><br>"+q.exp+"<br><span class=\"muted\">Cette notion reviendra vite.</span>";
+  }
+  $("qNext").style.display = "block";
+}
+$("qNext").addEventListener("click", nextQuestion);
+
+/* ============================================================
+   MODE 3 — CLASSEMENT RAPIDE
+   ============================================================ */
+
+let sortItem = null, sortAnswered = false, sortLimit = 10, timerId = null, tLeft = 0;
+document.querySelectorAll("[data-sm]").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("[data-sm]").forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on"); sortLimit = parseInt(b.dataset.sm,10); nextSort();
+  });
+});
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId = null; } }
+function startTimer(){
+  stopTimer();
+  const bar = $("sortTimer");
+  if(!sortLimit){ bar.style.width = "100%"; bar.style.opacity = ".25"; return; }
+  bar.style.opacity = "1";
+  tLeft = sortLimit*1000;
+  bar.style.width = "100%";
+  const step = 100;
+  timerId = setInterval(function(){
+    tLeft -= step;
+    bar.style.width = Math.max(0, tLeft/(sortLimit*1000)*100)+"%";
+    if(tLeft<=0){ stopTimer(); if(!sortAnswered) answerSort(null, null); }
+  }, step);
+}
+function nextSort(){
+  sortAnswered = false;
+  sortItem = pickWeighted(VOCAB);
+  if(!sortItem) return;
+  $("sortTerm").textContent = sortItem.en;
+  $("sortFb").style.display = "none";
+  $("sortNext").style.display = "none";
+  $("sortInfo").textContent = "Expression "+(S.ans>0?"· précision "+Math.round(S.ok/S.ans*100)+"%":"");
+  const keys = Object.keys(CATS);
+  const wrong = shuffle(keys.filter(function(k){ return k!==sortItem.cat; })).slice(0,5);
+  const opts = shuffle([sortItem.cat].concat(wrong));
+  const box = $("sortCats"); box.innerHTML = "";
+  opts.forEach(function(k){
+    const b = document.createElement("button");
+    b.className = "catbtn"; b.dataset.k = k;
+    b.innerHTML = CATS[k].emoji+"<br>"+CATS[k].label;
+    b.addEventListener("click", function(){ answerSort(k, b); });
+    box.appendChild(b);
+  });
+  startTimer();
+}
+function answerSort(k, btn){
+  if(sortAnswered) return;
+  sortAnswered = true;
+  stopTimer();
+  const ok = k===sortItem.cat;
+  $("sortCats").querySelectorAll(".catbtn").forEach(function(b){
+    b.disabled = true;
+    if(b.dataset.k===sortItem.cat) b.classList.add("correct");
+    else if(b===btn) b.classList.add("wrong");
+  });
+  mark(sortItem.id, ok);
+  const fb = $("sortFb");
+  fb.style.display = "block";
+  fb.className = "fb" + (ok ? "" : " err");
+  if(ok){
+    const speed = sortLimit ? Math.round(tLeft/(sortLimit*1000)*8) : 0;
+    addScore(10 + speed);
+    fb.innerHTML = "<b>✅ "+CHEERS[Math.floor(Math.random()*CHEERS.length)]+"</b> +"+(10+speed)+" pts"
+      + (speed>4 ? " (bonus rapidité ⚡)" : "") + "<br>« "+sortItem.en+" » = "+sortItem.fr;
+  }else{
+    fb.innerHTML = "<b>"+(k===null ? "⏱️ Temps écoulé !" : "❌ Raté")+"</b> → catégorie : "
+      + CATS[sortItem.cat].label + "<br>« "+sortItem.en+" » = "+sortItem.fr;
+  }
+  $("sortNext").style.display = "block";
+}
+$("sortNext").addEventListener("click", nextSort);
+
+/* ============================================================
+   MODE 4 — MÉMO (tableau de vocabulaire généré)
+   ============================================================ */
+
+(function buildMemo(){
+  let html = "";
+  Object.keys(CATS).forEach(function(k){
+    const rows = VOCAB.filter(function(v){ return v.cat===k; });
+    if(!rows.length) return;
+    html += "<h4 style=\"margin:16px 0 4px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:var(--acc2)\">"
+         + CATS[k].emoji+" "+CATS[k].label+"</h4><table>";
+    rows.forEach(function(v){
+      html += "<tr><td class=\"en\">"+v.en+"</td><td>"+v.fr+"</td></tr>";
+    });
+    html += "</table>";
+  });
+  $("memoVocab").innerHTML = html;
+})();
+
+/* ============================================================
+   MODE 5 — PROGRÈS
+   ============================================================ */
+
+function renderProgress(){
+  $("gScore").textContent = S.score;
+  $("gAns").textContent = S.ans;
+  $("gAcc").textContent = S.ans ? Math.round(S.ok/S.ans*100)+"%" : "—";
+  $("gBest").textContent = S.best;
+  const m = ALL.filter(function(it){ return mastered(it.id); }).length;
+  $("gMast").textContent = m+"/"+ALL.length;
+  $("gBar").style.width = (ALL.length ? m/ALL.length*100 : 0)+"%";
+
+  let html = "";
+  function group(label, items){
+    const done = items.filter(function(it){ return mastered(it.id); }).length;
+    const pct = items.length ? Math.round(done/items.length*100) : 0;
+    html += '<div class="pitem"><span>'+label+'</span><span class="muted">'+done+"/"+items.length+"</span>"
+         + '<div class="bar"><i style="width:'+pct+'%"></i></div></div>';
+  }
+  Object.keys(CATS).forEach(function(k){
+    group(CATS[k].emoji+" "+CATS[k].label, VOCAB.filter(function(v){ return v.cat===k; }));
+  });
+  Object.keys(TOPICS).forEach(function(k){
+    group("📘 "+TOPICS[k], METHOD.filter(function(v){ return v.topic===k; }));
+  });
+  $("progList").innerHTML = html;
+
+  const weak = ALL.filter(function(it){ const r=S.srs[it.id]; return r && r.w>1.2; })
+    .sort(function(a,b){ return S.srs[b.id].w - S.srs[a.id].w; }).slice(0,12);
+  $("revList").innerHTML = weak.length
+    ? weak.map(function(it){
+        const txt = it.kind==="vocab"
+          ? "<b>"+it.en+"</b> — "+it.fr
+          : "<b>"+it.q+"</b><br><span class=\"muted\">"+it.opts[it.a]+"</span>";
+        return '<div class="revitem">'+txt+"</div>";
+      }).join("")
+    : '<p class="muted">Rien à revoir pour l’instant : lancez un quiz pour repérer vos points faibles.</p>';
+}
+$("resetBtn").addEventListener("click", function(){
+  if(!confirm("Effacer le score et toute la progression ?")) return;
+  S = {srs:{}, score:0, ans:0, ok:0, best:0, theme:S.theme};
+  streak = 0; save(); renderStats(); renderProgress();
+  nextCard(); nextQuestion(); nextSort();
+  toast("Progression réinitialisée");
+});
+
+/* ============================================================
+   DÉMARRAGE
+   ============================================================ */
+
+load();
+applyTheme();
+renderStats();
+nextCard();
+nextQuestion();
+nextSort();
+renderProgress();
+</script>
+</body>
+</html>
