@@ -31,7 +31,7 @@ body{
 .wrap{max-width:900px;margin:0 auto;padding:0 16px}
 header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
   background:color-mix(in srgb, var(--bg) 82%, transparent);border-bottom:1px solid var(--line)}
-.hrow{display:flex;align-items:center;gap:10px;padding:10px 0}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
 .logo{font-weight:800;font-size:16px;letter-spacing:.2px;flex:1;min-width:0;line-height:1.25}
 .logo small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
 .iconbtn{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;
@@ -64,6 +64,13 @@ select,.chip{background:var(--card);color:var(--txt);border:1px solid var(--line
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1 1 140px}
 .muted{color:var(--muted);font-size:13px}
+.hrow .navswitch{flex:1 1 100%;justify-content:center;margin-top:2px;order:3}
+.hrow .iconbtn{order:2}
+.hrow .logo{flex:1 1 60%;min-width:0}
+.navswitch{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.navswitch a{font-size:11.5px;font-weight:700;color:var(--muted);text-decoration:none;border-radius:999px;
+  padding:6px 11px;white-space:nowrap}
+.navswitch a.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b}
 .switch{font-size:11.5px;font-weight:700;color:var(--acc2);text-decoration:none;border:1px solid var(--line);
   background:var(--card);border-radius:999px;padding:6px 10px;white-space:nowrap}
 .tagcat{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
@@ -175,7 +182,7 @@ h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--m
       <div class="logo">📊 IELTS Writing Task 1
         <small>Entraînement mémoire — vocabulaire &amp; méthodologie</small>
       </div>
-      <a class="switch" href="task2.html">✍️ Task 2</a>
+      <div class="navswitch"><a href="index.html" class="on">📊 Task 1</a><a href="task2.html">✍️ Task 2</a><a href="exam.html">⏱️ Examens</a></div>
       <button class="iconbtn" id="themeBtn" title="Thème clair / sombre">🌙</button>
     </div>
     <div class="stats">

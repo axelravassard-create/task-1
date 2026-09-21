@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>IELTS Writing — Examens blancs</title>
+<style>
+:root{
+  --bg:#0f172a; --bg2:#131f3a; --card:#1b2744; --card2:#22304f;
+  --txt:#eef2ff; --muted:#9fb0d0; --line:#2e3d60;
+  --acc:#6ee7b7; --acc2:#38bdf8; --warn:#fbbf24; --bad:#fb7185; --good:#34d399;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --r:16px;
+}
+:root[data-theme="light"]{
+  --bg:#f4f7fb; --bg2:#ffffff; --card:#ffffff; --card2:#eef3fb;
+  --txt:#12203a; --muted:#5b6b88; --line:#dbe4f0;
+  --acc:#0f9d76; --acc2:#0284c7; --warn:#b45309; --bad:#e11d48; --good:#0f9d76;
+  --shadow:0 8px 24px rgba(16,34,64,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 600px at 20% -10%, var(--bg2), var(--bg)) fixed;
+  color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.5; -webkit-text-size-adjust:100%;
+  padding-bottom:40px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 0;flex-wrap:wrap}
+.logo{font-weight:800;font-size:16px;letter-spacing:.2px;flex:1;min-width:0;line-height:1.25}
+.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.iconbtn{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;
+  padding:8px 10px;font-size:14px;cursor:pointer}
+.iconbtn:active{transform:scale(.96)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 8px;text-align:center}
+.stat b{display:block;font-size:16px;line-height:1.2}
+.stat span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--muted);
+  padding:9px 13px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.panel{display:none;animation:fade .25s ease}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+select,.chip{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;
+  padding:8px 10px;font-size:13px;font-family:inherit}
+.chip{cursor:pointer;font-weight:600}
+.chip.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.btn{border:none;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer;
+  font-family:inherit;background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.btn.good{background:rgba(52,211,153,.18);border-color:var(--good);color:var(--good)}
+.btn.bad{background:rgba(251,113,133,.16);border-color:var(--bad);color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 140px}
+.muted{color:var(--muted);font-size:13px}
+.switch{font-size:11.5px;font-weight:700;color:var(--acc2);text-decoration:none;border:1px solid var(--line);
+  background:var(--card);border-radius:999px;padding:6px 10px;white-space:nowrap}
+.tagcat{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--acc2);background:color-mix(in srgb,var(--acc2) 14%,transparent);border-radius:999px;padding:3px 10px}
+
+/* Flashcards */
+.flipwrap{perspective:1200px;margin:6px 0 14px}
+.flip{position:relative;width:100%;min-height:250px;transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+.flip.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:18px 16px;overflow:auto}
+.face .inner{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;gap:10px}
+.face.back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--card2),var(--card))}
+.face .term{font-size:23px;font-weight:800;line-height:1.3}
+.face .term.long{font-size:17.5px;line-height:1.35}
+svg.ill{width:100%;max-width:240px;height:auto;display:block;margin:2px auto}
+.ill-cap{font-size:11px;color:var(--muted);margin-top:-4px}
+.tip{font-size:13px;line-height:1.45;color:var(--txt);background:var(--card2);border:1px solid var(--line);
+  border-radius:10px;padding:9px 11px;text-align:left;width:100%}
+.tip b{color:var(--acc)}
+.ex{font-size:13px;line-height:1.45;text-align:left;width:100%;border-left:3px solid var(--acc2);padding-left:10px}
+.ex i{color:var(--txt);font-weight:600}
+.ex.ko{border-left-color:var(--bad)}
+.ex.ko i{color:var(--bad);font-weight:600}
+.exwrap{display:grid;gap:8px;width:100%}
+.exrow{font-size:12.5px;line-height:1.45;padding-top:0}
+.exrow div{margin:2px 0}
+.exrow .k{color:var(--bad)}
+.exrow .o{color:var(--acc)}
+.exrow em{color:var(--muted);font-style:normal}
+.ex span{display:block;color:var(--muted);font-size:12px}
+.fb svg.ill{max-width:210px;margin-top:8px}
+.memoart{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
+@media(min-width:620px){.memoart{grid-template-columns:repeat(3,1fr)}}
+.memoart figure{margin:0;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.memoart figcaption{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.3}
+.face .sub.small{font-size:12px;line-height:1.45}
+.face .sub{font-size:13px;color:var(--muted)}
+.hint{font-size:11px;color:var(--muted);position:absolute;bottom:10px;left:0;right:0;text-align:center}
+
+/* Quiz */
+.q{font-size:18px;font-weight:700;margin:6px 0 14px;line-height:1.35}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--card2);border:1px solid var(--line);color:var(--txt);
+  border-radius:12px;padding:13px 14px;font-size:14.5px;font-family:inherit;cursor:pointer;line-height:1.35}
+.opt:hover{border-color:var(--acc2)}
+.opt.correct{background:rgba(52,211,153,.18);border-color:var(--good)}
+.opt.wrong{background:rgba(251,113,133,.16);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;padding:12px;border-radius:12px;font-size:14px;border:1px solid var(--line);background:var(--card2)}
+.fb b{color:var(--acc)}
+.fb.err b{color:var(--bad)}
+
+/* Classement */
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+@media(min-width:620px){.cats{grid-template-columns:repeat(3,1fr)}}
+.catbtn{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:12px;
+  padding:12px 8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;line-height:1.25}
+.catbtn.correct{background:rgba(52,211,153,.2);border-color:var(--good)}
+.catbtn.wrong{background:rgba(251,113,133,.18);border-color:var(--bad)}
+.timerbar{height:7px;border-radius:999px;background:var(--card2);overflow:hidden;margin-top:12px;border:1px solid var(--line)}
+.timerbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:100%}
+.bigterm{font-size:24px;font-weight:800;text-align:center;padding:18px 6px;line-height:1.3}
+
+/* Mémo */
+.acc{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;background:var(--card)}
+.acc>summary{cursor:pointer;padding:14px 16px;font-weight:700;font-size:15px;list-style:none;display:flex;gap:10px;align-items:center}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary::after{content:"+";margin-left:auto;color:var(--muted);font-size:20px}
+.acc[open]>summary::after{content:"–"}
+.accbody{padding:0 16px 16px;font-size:14.5px}
+.accbody ul{padding-left:20px;margin:8px 0}
+.accbody li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td.en{font-weight:700}
+.box{border-radius:12px;padding:12px 14px;margin:10px 0;font-size:14px;border-left:4px solid}
+.box.bad{background:rgba(251,113,133,.10);border-color:var(--bad)}
+.box.good{background:rgba(52,211,153,.10);border-color:var(--good)}
+.box.warn{background:rgba(251,191,36,.10);border-color:var(--warn)}
+.box h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+kbd{background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
+
+/* Progrès */
+.bar{height:9px;background:var(--card2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.plist{display:grid;gap:10px;margin-top:10px}
+.pitem{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:13.5px}
+.pitem .bar{grid-column:1/3}
+.revlist{display:grid;gap:8px;margin-top:10px}
+.revitem{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;font-weight:800;padding:10px 18px;
+  border-radius:999px;font-size:14px;pointer-events:none;transition:.3s;z-index:50;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+h2.sec{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:22px 0 10px}
+.center{text-align:center}
+.sp{height:10px}
+
+/* — spécifique examens — */
+#examSel{flex:1 1 100%;max-width:100%;min-width:0}
+select{max-width:100%}
+.hrow .navswitch{flex:1 1 100%;justify-content:center;margin-top:2px;order:3}
+.hrow .iconbtn{order:2}
+.hrow .logo{flex:1 1 60%;min-width:0}
+.navswitch{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.navswitch a{font-size:11.5px;font-weight:700;color:var(--muted);text-decoration:none;border-radius:999px;
+  padding:6px 11px;white-space:nowrap}
+.navswitch a.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b}
+.timerbox{position:sticky;top:0;z-index:15;background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0;margin-bottom:14px}
+.clock{font-size:34px;font-weight:800;letter-spacing:1px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.clock.warn{color:var(--warn)} .clock.over{color:var(--bad)}
+.clocklbl{text-align:center;font-size:11.5px;color:var(--muted);margin-top:4px}
+.tprog{height:6px;border-radius:999px;background:var(--card2);overflow:hidden;border:1px solid var(--line);margin:8px 0 10px}
+.tprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:0%}
+.taskcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.taskhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.taskhead h3{margin:0;font-size:16px}
+.badge{font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;border-radius:999px;
+  padding:3px 9px;background:color-mix(in srgb,var(--acc2) 16%,transparent);color:var(--acc2)}
+.instr{font-size:15px;line-height:1.5;margin:6px 0 12px}
+.instr b{color:var(--acc)}
+.rubric{font-size:13px;color:var(--muted);font-style:italic;margin-top:6px}
+.figure{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px 6px;margin:12px 0;overflow-x:auto}
+.figure svg{width:100%;height:auto;display:block}
+.figcap{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+.datatable{width:100%;border-collapse:collapse;font-size:12.5px;min-width:300px}
+.datatable th,.datatable td{border:1px solid var(--line);padding:5px 7px;text-align:right;white-space:nowrap}
+.datatable th:first-child,.datatable td:first-child{text-align:left;font-weight:700}
+.datatable thead th{background:color-mix(in srgb,var(--acc2) 12%,transparent);color:var(--txt)}
+textarea{width:100%;min-height:220px;background:var(--card2);color:var(--txt);border:1px solid var(--line);
+  border-radius:12px;padding:12px;font-family:inherit;font-size:15px;line-height:1.55;resize:vertical}
+textarea:focus{outline:2px solid var(--acc2);outline-offset:1px}
+.wc{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;margin-top:6px;flex-wrap:wrap}
+.wc b{font-size:15px}
+.wc .ok{color:var(--good)} .wc .no{color:var(--bad)}
+.copybox{width:100%;min-height:150px;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+details.copyd{margin-top:10px}
+details.copyd>summary{cursor:pointer;font-size:13px;color:var(--muted);padding:6px 0}
+.done{font-size:13px;line-height:1.5;background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--acc);
+  border-radius:12px;padding:11px 13px;margin-top:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div class="logo">⏱️ Examens blancs IELTS
+        <small>Format officiel · 60 minutes · correction par copier-coller</small>
+      </div>
+      <div class="navswitch">
+        <a href="index.html">📊 Task 1</a>
+        <a href="task2.html">✍️ Task 2</a>
+        <a href="exam.html" class="on">⏱️ Examens</a>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="Thème clair / sombre">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="toolbar">
+    <select id="examSel"></select>
+    <button class="chip" id="randomBtn">🎲 Au hasard</button>
+    <button class="chip on" id="wcBtn" title="Le vrai test sur ordinateur affiche le compteur ; sur papier, non.">🔢 Compteur de mots</button>
+  </div>
+
+  <div class="timerbox">
+    <div class="clock" id="clock">60:00</div>
+    <div class="clocklbl" id="clockLbl">Durée officielle : 60 minutes pour les deux tâches</div>
+    <div class="tprog"><i id="tprog"></i></div>
+    <div class="row">
+      <button class="btn primary" id="startBtn">▶️ Démarrer l'épreuve</button>
+      <button class="btn" id="pauseBtn">⏸️ Pause</button>
+      <button class="btn" id="resetTimeBtn">↺ Remettre à zéro</button>
+    </div>
+  </div>
+
+  <!-- ===== TASK 1 ===== -->
+  <section class="taskcard" id="card1">
+    <div class="taskhead">
+      <h3>WRITING TASK 1</h3>
+      <span class="badge" id="t1kind">—</span>
+      <span class="muted" style="margin-left:auto">≈ 20 min · 150 mots min.</span>
+    </div>
+    <p class="muted" style="margin:0 0 8px"><i>You should spend about 20 minutes on this task.</i></p>
+    <div class="instr" id="t1instr">…</div>
+    <div class="figure" id="t1fig"></div>
+    <div class="figcap" id="t1cap"></div>
+    <details class="copyd" id="t1dataWrap">
+      <summary>📋 Données chiffrées du graphique (à ne pas consulter pendant l'épreuve — elles servent à la correction)</summary>
+      <div id="t1data" style="overflow-x:auto"></div>
+    </details>
+    <p class="rubric">Summarise the information by selecting and reporting the main features, and make comparisons where relevant.<br>Write at least 150 words.</p>
+    <textarea id="t1txt" spellcheck="false" autocapitalize="off" autocorrect="off"
+      placeholder="Rédigez votre réponse ici, en phrases complètes…"></textarea>
+    <div class="wc">
+      <span id="t1wc">0 mot</span>
+      <button class="btn primary" id="t1copy" style="flex:0 0 auto;padding:9px 14px;font-size:13px">📋 Copier pour correction</button>
+    </div>
+    <details class="copyd"><summary>Le copier-coller ne marche pas ? Afficher le texte à copier à la main</summary>
+      <textarea class="copybox" id="t1box" readonly></textarea></details>
+  </section>
+
+  <!-- ===== TASK 2 ===== -->
+  <section class="taskcard" id="card2">
+    <div class="taskhead">
+      <h3>WRITING TASK 2</h3>
+      <span class="badge" id="t2kind">—</span>
+      <span class="muted" style="margin-left:auto">≈ 40 min · 250 mots min.</span>
+    </div>
+    <p class="muted" style="margin:0 0 8px"><i>You should spend about 40 minutes on this task.</i></p>
+    <p class="muted" style="margin:0 0 4px">Write about the following topic:</p>
+    <div class="instr" id="t2instr">…</div>
+    <p class="rubric">Give reasons for your answer and include any relevant examples from your own knowledge or experience.<br>Write at least 250 words.</p>
+    <textarea id="t2txt" spellcheck="false" autocapitalize="off" autocorrect="off"
+      placeholder="Rédigez votre essai ici…"></textarea>
+    <div class="wc">
+      <span id="t2wc">0 mot</span>
+      <button class="btn primary" id="t2copy" style="flex:0 0 auto;padding:9px 14px;font-size:13px">📋 Copier pour correction</button>
+    </div>
+    <details class="copyd"><summary>Le copier-coller ne marche pas ? Afficher le texte à copier à la main</summary>
+      <textarea class="copybox" id="t2box" readonly></textarea></details>
+  </section>
+
+  <div class="row">
+    <button class="btn" id="allCopy">📋 Copier l'examen complet (Task 1 + Task 2)</button>
+    <button class="btn bad" id="clearBtn">🗑️ Effacer mes réponses</button>
+  </div>
+
+  <div class="done">
+    <b>Comment faire corriger</b> — cliquez sur « Copier pour correction » puis collez dans une conversation Claude.
+    Le texte copié contient la consigne officielle, les données chiffrées du sujet, votre réponse, son nombre de mots,
+    et la grille de correction (4 critères officiels, note par critère, erreurs corrigées, version réécrite band 8+).
+    <br><br>
+    <b>Conditions réelles</b> — le correcteur orthographique est désactivé, comme dans le vrai test.
+    Vos réponses sont enregistrées dans le navigateur : vous pouvez fermer la page sans les perdre.
+  </div>
+  <div class="sp"></div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+function $(id){ return document.getElementById(id); }
+const C = ["var(--acc)","var(--acc2)","var(--warn)","var(--bad)","var(--muted)"];
+const LINE="var(--line)", MUT="var(--muted)", TXT="var(--txt)";
+
+/* ============================================================
+   MOTEUR DE GRAPHIQUES (SVG, sans dépendance)
+   ============================================================ */
+const VW=460, VH=300, X0=54, X1=444, Y0=28, Y1=228;
+function T(x,y,t,c,sz,an,w){
+  return '<text x="'+x+'" y="'+y+'" fill="'+(c||MUT)+'" font-size="'+(sz||10.5)+'" font-weight="'+(w||600)
+       +'" text-anchor="'+(an||"middle")+'" font-family="system-ui,-apple-system,sans-serif">'+t+'</text>';
+}
+function L(d,c,w,dash){
+  return '<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"'
+       + (dash?' stroke-dasharray="'+dash+'"':"")+'/>';
+}
+function R(x,y,w,h,f,r,st){
+  return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(r||0)+'" fill="'+(f||"none")+'"'
+       + (st?' stroke="'+st+'" stroke-width="2"':"")+'/>';
+}
+function niceMax(v){
+  const e = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v/e;
+  const s = n<=1?1:n<=1.2?1.2:n<=1.5?1.5:n<=2?2:n<=2.5?2.5:n<=3?3:n<=4?4:n<=5?5:n<=6?6:n<=8?8:10;
+  return s*e;
+}
+function axes(max, unit, cats, rightMax, rightUnit, x1){
+  const XR = x1 || X1;
+  let g = "";
+  for(let i=0;i<=5;i++){
+    const y = Y1 - (Y1-Y0)*i/5, v = max*i/5;
+    g += L("M"+X0+" "+y+" H"+XR, LINE, i===0?2:1);
+    g += T(X0-8, y+4, (Math.round(v*100)/100).toLocaleString("en-US"), MUT, 12, "end");
+    if(rightMax!=null) g += T(XR+7, y+4, Math.round(rightMax*i/5), MUT, 12, "start");
+  }
+  g += L("M"+X0+" "+Y0+" V"+Y1, LINE, 2);
+  const n = cats.length;
+  cats.forEach(function(c,i){
+    let x = n===1 ? (X0+XR)/2 : X0 + (XR-X0)*i/(n-1);
+    const an = i===0 ? "start" : (i===n-1 && !rightMax) ? "end" : "middle";
+    if(i===0) x -= 6; else if(i===n-1 && !rightMax) x += 6;
+    g += T(x, Y1+18, c, MUT, 12.5, an);
+  });
+  g += T(X0-44, Y0-12, unit, MUT, 12, "start");
+  if(rightUnit) g += T(XR+30, Y0-12, rightUnit, MUT, 12, "end");
+  return g;
+}
+function legend(items){
+  let g = "", x = X0-6, y = VH-26;
+  items.forEach(function(it,i){
+    g += R(x, y-9, 18, 5, it.c, 2) + T(x+24, y-4, it.n, TXT, 12, "start");
+    x += 28 + it.n.length*7.3;
+  });
+  return g;
+}
+function chartLine(s){
+  const max = niceMax(Math.max.apply(null, s.series.reduce(function(a,x){ return a.concat(x.data); },[])));
+  const n = s.cats.length;
+  const px = function(i){ return X0 + (X1-X0)*i/(n-1); };
+  const py = function(v){ return Y1 - (Y1-Y0)*v/max; };
+  let g = axes(max, s.unit, s.cats);
+  s.series.forEach(function(se,k){
+    const c = C[k%C.length];
+    let solid = "", dashed = "";
+    se.data.forEach(function(v,i){
+      const cmd = (i===0?"M":"L")+px(i)+" "+py(v);
+      if(s.projFrom!=null && i>=s.projFrom){
+        if(dashed==="") dashed = "M"+px(s.projFrom-1)+" "+py(se.data[s.projFrom-1])+" ";
+        dashed += "L"+px(i)+" "+py(v)+" ";
+      } else solid += cmd+" ";
+    });
+    g += L(solid.trim(), c, 3) + (dashed ? L(dashed.trim(), c, 3, "7 5") : "");
+    se.data.forEach(function(v,i){ g += '<circle cx="'+px(i)+'" cy="'+py(v)+'" r="3.5" fill="'+c+'"/>'; });
+  });
+  if(s.projFrom!=null){
+    const x = px(s.projFrom-1);
+    g += L("M"+x+" "+Y0+" V"+Y1, MUT, 1, "4 4") + T(x+5, Y0-2, "projections →", MUT, 11, "start");
+  }
+  return '<svg viewBox="0 0 '+VW+' '+VH+'">'+g+legend(s.series.map(function(se,k){ return {n:se.name, c:C[k%C.length]}; }))+'</svg>';
+}
+function chartBar(s){
+  const max = niceMax(Math.max.apply(null, s.series.reduce(function(a,x){ return a.concat(x.data); },[])));
+  const n = s.cats.length, m = s.series.length;
+  const slot = (X1-X0)/n, bw = slot*0.66/m;
+  let g = "";
+  for(let i=0;i<=5;i++){
+    const y = Y1-(Y1-Y0)*i/5;
+    g += L("M"+X0+" "+y+" H"+X1, LINE, i===0?2:1) + T(X0-8, y+4, Math.round(max*i/5), MUT, 12, "end");
+  }
+  g += L("M"+X0+" "+Y0+" V"+Y1, LINE, 2) + T(X0-44, Y0-12, s.unit, MUT, 12, "start");
+  s.cats.forEach(function(c,i){
+    const cx = X0 + slot*(i+0.5);
+    g += T(cx, Y1+18, c, MUT, 11.5);
+    s.series.forEach(function(se,k){
+      const v = se.data[i], h = (Y1-Y0)*v/max;
+      const x = cx - (m*bw)/2 + k*bw;
+      g += R(x, Y1-h, bw-2, h, C[k%C.length], 2) + T(x+(bw-2)/2, Y1-h-5, v, MUT, 10.5);
+    });
+  });
+  return '<svg viewBox="0 0 '+VW+' '+VH+'">'+g+legend(s.series.map(function(se,k){ return {n:se.name, c:C[k%C.length]}; }))+'</svg>';
+}
+function chartMixed(s){
+  const maxB = niceMax(Math.max.apply(null, s.bars.data));
+  const maxL = niceMax(Math.max.apply(null, s.line.data));
+  const XR = X1-30;
+  const n = s.cats.length, slot = (XR-X0)/n, bw = slot*0.5;
+  let g = axes(maxB, s.unit, s.cats, maxL, s.unitR, XR);
+  s.cats.forEach(function(c,i){
+    const cx = X0 + slot*(i+0.5), h = (Y1-Y0)*s.bars.data[i]/maxB;
+    g += R(cx-bw/2, Y1-h, bw, h, C[1], 2);
+  });
+  let d = "";
+  s.line.data.forEach(function(v,i){
+    const x = X0+slot*(i+0.5), y = Y1-(Y1-Y0)*v/maxL;
+    d += (i?"L":"M")+x+" "+y+" ";
+  });
+  g += L(d.trim(), C[0], 3);
+  s.line.data.forEach(function(v,i){
+    const x = X0+slot*(i+0.5), y = Y1-(Y1-Y0)*v/maxL;
+    g += '<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="'+C[0]+'"/>';
+  });
+  return '<svg viewBox="0 0 '+VW+' '+VH+'">'+g+legend([{n:s.bars.name,c:C[1]},{n:s.line.name,c:C[0]}])+'</svg>';
+}
+function chartPie(s){
+  let g = "";
+  s.pies.forEach(function(pie,pi){
+    const cx = pi===0 ? 118 : 342, cy = 128, r = 78;
+    const total = pie.slices.reduce(function(a,x){ return a+x.value; },0);
+    let ang = -Math.PI/2;
+    pie.slices.forEach(function(sl,k){
+      const a2 = ang + 2*Math.PI*sl.value/total;
+      const x1 = cx+r*Math.cos(ang), y1 = cy+r*Math.sin(ang);
+      const x2 = cx+r*Math.cos(a2),  y2 = cy+r*Math.sin(a2);
+      const big = (a2-ang) > Math.PI ? 1 : 0;
+      g += '<path d="M'+cx+' '+cy+' L'+x1.toFixed(1)+' '+y1.toFixed(1)+' A'+r+' '+r+' 0 '+big+' 1 '
+         + x2.toFixed(1)+' '+y2.toFixed(1)+' Z" fill="'+C[k%C.length]+'" stroke="var(--card2)" stroke-width="1.5"/>';
+      const mid = (ang+a2)/2, lr = r*0.66;
+      const pct = Math.round(sl.value/total*100);
+      if(pct >= 8) g += T(cx+lr*Math.cos(mid), cy+lr*Math.sin(mid)+5, pct+"%", "#06202b", 13, "middle", 800);
+      ang = a2;
+    });
+    g += T(cx, cy+r+24, pie.label, TXT, 14, "middle", 800);
+  });
+  return '<svg viewBox="0 0 '+VW+' '+VH+'">'+g+legend(s.pies[0].slices.map(function(sl,k){ return {n:sl.name, c:C[k%C.length]}; }))+'</svg>';
+}
+function chartTable(s){
+  let h = '<table class="datatable"><thead><tr>';
+  s.head.forEach(function(c){ h += "<th>"+c+"</th>"; });
+  h += "</tr></thead><tbody>";
+  s.rows.forEach(function(r){
+    h += "<tr>"; r.forEach(function(c){ h += "<td>"+c+"</td>"; }); h += "</tr>";
+  });
+  return h + "</tbody></table>";
+}
+function renderChart(s){
+  if(s.kind==="line")  return chartLine(s);
+  if(s.kind==="bar")   return chartBar(s);
+  if(s.kind==="mixed") return chartMixed(s);
+  if(s.kind==="pie")   return chartPie(s);
+  if(s.kind==="table") return chartTable(s);
+  return s.svg;
+}
+/* données en texte, pour la correction */
+function dataText(s){
+  if(s.kind==="custom") return s.dataText;
+  if(s.kind==="table"){
+    let t = s.head.join(" | ") + "\n" + s.head.map(function(){ return "---"; }).join(" | ") + "\n";
+    s.rows.forEach(function(r){ t += r.join(" | ") + "\n"; });
+    return t.trim();
+  }
+  if(s.kind==="pie"){
+    return s.pies.map(function(p){
+      const tot = p.slices.reduce(function(a,x){ return a+x.value; },0);
+      return p.label+" : "+p.slices.map(function(sl){ return sl.name+" "+Math.round(sl.value/tot*100)+"%"; }).join(", ");
+    }).join("\n");
+  }
+  if(s.kind==="mixed"){
+    return "Période : "+s.cats.join(", ")+"\n"
+         + s.bars.name+" ("+s.unit+") : "+s.bars.data.join(", ")+"\n"
+         + s.line.name+" ("+s.unitR+") : "+s.line.data.join(", ");
+  }
+  return "Unité : "+s.unit+"\nPériode / catégories : "+s.cats.join(", ")+"\n"
+       + s.series.map(function(se){ return se.name+" : "+se.data.join(", "); }).join("\n")
+       + (s.projFrom!=null ? "\n(Les valeurs à partir de "+s.cats[s.projFrom]+" sont des projections.)" : "");
+}
+
+/* — diagramme de process : recyclage du verre — */
+function pbox(x,y,l1,l2,c){
+  return R(x,y,100,46,"var(--card)",8,c||LINE)
+       + T(x+50,y+(l2?20:28),l1,TXT,11,"middle",700)
+       + (l2?T(x+50,y+35,l2,TXT,11,"middle",700):"");
+}
+function ar(x,y,dir){
+  const c = MUT;
+  if(dir==="right") return L("M"+x+" "+y+" h22",c,2)+'<polygon points="'+(x+22)+','+(y-5)+' '+(x+22)+','+(y+5)+' '+(x+30)+','+y+'" fill="'+c+'"/>';
+  if(dir==="left")  return L("M"+x+" "+y+" h-22",c,2)+'<polygon points="'+(x-22)+','+(y-5)+' '+(x-22)+','+(y+5)+' '+(x-30)+','+y+'" fill="'+c+'"/>';
+  return L("M"+x+" "+y+" v22",c,2)+'<polygon points="'+(x-5)+','+(y+22)+' '+(x+5)+','+(y+22)+' '+x+','+(y+30)+'" fill="'+c+'"/>';
+}
+const PROCESS_GLASS = '<svg viewBox="0 0 460 300">'
+  + T(230,16,"Recycling of glass bottles",TXT,14,"middle",800)
+  + pbox(6,32,"Used bottles","collected",C[0]) + ar(112,55,"right")
+  + pbox(148,32,"Transported to","the plant") + ar(254,55,"right")
+  + pbox(290,32,"Sorted by","colour") + ar(396,55,"down")
+  + pbox(290,118,"Washed and","cleaned") + ar(285,141,"left")
+  + pbox(148,118,"Crushed into","small pieces (cullet)") + ar(143,141,"left")
+  + pbox(6,118,"Melted in a","furnace (1,500°C)") + ar(56,168,"down")
+  + pbox(6,204,"Moulded into","new bottles") + ar(112,227,"right")
+  + pbox(148,204,"Filled and","sealed") + ar(254,227,"right")
+  + pbox(290,204,"Delivered to","shops",C[1])
+  + L("M396 204 V190 h44 V70 h-38",MUT,2,"6 4")
+  + '<polygon points="407,65 407,75 399,70" fill="'+MUT+'"/>'
+  + T(440,140,"reused",MUT,11,"middle")
+  + '</svg>';
+
+/* — cartes avant / après : centre-ville de Newbridge — */
+function mapPanel(x,label,after){
+  let g = R(x,34,196,218,"var(--card)",10,LINE) + T(x+98,24,label,TXT,13,"middle",800);
+  g += L("M"+(x+8)+" 228 q 30 -10 60 0 t 60 0 t 60 0",C[1],5);
+  g += T(x+98,247,"River Ness",C[1],11);
+  g += L("M"+(x+8)+" 150 H"+(x+188),MUT,after?9:6);
+  g += T(x+98,143,after?"Main Street (widened)":"Main Street",MUT,10.5);
+  g += R(x+12,44,172,30,"var(--card2)",5,LINE) + T(x+98,64,after?"Housing estate":"Farmland",TXT,11.5,"middle",700);
+  g += R(x+12,84,80,52,"var(--card2)",5,LINE) + T(x+52,106,"Shops",TXT,11.5,"middle",700) + T(x+52,120,after?"(pedestrianised)":"",MUT,9.5);
+  g += R(x+104,84,80,52,"var(--card2)",5,C[0]) + T(x+144,106,"School",TXT,11.5,"middle",700) + T(x+144,120,after?"(extended)":"",MUT,9.5);
+  g += R(x+12,166,80,48,"var(--card2)",5,after?C[0]:LINE) + T(x+52,188,after?"Apartments":"Factory",TXT,11.5,"middle",700);
+  g += R(x+104,166,80,48,"var(--card2)",5,after?C[0]:LINE) + T(x+144,184,after?"Pedestrian":"Car park",TXT,11.5,"middle",700)
+     + (after?T(x+144,198,"square",TXT,11.5,"middle",700):"");
+  if(after){ g += L("M"+(x+150)+" 216 V240",C[0],3) + T(x+150,259,"footbridge",C[0],10.5); }
+  return g;
+}
+const MAP_TOWN = '<svg viewBox="0 0 460 300">' + mapPanel(8,"Newbridge in 1990",false)
+  + mapPanel(256,"Newbridge today",true) + '</svg>';
+
+/* ============================================================
+   LES 8 EXAMENS BLANCS (formulations officielles IELTS)
+   ============================================================ */
+const EXAMS = [
+{
+ n:"Examen 1", t1kind:"Line graph", t2kind:"Opinion",
+ t1:"The graph below shows the proportion of electricity generated from four different sources in Country X between 2005 and 2025.",
+ cap:"Electricity generation by source, Country X, 2005–2025 (% of total)",
+ chart:{kind:"line", unit:"% of total", cats:["2005","2010","2015","2020","2025"], series:[
+   {name:"Coal", data:[40,33,26,17,10]},
+   {name:"Natural gas", data:[30,32,30,27,22]},
+   {name:"Nuclear", data:[20,20,19,18,18]},
+   {name:"Renewables", data:[10,15,25,38,50]}]},
+ t2:"Some people believe that unpaid community service should be a compulsory part of high school programmes.\n\nTo what extent do you agree or disagree?"
+},
+{
+ n:"Examen 2", t1kind:"Bar chart", t2kind:"Discussion",
+ t1:"The chart below shows the average number of hours per week spent on four leisure activities by three age groups in one country in 2023.",
+ cap:"Average weekly hours spent on leisure activities, by age group, 2023",
+ chart:{kind:"bar", unit:"hours per week", cats:["Social media","Watching TV","Sport","Reading"], series:[
+   {name:"18–29", data:[14,9,5,2]},
+   {name:"30–49", data:[8,12,4,3]},
+   {name:"50+",   data:[3,18,3,7]}]},
+ t2:"Some people think that parents should teach children how to be good members of society. Others believe that school is the place to learn this.\n\nDiscuss both these views and give your own opinion."
+},
+{
+ n:"Examen 3", t1kind:"Pie charts", t2kind:"Avantages / inconvénients",
+ t1:"The pie charts below show the proportion of household spending in five categories in Country Y in 2000 and in 2020.",
+ cap:"Household spending by category, Country Y, 2000 and 2020",
+ chart:{kind:"pie", pies:[
+   {label:"2000", slices:[{name:"Housing",value:25},{name:"Food",value:30},{name:"Transport",value:15},{name:"Leisure",value:10},{name:"Other",value:20}]},
+   {label:"2020", slices:[{name:"Housing",value:38},{name:"Food",value:20},{name:"Transport",value:14},{name:"Leisure",value:16},{name:"Other",value:12}]}]},
+ t2:"More and more people are migrating from rural areas to large cities in search of a better life.\n\nDo the advantages of this trend outweigh the disadvantages?"
+},
+{
+ n:"Examen 4", t1kind:"Table", t2kind:"Problème & solution",
+ t1:"The table below gives information about the population of five cities in 1990 and 2010, together with projected figures for 2030.",
+ cap:"Population of five cities, 1990–2030 (millions)",
+ chart:{kind:"table",
+   head:["City","1990","2010","2030 (projected)"],
+   rows:[["Tokyo","32.5","36.9","36.0"],["Delhi","9.7","22.0","39.0"],["Lagos","4.8","10.4","24.2"],
+         ["São Paulo","14.8","19.7","23.8"],["Cairo","9.1","16.9","25.5"]]},
+ t2:"Traffic congestion is becoming a serious problem in many large cities.\n\nWhat problems does traffic congestion cause, and what measures could be taken to reduce it?"
+},
+{
+ n:"Examen 5", t1kind:"Process diagram", t2kind:"Two-part question",
+ t1:"The diagram below shows the process by which glass bottles are recycled.",
+ cap:"The glass bottle recycling process",
+ chart:{kind:"custom", svg:PROCESS_GLASS,
+   dataText:"Diagramme de process en boucle, 9 étapes :\n1. Used bottles are collected (bottle banks)\n2. Transported to the processing plant\n3. Sorted by colour\n4. Washed and cleaned\n5. Crushed into small pieces (cullet)\n6. Melted in a furnace at 1,500°C\n7. Moulded into new bottles\n8. Filled and sealed\n9. Delivered to shops, then reused by consumers (la boucle recommence)\nAucune date, aucun chiffre en dehors de la température."},
+ t2:"Some people find it difficult to learn a second language, even after several years of study.\n\nWhy is this the case? What can be done to help these learners?"
+},
+{
+ n:"Examen 6", t1kind:"Maps", t2kind:"Opinion (positive / negative)",
+ t1:"The maps below show the centre of the town of Newbridge in 1990 and the same area today.",
+ cap:"Newbridge town centre: 1990 and today",
+ chart:{kind:"custom", svg:MAP_TOWN,
+   dataText:"Deux cartes du même quartier (avant / après).\nEn 1990 : farmland au nord ; shops à l’ouest de Main Street ; school à l’est ; factory au sud-ouest, près de la rivière ; car park au sud-est ; River Ness au sud ; Main Street traverse le quartier d’ouest en est.\nAujourd’hui : la farmland a été remplacée par un housing estate ; la zone commerçante a été piétonnisée ; l’école a été agrandie ; l’usine a été convertie en apartments ; le car park est devenu une pedestrian square ; une footbridge a été construite au-dessus de la rivière ; Main Street a été élargie."},
+ t2:"In many countries, an increasing number of people are choosing to live alone.\n\nIs this a positive or a negative development?"
+},
+{
+ n:"Examen 7", t1kind:"Mixed charts", t2kind:"Discussion",
+ t1:"The chart below shows the number of international students enrolled at one university (bars) and their overall satisfaction rate (line) between 2016 and 2023.",
+ cap:"International enrolment and satisfaction rate, 2016–2023",
+ chart:{kind:"mixed", unit:"students", unitR:"% satisfied", cats:["2016","2017","2018","2019","2020","2021","2022","2023"],
+   bars:{name:"Students enrolled", data:[1200,1500,1750,1800,900,1100,1600,2400]},
+   line:{name:"Satisfaction rate", data:[78,80,82,83,71,74,79,86]}},
+ t2:"Some people think that the best way to reduce crime is to give longer prison sentences. Others, however, believe that there are better alternative ways of reducing crime.\n\nDiscuss both views and give your own opinion."
+},
+{
+ n:"Examen 8", t1kind:"Line graph + projections", t2kind:"Opinion",
+ t1:"The graph below shows online and in-store retail sales in Country Z between 2010 and 2022, with projected figures up to 2030.",
+ cap:"Online and in-store retail sales, Country Z, 2010–2030 (billions of dollars)",
+ chart:{kind:"line", unit:"$ billions", cats:["2010","2014","2018","2022","2026","2030"], projFrom:4, series:[
+   {name:"In-store sales", data:[210,200,185,160,140,125]},
+   {name:"Online sales",   data:[20,45,90,150,210,270]}]},
+ t2:"Some people believe that technology has made our lives more complex, rather than simpler.\n\nTo what extent do you agree or disagree?"
+}];
+
+/* ============================================================
+   LOGIQUE
+   ============================================================ */
+const LS = "ielts-exam-v1";
+let S = { exam:0, answers:{}, theme:"dark", showWc:true };
+function load(){ try{ const r = localStorage.getItem(LS); if(r) S = Object.assign(S, JSON.parse(r)); }catch(e){} }
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme", S.theme==="light" ? "light" : "dark");
+  $("themeBtn").textContent = S.theme==="light" ? "☀️" : "🌙";
+}
+$("themeBtn").addEventListener("click", function(){ S.theme = S.theme==="light"?"dark":"light"; save(); applyTheme(); });
+
+let toastT=null;
+function toast(m){ const el=$("toast"); el.textContent=m; el.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(function(){ el.classList.remove("show"); },1600); }
+
+function words(t){ const a = t.trim().split(/\s+/).filter(Boolean); return a.length; }
+function ansKey(i){ return "e"+i; }
+function curAns(){ return S.answers[ansKey(S.exam)] || {t1:"",t2:""}; }
+
+function renderExam(){
+  const e = EXAMS[S.exam];
+  $("t1kind").textContent = e.t1kind;
+  $("t2kind").textContent = e.t2kind;
+  $("t1instr").textContent = e.t1;
+  $("t1fig").innerHTML = renderChart(e.chart);
+  $("t1cap").textContent = e.cap;
+  $("t1data").innerHTML = "<pre style=\"white-space:pre-wrap;font-size:12.5px;margin:6px 0 0\">"+dataText(e.chart)+"</pre>";
+  $("t1dataWrap").open = false;
+  $("t2instr").textContent = e.t2;
+  const a = curAns();
+  $("t1txt").value = a.t1; $("t2txt").value = a.t2;
+  updateWc();
+  $("examSel").value = String(S.exam);
+}
+(function buildSel(){
+  $("examSel").innerHTML = EXAMS.map(function(e,i){
+    return '<option value="'+i+'">'+e.n+" — "+e.t1kind+" + "+e.t2kind+"</option>";
+  }).join("");
+})();
+$("examSel").addEventListener("change", function(){ S.exam = parseInt(this.value,10); save(); renderExam(); resetTimer(); });
+$("randomBtn").addEventListener("click", function(){
+  let i = S.exam; while(EXAMS.length>1 && i===S.exam) i = Math.floor(Math.random()*EXAMS.length);
+  S.exam = i; save(); renderExam(); resetTimer(); toast(EXAMS[i].n);
+});
+$("wcBtn").addEventListener("click", function(){
+  S.showWc = !S.showWc; save(); this.classList.toggle("on", S.showWc); updateWc();
+  toast(S.showWc ? "Compteur affiché" : "Mode papier : compteur masqué");
+});
+
+function wcLabel(el, n, min){
+  if(!S.showWc){ el.innerHTML = '<span class="muted">Compteur masqué (mode papier)</span>'; return; }
+  const ok = n >= min;
+  el.innerHTML = "<b class=\""+(ok?"ok":"no")+"\">"+n+"</b> mot"+(n>1?"s":"")
+    + ' <span class="muted">· minimum '+min+(ok?" ✅":" — il en manque "+(min-n))+"</span>";
+}
+function updateWc(){
+  wcLabel($("t1wc"), words($("t1txt").value), 150);
+  wcLabel($("t2wc"), words($("t2txt").value), 250);
+}
+function onType(){
+  S.answers[ansKey(S.exam)] = {t1:$("t1txt").value, t2:$("t2txt").value};
+  save(); updateWc();
+}
+$("t1txt").addEventListener("input", onType);
+$("t2txt").addEventListener("input", onType);
+$("clearBtn").addEventListener("click", function(){
+  if(!confirm("Effacer vos réponses pour "+EXAMS[S.exam].n+" ?")) return;
+  delete S.answers[ansKey(S.exam)]; save(); $("t1txt").value=""; $("t2txt").value=""; updateWc();
+  toast("Réponses effacées");
+});
+
+/* — chronomètre 60 minutes — */
+const TOTAL = 60*60;
+let left = TOTAL, tick = null, running = false;
+function fmt(s){ const m = Math.floor(Math.abs(s)/60), x = Math.abs(s)%60;
+  return (s<0?"-":"")+String(m).padStart(2,"0")+":"+String(x).padStart(2,"0"); }
+function paintClock(){
+  const c = $("clock");
+  c.textContent = fmt(left);
+  c.classList.toggle("warn", left<=10*60 && left>0);
+  c.classList.toggle("over", left<=0);
+  $("tprog").style.width = Math.max(0, Math.min(100,(TOTAL-left)/TOTAL*100))+"%";
+  const used = TOTAL-left;
+  $("clockLbl").textContent = left<=0 ? "⏰ Temps écoulé — dans le vrai test, vous devez rendre votre copie."
+    : used < 20*60 ? "Task 1 recommandée jusqu’à 20:00 écoulées (reste "+fmt(20*60-used)+" sur la Task 1)"
+    : "Vous devriez être sur la Task 2 — il reste "+fmt(left)+" pour la terminer";
+}
+function startTimer(){
+  if(running) return;
+  running = true; $("startBtn").textContent = "▶️ En cours…";
+  tick = setInterval(function(){ left--; paintClock(); if(left===0) toast("⏰ Temps écoulé"); }, 1000);
+}
+function pauseTimer(){ running=false; clearInterval(tick); tick=null; $("startBtn").textContent="▶️ Reprendre"; }
+function resetTimer(){ pauseTimer(); left = TOTAL; $("startBtn").textContent="▶️ Démarrer l’épreuve"; paintClock(); }
+$("startBtn").addEventListener("click", startTimer);
+$("pauseBtn").addEventListener("click", pauseTimer);
+$("resetTimeBtn").addEventListener("click", function(){ if(confirm("Remettre le chronomètre à 60:00 ?")) resetTimer(); });
+
+/* — construction du texte de correction — */
+const GRID = "Tu es examinateur IELTS Academic certifié. Corrige ma copie ci-dessous en appliquant STRICTEMENT les descripteurs officiels, sans complaisance.\n\n"
+ + "Pour CHACUN des 4 critères, donne une note en bandes (0–9, demi-points autorisés) et deux phrases de justification citant mon texte :\n"
+ + "1. Task Achievement / Task Response\n2. Coherence and Cohesion\n3. Lexical Resource\n4. Grammatical Range and Accuracy\n\n"
+ + "Puis fournis :\n"
+ + "- la note globale de la tâche (moyenne des 4 critères, arrondie selon les règles IELTS) ;\n"
+ + "- les 3 problèmes qui me coûtent le plus de points, classés par impact ;\n"
+ + "- la liste complète de mes erreurs, au format : « ma phrase » → correction → la règle en une ligne ;\n"
+ + "- une version réécrite de MA réponse au niveau band 8+, qui garde mes idées et ma structure ;\n"
+ + "- 3 consignes concrètes à appliquer à ma prochaine rédaction.\n"
+ + "Vérifie aussi que mes chiffres et mes comparaisons correspondent bien aux données fournies.";
+
+function block(task){
+  const e = EXAMS[S.exam];
+  if(task===1){
+    const t = $("t1txt").value.trim();
+    return "===== IELTS ACADEMIC WRITING TASK 1 (20 minutes, 150 mots minimum) =====\n"
+      + "You should spend about 20 minutes on this task.\n\n" + e.t1 + "\n\n"
+      + "Summarise the information by selecting and reporting the main features, and make comparisons where relevant.\n"
+      + "Write at least 150 words.\n\n"
+      + "--- Données du sujet (" + e.cap + ") ---\n" + dataText(e.chart) + "\n\n"
+      + "===== MA RÉPONSE (" + words(t) + " mots) =====\n" + (t || "(vide)");
+  }
+  const t = $("t2txt").value.trim();
+  return "===== IELTS ACADEMIC WRITING TASK 2 (40 minutes, 250 mots minimum) =====\n"
+    + "You should spend about 40 minutes on this task.\n\nWrite about the following topic:\n\n" + e.t2 + "\n\n"
+    + "Give reasons for your answer and include any relevant examples from your own knowledge or experience.\n"
+    + "Write at least 250 words.\n\n"
+    + "===== MA RÉPONSE (" + words(t) + " mots) =====\n" + (t || "(vide)");
+}
+function fullText(which){
+  const e = EXAMS[S.exam];
+  const head = GRID + "\n\n(" + e.n + " · temps écoulé : " + fmt(TOTAL-left) + " sur 60:00)\n\n";
+  if(which==="t1") return head + block(1);
+  if(which==="t2") return head + block(2);
+  return head + block(1) + "\n\n\n" + block(2)
+    + "\n\nTermine par une estimation de ma note globale de Writing (Task 1 comptant pour un tiers et Task 2 pour deux tiers).";
+}
+function copy(which, boxId){
+  const txt = fullText(which);
+  if(boxId) $(boxId).value = txt;
+  const done = function(){ toast("✅ Copié — collez-le dans Claude"); };
+  const fail = function(){
+    toast("Copie impossible : utilisez le bloc « texte à copier »");
+    if(boxId){ const b=$(boxId); b.closest("details").open = true; b.focus(); b.select(); }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(function(){
+      try{ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta);
+        ta.select(); const ok=document.execCommand("copy"); ta.remove(); ok?done():fail();
+      }catch(e){ fail(); }
+    });
+  }else{
+    try{ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta);
+      ta.select(); const ok=document.execCommand("copy"); ta.remove(); ok?done():fail();
+    }catch(e){ fail(); }
+  }
+}
+$("t1copy").addEventListener("click", function(){ copy("t1","t1box"); });
+$("t2copy").addEventListener("click", function(){ copy("t2","t2box"); });
+$("allCopy").addEventListener("click", function(){ copy("all","t1box"); });
+
+/* — démarrage — */
+load();
+applyTheme();
+$("wcBtn").classList.toggle("on", S.showWc);
+if(S.exam < 0 || S.exam >= EXAMS.length) S.exam = 0;
+renderExam();
+paintClock();
+</script>
+</body>
+</html>

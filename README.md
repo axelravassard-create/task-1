@@ -4,9 +4,10 @@ Deux pages HTML **autonomes**, sans dépendance ni bibliothèque externe, utilis
 connexion une fois chargées, sur mobile comme sur ordinateur :
 
 - **`index.html`** — Writing **Task 1** (graphiques, process, maps)
-- **`task2.html`** — Writing **Task 2** (essai argumenté), accessible par le bouton en haut de page
+- **`task2.html`** — Writing **Task 2** (essai argumenté)
+- **`exam.html`** — **8 examens blancs** au format officiel, avec chronomètre
 
-Il suffit d'ouvrir l'une ou l'autre dans un navigateur.
+Le sélecteur en haut de chaque page permet de passer de l'une à l'autre.
 
 ## Task 1 — modes de jeu
 
@@ -53,3 +54,33 @@ méthode que la langue.
 
 Même moteur que la Task 1 : répétition espacée, score, séries, thème clair/sombre,
 progression sauvegardée séparément dans le `localStorage`.
+
+## Examens blancs — `exam.html`
+
+8 épreuves complètes **au format officiel** (Task 1 + Task 2, 60 minutes), à corriger en
+collant le tout dans une conversation Claude.
+
+| # | Task 1 | Task 2 |
+|---|---|---|
+| 1 | Line graph — sources d'électricité 2005-2025 | Opinion (agree / disagree) |
+| 2 | Bar chart — loisirs par tranche d'âge | Discussion des deux vues |
+| 3 | Pie charts — dépenses des ménages 2000 vs 2020 | Avantages / inconvénients (`outweigh`) |
+| 4 | Table — population de cinq villes, avec projections | Problème & solution |
+| 5 | Process diagram — recyclage du verre | Two-part question |
+| 6 | Maps — centre-ville avant / après | Opinion (positive or negative) |
+| 7 | Mixed charts — effectifs (barres) + satisfaction (courbe) | Discussion des deux vues |
+| 8 | Line graph avec projections en pointillés | Opinion (agree / disagree) |
+
+**Conditions réalistes** : formulations officielles mot pour mot (*Summarise the information by
+selecting and reporting the main features…*, *Give reasons for your answer…*), mentions
+*You should spend about 20/40 minutes on this task*, vrais graphiques avec axes, unités,
+légendes et valeurs, **correcteur orthographique désactivé** comme dans le vrai test,
+chronomètre de 60 minutes qui rappelle de passer à la Task 2 à 20:00, compteur de mots
+masquable (mode papier).
+
+**Correction** : le bouton « Copier pour correction » place dans le presse-papier la consigne
+officielle, **les données chiffrées du graphique** (pour que la correction vérifie vos chiffres),
+votre réponse avec son nombre de mots et le temps écoulé, ainsi que la grille de correction :
+note par critère sur les 4 critères officiels, note globale, erreurs corrigées une par une,
+version réécrite band 8+ et 3 actions pour progresser. Les réponses sont sauvegardées dans le
+navigateur.
