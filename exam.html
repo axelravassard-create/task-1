@@ -229,6 +229,33 @@ details.model[open]>summary::after{content:"▴"}
   padding:8px 11px;font-size:13px;line-height:1.45}
 .mwords{font-size:12px;color:var(--muted);margin-bottom:10px}
 h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 6px}
+/* — mode corrigés — */
+body.corrige .timerbox, body.corrige #wcBtn, body.corrige #randomBtn, body.corrige #t1txt, body.corrige #t2txt,
+body.corrige .wc, body.corrige details.copyd, body.corrige #actionsRow, body.corrige .done,
+body.corrige details.model{display:none!important}
+.walk{margin-top:14px}
+.step{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-top:12px}
+.step h4{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:9px;line-height:1.3}
+.step .num{flex:0 0 auto;width:24px;height:24px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:800;color:#06202b;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+.step p{margin:0;font-size:14px;line-height:1.5}
+.step ul{margin:0;padding-left:19px}
+.step li{margin:5px 0;font-size:14px;line-height:1.5}
+.step li b, .step p b{color:var(--acc)}
+.step.warn{border-left:4px solid var(--warn)}
+.step.good{border-left:4px solid var(--good)}
+.step.bad{border-left:4px solid var(--bad)}
+.step.bad .num{background:var(--bad);color:#fff}
+.weaktxt{font-size:14.5px;line-height:1.6;background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 12px}
+.weaktxt p{margin:0 0 8px}
+.weaktxt p:last-child{margin:0}
+.errs{display:grid;gap:8px}
+.errs div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.45;
+  display:grid;grid-template-columns:1fr auto;gap:3px 10px}
+.errs i{grid-column:1/2;color:var(--bad);font-weight:600}
+.errs span{grid-column:1/2}
+.errs b{grid-column:2/3;grid-row:1/3;align-self:start;font-size:10.5px;font-weight:800;letter-spacing:.3px;color:var(--acc2);
+  background:color-mix(in srgb,var(--acc2) 14%,transparent);border-radius:999px;padding:3px 8px;white-space:nowrap}
 .done{font-size:13px;line-height:1.5;background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--acc);
   border-radius:12px;padding:11px 13px;margin-top:12px}
 </style>
@@ -237,13 +264,14 @@ h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--
 <header>
   <div class="wrap">
     <div class="hrow">
-      <div class="logo">⏱️ Examens blancs IELTS
+      <div class="logo" id="pageTitle">⏱️ Examens blancs IELTS
         <small>Format officiel · 60 minutes · correction par copier-coller</small>
       </div>
       <div class="navswitch">
         <a href="index.html">📊 Task 1</a>
         <a href="task2.html">✍️ Task 2</a>
-        <a href="exam.html" class="on">⏱️ Examens</a>
+        <a href="exam.html#corriges" id="navCo">📗 Corrigés</a>
+        <a href="exam.html" id="navEx" class="on">⏱️ Examens</a>
       </div>
       <button class="iconbtn" id="themeBtn" title="Thème clair / sombre">🌙</button>
     </div>
@@ -284,6 +312,7 @@ h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--
       <div id="t1data" style="overflow-x:auto"></div>
     </details>
     <p class="rubric">Summarise the information by selecting and reporting the main features, and make comparisons where relevant.<br>Write at least 150 words.</p>
+    <div class="walk" id="w1"></div>
     <textarea id="t1txt" spellcheck="false" autocapitalize="off" autocorrect="off"
       placeholder="Rédigez votre réponse ici, en phrases complètes…"></textarea>
     <div class="wc">
@@ -307,6 +336,7 @@ h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--
     <p class="muted" style="margin:0 0 4px">Write about the following topic:</p>
     <div class="instr" id="t2instr">…</div>
     <p class="rubric">Give reasons for your answer and include any relevant examples from your own knowledge or experience.<br>Write at least 250 words.</p>
+    <div class="walk" id="w2"></div>
     <textarea id="t2txt" spellcheck="false" autocapitalize="off" autocorrect="off"
       placeholder="Rédigez votre essai ici…"></textarea>
     <div class="wc">
@@ -319,7 +349,7 @@ h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--
       <div class="modelbody" id="m2"></div></details>
   </section>
 
-  <div class="row">
+  <div class="row" id="actionsRow">
     <button class="btn" id="allCopy">📋 Copier l'examen complet (Task 1 + Task 2)</button>
     <button class="btn bad" id="clearBtn">🗑️ Effacer mes réponses</button>
   </div>
@@ -1199,10 +1229,557 @@ t2:{parts:[
         "The decisive point, in my view, is that the abuses described above are all consequences of […]."]}
 }];
 
+
+/* ============================================================
+   CORRIGÉS : la démarche pas à pas + une copie faible annotée
+   type · spot (ce qu'on repère) · plan · traps (pièges évités)
+   weak = {band, text, errs:[[extrait, problème, critère]]}
+   ============================================================ */
+const WALK = [
+/* ---------- EXERCICE 1 ---------- */
+{
+t1:{type:"Line graph · 4 séries · 5 dates (2005 → 2025) · pourcentages d’un total : chaque année fait 100 %.",
+ spot:["<b>Renversement majeur</b> : les renouvelables passent de la dernière place (10 %) à la première (50 %).",
+       "<b>Le plus grand changement</b> : le charbon s’effondre de 40 % à 10 %, soit −30 points.",
+       "Le gaz baisse aussi, mais doucement : pic à 32 % en 2010, 22 % en 2025.",
+       "<b>L’exception</b> : le nucléaire reste quasi stable, entre 18 et 20 %.",
+       "Les renouvelables dépassent le charbon et le gaz entre 2015 et 2020."],
+ plan:["<b>Intro</b> — paraphraser : shows → compares ; 2005-2025 → over the twenty-year period.",
+       "<b>Overview</b> — renversement charbon ↔ renouvelables + nucléaire stable. Aucun chiffre.",
+       "<b>Corps 1</b> — les deux énergies fossiles en baisse, regroupées.",
+       "<b>Corps 2</b> — la hausse des renouvelables, puis l’exception du nucléaire."],
+ traps:["Décrire les quatre courbes l’une après l’autre avec les vingt valeurs.",
+        "Écrire « coal decreased by 30% » au lieu de « 30 percentage points ».",
+        "Expliquer pourquoi (politique climatique…) : toute spéculation est interdite."],
+ weak:{band:"5", text:"The graph shows the sources of electricity generated in Country X between 2005 and 2025. In 2005 coal was 40%, gas was 30%, nuclear was 20% and renewables was 10%. In 2010 coal was 33% and gas was 32%, nuclear was 20% and renewables was 15%. In 2015 coal decreased to 26% and renewables increased to 25%. In 2020 coal was 17% and renewables was 38%. In 2025 coal was only 10% and renewables was 50%, it is the biggest. Gas decreased from 32% to 22% and nuclear was stable. In conclusion, renewables increased a lot because the government want to protect the environment, which is a very good thing for the future.",
+  errs:[["The graph shows the sources of electricity generated in Country X between 2005 and 2025.","Consigne recopiée presque mot pour mot : aucun crédit de paraphrase.","LR"],
+        ["In 2005 coal was 40%, gas was 30%, nuclear was 20%…","Liste chronologique de toutes les valeurs, sans regroupement ni comparaison.","TA · CC"],
+        ["(aucun overview)","Pas une phrase ne résume la tendance d’ensemble : sans overview, Task Achievement est plafonné à 5.","TA"],
+        ["renewables was 10%","« renewables » est pluriel : renewables were.","GRA"],
+        ["…was 50%, it is the biggest.","Deux propositions collées par une virgule (comma splice).","GRA"],
+        ["because the government want to protect the environment, which is a very good thing","Spéculation sur les causes + opinion : les deux sont interdits en Task 1. Et : the government wants.","TA · GRA"],
+        ["(113 mots)","Sous les 150 mots : pénalité automatique.","TA"]]}},
+t2:{type:"Opinion — « To what extent do you agree or disagree? » : il faut UNE position claire, tenue jusqu’au bout.",
+ spot:["✅ Compétences pratiques et employabilité — retenue : facile à illustrer.",
+       "✅ Cohésion sociale, mélange des milieux — retenue.",
+       "⚖️ Objection : surcharge pour les élèves — à concéder puis réfuter.",
+       "❌ « C’est bien pour la société » — écartée : trop vague pour être développée.",
+       "<b>Position</b> : strongly agree."],
+ plan:["<b>Intro</b> — paraphrase + thèse + annonce des deux arguments.",
+       "<b>Corps 1</b> — employabilité, en PEEL, avec l’exemple de la banque alimentaire.",
+       "<b>Corps 2</b> — concession (surcharge) puis réfutation (bénéfice social).",
+       "<b>Conclusion</b> — thèse reformulée + synthèse, rien de neuf."],
+ traps:["Exposer le pour et le contre sans trancher : c’est répondre à une autre question.",
+        "Changer d’avis en conclusion.",
+        "Lister cinq avantages en une phrase chacun."],
+ weak:{band:"5", text:"Nowadays, in this modern world, community service is a very important topic. Some people think it should be compulsory and some people think it should not be. In this essay I will discuss both sides.\n\nOn one hand, community service is good for students. They can learn many things like working in team, being responsible and helping people. It is also good for their CV and for the society. For example in my country many students do volunteering.\n\nOn the other hand, students have already a lot of homeworks and exams. They don't have time for doing community service and they will be stressed. Also some students don't want to do it so it is not useful to obligate them.\n\nIn conclusion, community service has advantages and disadvantages. I think it is good but it should not be compulsory for everybody.",
+  errs:[["Nowadays, in this modern world, community service is a very important topic.","Formule mémorisée et vide : elle ne rapporte rien et se repère immédiatement.","TR · LR"],
+        ["In this essay I will discuss both sides.","Mauvais plan : la consigne demande un avis, pas une discussion.","TR"],
+        ["They can learn many things like working in team, being responsible and helping people.","Idées listées sans explication : rien n’est développé.","TR"],
+        ["For example in my country many students do volunteering.","Exemple vague qui ne démontre rien.","TR"],
+        ["a lot of homeworks","« homework » est indénombrable.","GRA"],
+        ["They don't have time","Contraction : registre trop familier.","LR"],
+        ["I think it is good but it should not be compulsory","Position donnée à la dernière ligne, et contradictoire (« good » mais « not compulsory ») : elle reste floue.","TR"],
+        ["(141 mots)","Loin des 250 mots minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 2 ---------- */
+{
+t1:{type:"Bar chart groupé · 4 activités × 3 tranches d’âge · heures par semaine · une seule année (2023) : pas d’évolution dans le temps, uniquement des comparaisons.",
+ spot:["<b>Plus grand contraste</b> : réseaux sociaux, 14 h chez les 18-29 ans contre 3 h chez les 50 ans et plus (plus de 4 fois plus).",
+       "<b>Profil inverse</b> : la lecture augmente avec l’âge, de 2 h à 7 h.",
+       "<b>Valeur la plus haute</b> : la télévision, 18 h chez les plus de 50 ans.",
+       "<b>L’exception</b> : le sport varie à peine (3 à 5 h) d’un groupe à l’autre."],
+ plan:["<b>Intro</b> — paraphrase (spent on → devoted to).",
+       "<b>Overview</b> — télé dominante ; réseaux sociaux et lecture opposent les générations ; sport le plus faible partout.",
+       "<b>Corps 1</b> — les deux séries opposées : réseaux sociaux et lecture.",
+       "<b>Corps 2</b> — la télé (progression régulière) puis le sport (exception)."],
+ traps:["Parler d’« augmentation » entre groupes d’âge comme s’il s’agissait d’années : dire « rose with age », « among the oldest ».",
+        "Décrire groupe par groupe : on répète trois fois les quatre activités.",
+        "Expliquer pourquoi les jeunes aiment les réseaux sociaux."],
+ weak:{band:"5", text:"The bar chart gives informations about the hours per week spent on four leisure activities by three age groups in 2023.\n\nFor the people 18-29, they spend 14 hours on social media, 9 hours watching TV, 5 hours for sport and 2 hours reading. For the people 30-49, they spend 8 hours on social media, 12 hours on TV, 4 hours on sport and 3 hours reading. The people who are more than 50 spend 3 hours on social media, 18 hours watching TV, 3 hours for sport and 7 hours reading.\n\nAs we can see, young people use social media more than old people, maybe because they have smartphones. Old people watch more TV. Sport is not very popular for all ages.",
+  errs:[["gives informations","« information » est indénombrable : gives information.","GRA"],
+        ["For the people 18-29, they spend…","Présent au lieu du passé (données de 2023) et double sujet (the people…, they).","GRA"],
+        ["(les trois groupes décrits l’un après l’autre)","Les douze valeurs sont recopiées dans l’ordre : ni sélection, ni comparaison chiffrée.","TA · CC"],
+        ["As we can see, young people use social media more…","La synthèse arrive à la fin, incomplète : l’élément le plus frappant (la lecture qui monte avec l’âge) manque.","TA"],
+        ["maybe because they have smartphones","Spéculation sur les causes : interdite en Task 1.","TA"],
+        ["(123 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Discussion — « Discuss both views and give your own opinion » : trois obligations — vue A, vue B, ET votre opinion.",
+ spot:["Vue A (parents) : les valeurs s’acquièrent tôt, par imitation — exemple du portefeuille rendu.",
+       "Vue B (école) : une « mini-société » où l’on apprend à négocier et partager avec des inconnus.",
+       "<b>Position</b> : complémentaires, mais la famille est décisive, car elle agit en premier.",
+       "❌ Écarté : « les deux sont importants » sans hiérarchie — ce n’est pas une position."],
+ plan:["<b>Intro</b> — les deux vues + position annoncée.",
+       "<b>Corps 1</b> — la vue A, développée sérieusement.",
+       "<b>Corps 2</b> — la vue B, puis la position tranchée.",
+       "<b>Conclusion</b> — même position qu’en introduction."],
+ traps:["Oublier l’opinion, ou la donner dans la toute dernière phrase.",
+        "Bâcler la vue qu’on ne partage pas.",
+        "S’arrêter à « both are important »."],
+ weak:{band:"5", text:"It is a very controversial question who must teach children to be good members of society. Some people think parents, others think school.\n\nFirstly, parents are very important because they are with their children every day. They must teach them good manners and respect. If parents don't do it, children will become bad.\n\nSecondly, school is also important. Teachers can teach children many things like history and rules. At school children learn to live with other children.\n\nIn my opinion, both parents and school are important and they must work together. Parents teach at home and school teach at school. So both are responsible.\n\nIn conclusion, I think parents and school must teach children to be good members of society.",
+  errs:[["It is a very controversial question… Some people think parents, others think school.","Introduction qui recopie le sujet et n’annonce aucune position.","TR · LR"],
+        ["If parents don't do it, children will become bad.","Généralisation simpliste, non argumentée, avec une contraction.","TR · LR"],
+        ["Teachers can teach children many things like history and rules.","Hors sujet partiel : la consigne porte sur le civisme, pas sur les matières scolaires.","TR"],
+        ["both parents and school are important","Pas de position réelle : il fallait trancher ou au moins hiérarchiser.","TR"],
+        ["school teach at school","Accord : school teaches — et répétition maladroite.","GRA · LR"],
+        ["Firstly… Secondly… In my opinion… In conclusion","Connecteurs mécaniques ; chaque paragraphe tient en deux ou trois phrases non développées.","CC"],
+        ["(120 mots)","La moitié du minimum requis.","TR"]]}}
+},
+/* ---------- EXERCICE 3 ---------- */
+{
+t1:{type:"Deux camemberts · 5 catégories · 2000 vs 2020 · parts d’un tout (chaque camembert = 100 %).",
+ spot:["<b>Renversement</b> : le logement (25 % → 38 %) remplace l’alimentation (30 % → 20 %) comme premier poste.",
+       "Écarts à exprimer en points : <b>+13 points</b> pour le logement, <b>−10</b> pour l’alimentation.",
+       "Les loisirs sont la seule autre catégorie en hausse (10 % → 16 %).",
+       "Transport quasi stable (15 % → 14 %) ; « Other » devient le plus petit poste (12 %)."],
+ plan:["<b>Intro</b> — the two pie charts compare how households divided their spending.",
+       "<b>Overview</b> — le logement remplace l’alimentation ; les dépenses se concentrent sur le logement.",
+       "<b>Corps 1</b> — le renversement, en fractions et en points.",
+       "<b>Corps 2</b> — les trois petites catégories, regroupées."],
+ traps:["« Housing increased by 13% » : c’est 13 percentage points.",
+        "Décrire le camembert de 2000 puis celui de 2020 séparément : on ne compare jamais.",
+        "Écrire que les ménages dépensent « plus d’argent » : un camembert donne des proportions, pas des montants."],
+ weak:{band:"5", text:"The two pie charts show the household spending in Country Y in 2000 and 2020.\n\nIn 2000, food was 30%, housing was 25%, other was 20%, transport was 15% and leisure was 10%. Food was the biggest part.\n\nIn 2020, housing was 38%, food was 20%, leisure was 16%, transport was 14% and other was 12%. Housing was the biggest part.\n\nSo housing increased by 13% and food decreased by 10%. People spent more money for their house in 2020 because houses are more expensive now. Leisure increased also, people have more free time.",
+  errs:[["In 2000, food was 30%… In 2020, housing was 38%…","Chaque camembert est décrit séparément : aucune comparaison avant le dernier paragraphe.","TA · CC"],
+        ["(aucun overview)","Pas de phrase de synthèse sur le renversement logement / alimentation.","TA"],
+        ["housing increased by 13%","Écart entre deux pourcentages : 13 percentage points.","TA · LR"],
+        ["People spent more money for their house","Un camembert donne des proportions : rien ne dit que les ménages ont dépensé davantage.","TA"],
+        ["because houses are more expensive now… people have more free time","Spéculation sur les causes.","TA"],
+        ["Leisure increased also","Ordre des mots : Leisure also increased.","GRA"],
+        ["(94 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Avantages / inconvénients avec « outweigh » — question fermée : il faut un verdict.",
+ spot:["Avantages : accès aux emplois, aux hôpitaux, aux universités (effet de concentration) ; salaires plus élevés.",
+       "Inconvénients : loyers, transports saturés, habitat informel, campagnes vidées.",
+       "<b>Argument de pesée</b> : les inconvénients viennent surtout d’une mauvaise planification, pas de la migration elle-même.",
+       "<b>Verdict</b> : les avantages l’emportent."],
+ plan:["<b>Intro</b> — paraphrase + verdict formulé avec « outweigh ».",
+       "<b>Corps 1</b> — les avantages : mécanisme de concentration + exemple individuel.",
+       "<b>Corps 2</b> — les inconvénients, traités honnêtement puis relativisés.",
+       "<b>Conclusion</b> — « On balance… outweigh » + la raison."],
+ traps:["Lister les deux côtés sans jamais dire lequel l’emporte.",
+        "Un verdict différent entre l’introduction et la conclusion.",
+        "Un paragraphe d’avantages de cinq lignes contre une ligne d’inconvénients."],
+ weak:{band:"5", text:"In recent years, a lot of people move from countryside to big cities for having a better life. This essay will discuss the advantages and disadvantages of this trend.\n\nThe first advantage is that in the city there are more jobs and the salary is higher. There are also more hospitals, universities and entertainment. For example, my cousin moved to Paris and he found a good job.\n\nHowever there are also disadvantages. The cities become very crowded and there is a lot of pollution and traffic. The houses are very expensive and some people must live in bad conditions. Also the villages become empty.\n\nIn conclusion, moving to the city has advantages and disadvantages. It depends on the person. Governments should build more houses in the cities.",
+  errs:[["This essay will discuss the advantages and disadvantages","La question demande lequel l’emporte : annoncer une simple liste, c’est répondre à une autre question.","TR"],
+        ["for having a better life","Le but s’exprime avec to + infinitif : to have a better life.","GRA"],
+        ["a lot of people move","« a lot of » est familier, et le présent simple est mal choisi (are moving / have moved).","LR · GRA"],
+        ["my cousin moved to Paris and he found a good job","Anecdote personnelle qui ne prouve rien de général.","TR"],
+        ["It depends on the person.","Refus de trancher, alors que « outweigh » l’exige.","TR"],
+        ["Governments should build more houses in the cities.","Idée nouvelle en conclusion, jamais développée.","CC · TR"],
+        ["(127 mots)","Bien sous le minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 4 ---------- */
+{
+t1:{type:"Tableau · 5 villes · 3 colonnes (1990, 2010, 2030 projeté) · millions d’habitants.",
+ spot:["<b>Tokyo, à part</b> : la plus grande en 1990 (32,5 M) mais la seule qui devrait décliner d’ici 2030 (36,0 M).",
+       "<b>Delhi</b> : la plus forte croissance en volume (9,7 → 39,0 M), elle devient la plus peuplée en 2030.",
+       "<b>Lagos</b> : la croissance relative la plus rapide (× 5, de 4,8 à 24,2 M) — c’était la plus petite en 1990.",
+       "Le Caire et São Paulo : croissance soutenue mais plus modérée.",
+       "La colonne 2030 est une projection → <b>is projected to / is expected to</b>."],
+ plan:["<b>Intro</b> — paraphrase + mention des projections.",
+       "<b>Overview</b> — croissance générale ; Tokyo, l’exception ; Delhi prend la tête.",
+       "<b>Corps 1</b> — Tokyo face à Delhi.",
+       "<b>Corps 2</b> — Lagos (× 5), puis Le Caire et São Paulo."],
+ traps:["Décrire le tableau ligne par ligne (Tokyo, puis Delhi, puis Lagos…).",
+        "Mettre 2030 au passé (« Delhi reached 39 million in 2030 »).",
+        "Recopier les quinze valeurs."],
+ weak:{band:"5.5", text:"The table shows the population of five cities in 1990, 2010 and 2030.\n\nTokyo had 32.5 million people in 1990, 36.9 million in 2010 and 36.0 million in 2030. Delhi had 9.7 million in 1990, 22 million in 2010 and 39 million in 2030. Lagos had 4.8 million in 1990, 10.4 million in 2010 and 24.2 million in 2030. São Paulo had 14.8 million, 19.7 million and 23.8 million. Cairo had 9.1 million, 16.9 million and 25.5 million.\n\nAll the cities increased except Tokyo which decreased a little in 2030. Delhi will be the biggest city in 2030 and Lagos grew very fast.",
+  errs:[["Tokyo had… Delhi had… Lagos had…","Description ligne par ligne : les quinze valeurs recopiées, aucun regroupement.","TA · CC"],
+        ["36.0 million in 2030","2030 est une projection : « is projected to fall slightly to 36.0 million ».","GRA · TA"],
+        ["All the cities increased","Une ville n’« augmente » pas : c’est sa population qui augmente.","LR"],
+        ["Tokyo which decreased","Relative non restrictive : virgule obligatoire (Tokyo, which…).","GRA"],
+        ["Delhi will be the biggest city in 2030 and Lagos grew very fast.","Les bonnes observations arrivent à la fin, en une ligne, sans chiffres pour les appuyer.","TA · CC"],
+        ["(103 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Problème & solution — deux questions : quels problèmes cause la congestion ? quelles mesures ?",
+ spot:["Problème 1 : coût économique — temps perdu, livraisons plus chères.",
+       "Problème 2 : santé publique — pollution concentrée là où la densité est la plus forte.",
+       "Solution 1 : transports publics fréquents et fiables (condition : plus rapides que la voiture).",
+       "Solution 2 : péage urbain — exemple de Londres, 2003.",
+       "❌ Écarté : « les gens doivent être plus responsables » — aucun mécanisme."],
+ plan:["<b>Intro</b> — annonce des deux problèmes et des deux mesures.",
+       "<b>Corps 1</b> — les problèmes, chacun expliqué.",
+       "<b>Corps 2</b> — les mesures, reliées aux problèmes.",
+       "<b>Conclusion</b> — une phrase par question."],
+ traps:["Traiter les <i>causes</i> de la congestion alors que la consigne demande les <i>problèmes qu’elle cause</i>.",
+        "Des solutions sans acteur (« something must be done »).",
+        "Des solutions qui ne répondent à aucun problème cité."],
+ weak:{band:"5", text:"Traffic congestion is a big problem in the world today. There are many reasons for traffic jams, for example there are too many cars, the roads are too small and people are lazy to take the bus.\n\nTraffic causes a lot of problems. People lose time, they are stressed and they arrive late at work. There is also pollution which is bad for health and for the planet.\n\nTo solve this problem, the government must do something. People should use more public transport or bicycle. Also they can work at home. The government can also build more roads.\n\nIn conclusion, traffic congestion is a serious problem and we must find solutions quickly to have a better life in cities.",
+  errs:[["There are many reasons for traffic jams…","Ce paragraphe traite des causes : la consigne demande les problèmes causés par la congestion.","TR"],
+        ["people are lazy to take the bus","Généralisation, et structure fautive : too lazy to take the bus.","TR · GRA"],
+        ["People lose time, they are stressed and they arrive late at work.","Trois idées listées, aucune développée ni illustrée.","TR"],
+        ["the government must do something","Solution vide : ni mesure, ni mécanisme.","TR"],
+        ["The government can also build more roads.","Non argumenté, et discutable : de nouvelles routes attirent souvent plus de trafic.","TR"],
+        ["to have a better life in cities","Formule creuse en conclusion.","LR"],
+        ["(119 mots)","La moitié du minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 5 ---------- */
+{
+t1:{type:"Diagramme de process · 9 étapes · cycle fermé (les bouteilles reviennent au début) · aucune date, aucun chiffre sauf la température.",
+ spot:["<b>Nombre d’étapes</b> : 9, de la collecte à la livraison en magasin.",
+       "<b>Nature du process</b> : cyclique — les bouteilles vendues sont réutilisées puis recollectées.",
+       "<b>Deux phases</b> : d’abord préparer le verre (transport, tri, lavage), puis le transformer (broyage, fusion, moulage).",
+       "Seul chiffre : la fusion à 1 500 °C — à reprendre tel quel, sans rien inventer d’autre."],
+ plan:["<b>Intro</b> — the diagram illustrates the stages involved in recycling glass bottles.",
+       "<b>Overview</b> — 9 étapes, début et fin, caractère cyclique. Aucun détail.",
+       "<b>Corps 1</b> — la première moitié : collecte → lavage.",
+       "<b>Corps 2</b> — la seconde moitié : broyage → livraison, et retour au début du cycle."],
+ traps:["Écrire à la voix active (« workers collect the bottles ») : un process se décrit au passif.",
+        "Passer au passé : un process général est au présent simple.",
+        "Répéter « then » à chaque phrase : varier (after this, once…, subsequently, finally)."],
+ weak:{band:"5.5", text:"The diagram shows how glass bottles are recycled.\n\nFirst, people put the bottles in the bottle banks. Then a truck takes the bottles to the plant. Then workers sort the bottles by colour. Then they wash the bottles. Then they crush the glass into small pieces. Then they melt it in a furnace at 1500 degrees. Then they make new bottles. Then they fill the bottles and close them. Then the bottles go to the shops and people buy them again.\n\nIn my opinion recycling glass is very important for the environment because it saves energy and resources.",
+  errs:[["The diagram shows how glass bottles are recycled.","Consigne recopiée ; aucune annonce du nombre d’étapes.","LR"],
+        ["(aucun overview)","Pas de synthèse : ni nombre d’étapes, ni caractère cyclique.","TA"],
+        ["people put… a truck takes… workers sort… they wash…","Voix active et acteurs inventés : un process se décrit au passif (the bottles are sorted, are washed…).","GRA"],
+        ["Then… Then… Then… (8 fois)","Connecteur unique répété : cohésion mécanique, lexique pauvre.","CC · LR"],
+        ["(un seul bloc de phrases courtes)","Aucune phrase complexe (relative, once…, before being…) : la variété grammaticale est nulle.","GRA"],
+        ["In my opinion recycling glass is very important for the environment","Opinion personnelle : interdite en Task 1.","TA"],
+        ["(98 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Two-part question — deux questions directes : pourquoi est-ce difficile ? que faire pour aider ?",
+ spot:["<b>Cause principale</b> : peu d’exposition réelle — cours de grammaire en groupe, très peu de pratique orale.",
+       "Cause aggravante : la peur de l’erreur dans une classe où chaque faute est corrigée en public.",
+       "<b>Remède</b> : une exposition fréquente, utile et sans enjeu — cours dans la langue, tâches concrètes.",
+       "Remède complémentaire : contact quotidien court (podcasts, séries, échanges), évaluation de l’oral.",
+       "Fil rouge : le remède découle directement du diagnostic."],
+ plan:["<b>Intro</b> — cause et remède annoncés en une phrase.",
+       "<b>Corps 1</b> — répond à « why? » : la cause, expliquée et illustrée.",
+       "<b>Corps 2</b> — répond à « what can be done? » : les remèdes, reliés à la cause.",
+       "<b>Conclusion</b> — une proposition par question."],
+ traps:["Répondre longuement à la première question et bâcler la seconde.",
+        "Des remèdes sans lien avec la cause expliquée.",
+        "Parler de soi (« when I learnt English… ») au lieu d’argumenter."],
+ weak:{band:"5.5", text:"Learning a second language is very difficult for many people. In this essay I will explain why and give some solutions.\n\nThere are many reasons why people find it difficult. Firstly, grammar is very complicated, for example in English there are a lot of tenses. Secondly, people don't have time because they work. Thirdly, some people are shy and they are afraid to speak. Also the pronunciation is difficult.\n\nThere are some solutions for this problem. People can watch films in English with subtitles. They can also travel to other countries or use applications like Duolingo. Teachers should make the lessons more interesting.\n\nIn conclusion, learning a language is difficult but it is possible if you work hard and practise every day.",
+  errs:[["In this essay I will explain why and give some solutions.","Annonce creuse : aucune réponse n’est donnée dès l’introduction.","TR"],
+        ["Firstly… Secondly… Thirdly… Also…","Quatre causes listées en une phrase chacune, aucune expliquée.","TR · CC"],
+        ["people don't have time","Contraction : registre familier.","LR"],
+        ["People can watch films… travel… use applications like Duolingo.","Remèdes juxtaposés, sans lien avec les causes citées.","TR · CC"],
+        ["Teachers should make the lessons more interesting.","Vague : comment ? par quel mécanisme ?","TR"],
+        ["if you work hard and practise every day","Passage à « you » et conseil générique : la conclusion ne répond plus aux deux questions.","TR · LR"],
+        ["(122 mots)","Très en dessous des 250 mots.","TR"]]}}
+},
+/* ---------- EXERCICE 6 ---------- */
+{
+t1:{type:"Deux cartes · même quartier en 1990 et aujourd’hui · transformations spatiales, aucun chiffre.",
+ spot:["<b>Changement de caractère</b> : un quartier industriel devient résidentiel et piéton.",
+       "<b>Nord</b> : les terres agricoles sont remplacées par un lotissement.",
+       "<b>Centre</b> : Main Street élargie, commerces piétonnisés, école agrandie.",
+       "<b>Sud</b> : l’usine devient des appartements, le parking une place piétonne, une passerelle franchit la rivière.",
+       "<b>Ce qui reste</b> : l’école et la rue principale gardent leur fonction."],
+ plan:["<b>Intro</b> — the two maps show how the centre of Newbridge has changed since 1990.",
+       "<b>Overview</b> — d’industriel à résidentiel ; l’extension se fait vers le nord.",
+       "<b>Corps 1</b> — le nord et le centre.",
+       "<b>Corps 2</b> — le sud et la rivière."],
+ traps:["Décrire bâtiment par bâtiment au lieu de zone par zone.",
+        "Voix active (« they built a bridge ») : sur une carte, on emploie le passif.",
+        "Répéter « changed » : chaque transformation a son verbe (replaced, converted, widened, extended…)."],
+ weak:{band:"5.5", text:"The maps show the town of Newbridge in 1990 and today.\n\nIn 1990 there was a farmland, some shops, a school, a factory and a car park. Today there are a lot of changes. The farmland changed into houses. The factory changed into apartments. The car park changed into a square. The school is bigger. They built a bridge on the river. The shops are pedestrian now and the road is bigger.\n\nIn my opinion, the town is better today because it is more modern and there is less pollution without the factory.",
+  errs:[["The maps show the town of Newbridge in 1990 and today.","Quasi-recopie de la consigne.","LR"],
+        ["In 1990 there was a farmland, some shops, a school, a factory and a car park.","Inventaire de la carte de 1990 : décrire ce qui existait n’est pas décrire les changements.","TA"],
+        ["changed into… changed into… changed into…","Un seul verbe pour tout : replaced by, converted into, gave way to étaient attendus.","LR"],
+        ["They built a bridge on the river.","Voix active avec un « they » indéfini : a footbridge has been built across the river.","GRA"],
+        ["a farmland","« farmland » est indénombrable : the farmland.","GRA"],
+        ["(aucun overview, aucune structure géographique)","Les changements sont listés dans le désordre, sans vue d’ensemble.","TA · CC"],
+        ["In my opinion, the town is better today…","Opinion et spéculation : interdites en Task 1.","TA"],
+        ["(93 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Opinion — « Is this a positive or a negative development? » : il faut choisir un camp.",
+ spot:["✅ Vivre seul est le résultat d’un <b>choix</b> devenu possible (indépendance économique, notamment des femmes).",
+       "✅ Vivre seul n’est pas s’isoler : réseaux amicaux souvent plus larges.",
+       "⚖️ Risques réels : solitude, pression sur le logement — à concéder, puis requalifier en problèmes d’offre.",
+       "<b>Position</b> : développement globalement positif."],
+ plan:["<b>Intro</b> — paraphrase + verdict (positif) avec une nuance.",
+       "<b>Corps 1</b> — l’argument du choix, illustré par deux cas.",
+       "<b>Corps 2</b> — concession (solitude, logement) puis réfutation.",
+       "<b>Conclusion</b> — concession rappelée, verdict identique."],
+ traps:["Répondre « positive and negative » sans trancher.",
+        "Laisser la concession l’emporter sur sa propre position.",
+        "Confondre avec un sujet « advantages and disadvantages » neutre."],
+ weak:{band:"5.5", text:"Nowadays more and more people live alone. There are positive and negative points about this.\n\nThe positive points are that people have more freedom. They can do what they want, they can decide the decoration of their house and they don't need to share. Also it is good for the independence.\n\nThe negative points are that people can feel lonely and sad. They can have depression. Also it is more expensive to live alone because you pay the rent alone. For example, in Paris the rents are very high.\n\nIn conclusion, living alone has positive and negative points. I think it is a positive development but people must be careful to not be lonely.",
+  errs:[["There are positive and negative points about this.","Aucune position en introduction : la consigne demande un verdict.","TR"],
+        ["They can do what they want, they can decide the decoration of their house","Idées superficielles, sans analyse.","TR"],
+        ["it is good for the independence","Article superflu : good for independence.","GRA"],
+        ["They can have depression.","Affirmation grave et non étayée.","TR"],
+        ["because you pay the rent alone","Passage au « you » : registre trop oral.","LR"],
+        ["I think it is a positive development","Le verdict n’apparaît qu’à la dernière ligne, après deux paragraphes neutres.","TR · CC"],
+        ["to not be lonely","Ordre usuel : not to be lonely.","GRA"],
+        ["(114 mots)","Bien sous le minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 7 ---------- */
+{
+t1:{type:"Graphique mixte · barres (étudiants inscrits) + courbe (% de satisfaits) · 2016 → 2023 · deux unités différentes.",
+ spot:["<b>Lien entre les deux séries</b> : elles évoluent ensemble — même creux (2020), même sommet (2023).",
+       "<b>Rupture</b> en 2020 : les inscriptions sont divisées par deux (1 800 → 900), la satisfaction tombe à 71 %.",
+       "<b>Maximum</b> en 2023 : 2 400 étudiants (le double de 2016) et 86 % de satisfaits.",
+       "Avant 2020 : hausse régulière des deux indicateurs.",
+       "⚠️ On constate que les courbes évoluent ensemble, on ne dit <b>jamais</b> que l’une cause l’autre."],
+ plan:["<b>Intro</b> — nommer les deux séries et leurs unités.",
+       "<b>Overview</b> — hausse générale + les deux séries évoluent en parallèle.",
+       "<b>Corps 1</b> — croissance puis rupture de 2020.",
+       "<b>Corps 2</b> — la reprise jusqu’aux records de 2023."],
+ traps:["Traiter les barres puis la courbe séparément : l’overview doit relier les deux.",
+        "Expliquer la chute de 2020 (pandémie…) : spéculation interdite.",
+        "Mélanger les unités (« satisfaction rose by 900 »)."],
+ weak:{band:"5.5", text:"The chart shows the number of international students and their satisfaction.\n\nThe number of students increased from 1200 in 2016 to 1800 in 2019. In 2020 it decreased a lot to 900 because of the Covid pandemic. After that it increased again to 1100 in 2021, 1600 in 2022 and 2400 in 2023.\n\nThe satisfaction was 78% in 2016, 80% in 2017, 82% in 2018 and 83% in 2019. In 2020 it went down to 71%. Then it went up to 74%, 79% and 86% in 2023.\n\nThe two graphs have the same shape.",
+  errs:[["The chart shows the number of international students and their satisfaction.","Période absente, consigne à peine reformulée.","TA · LR"],
+        ["because of the Covid pandemic","Cause non donnée par le graphique : spéculation interdite.","TA"],
+        ["(barres dans un paragraphe, courbe dans l’autre)","Les deux séries ne sont jamais comparées directement : c’est pourtant l’enjeu d’un graphique mixte.","TA · CC"],
+        ["78% in 2016, 80% in 2017, 82% in 2018 and 83% in 2019","Toutes les valeurs recopiées au lieu d’une tendance (« improved gradually from 78% to 83% »).","TA"],
+        ["went down… went up…","Verbes familiers et répétitifs.","LR"],
+        ["The two graphs have the same shape.","La seule idée de synthèse arrive à la fin, en une phrase non développée : ce devait être l’overview.","TA · CC"],
+        ["(94 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Discussion — deux vues (peines plus longues / alternatives) + votre opinion.",
+ spot:["Vue A : dissuasion et mise à l’écart des délinquants — valable pour les crimes les plus violents.",
+       "Vue B : la dissuasion dépend de la probabilité d’être pris, pas de la durée ; la prison longue produit de la récidive.",
+       "Exemple : la Norvège (réinsertion) vs pays ayant allongé les peines.",
+       "<b>Position</b> : au-delà d’un certain seuil, les alternatives sont plus efficaces."],
+ plan:["<b>Intro</b> — les deux vues + position nuancée.",
+       "<b>Corps 1</b> — la vue A, avec ses meilleurs arguments.",
+       "<b>Corps 2</b> — la vue B, puis la position.",
+       "<b>Conclusion</b> — concession + position identique."],
+ traps:["Caricaturer la vue adverse (« people who want prison are cruel »).",
+        "Oublier de dire laquelle des deux approches on préfère.",
+        "Inventer des statistiques précises."],
+ weak:{band:"5.5", text:"Crime is a big problem in many countries. Some people think longer prison sentences are the best solution, but other people think there are better ways.\n\nPeople who support longer sentences think criminals will be afraid to go to prison. Also when criminals are in prison they cannot do crimes. It is also fair for the victims.\n\nOther people think prison is not a good solution. In prison criminals meet other criminals and they become worse. It is better to give them education and a job so they don't do crimes again. Also prison is very expensive for the government, it costs 100 000 euros per prisoner each year.\n\nIn my opinion both ideas are good. Dangerous criminals must go to prison but for small crimes we can find other solutions.",
+  errs:[["Crime is a big problem in many countries.","Ouverture générale qui n’apporte rien.","TR · LR"],
+        ["criminals will be afraid to go to prison","Argument juste mais affirmé, jamais expliqué.","TR"],
+        ["they cannot do crimes","Collocation : commit crimes.","LR"],
+        ["it costs 100 000 euros per prisoner each year","Statistique inventée : risquée et inutile. Et comma splice avant « it costs ».","TR · GRA"],
+        ["In my opinion both ideas are good.","Formule qui esquive la question avant d’esquisser une position.","TR"],
+        ["(opinion absente de l’introduction)","La consigne exige votre opinion : il fallait l’annoncer dès le début.","TR"],
+        ["(131 mots)","Loin des 250 mots.","TR"]]}}
+},
+/* ---------- EXERCICE 8 ---------- */
+{
+t1:{type:"Line graph · 2 séries · 2010 → 2030 · milliards de dollars · les valeurs de 2026 et 2030 sont des <b>projections</b> (pointillés).",
+ spot:["<b>Croisement</b> : les ventes en ligne dépassent les ventes en magasin entre 2022 et 2026.",
+       "Au départ : magasins 210 Md$, en ligne 20 Md$ — plus de dix fois moins.",
+       "Période observée : magasins −25 % environ (→ 160), en ligne × 7,5 (→ 150).",
+       "Projections : en ligne 270 Md$ en 2030, magasins 125 Md$ — plus du double.",
+       "<b>Deux temps grammaticaux</b> : passé simple pour 2010-2022, is expected to / is forecast to pour 2026-2030."],
+ plan:["<b>Intro</b> — distinguer données observées et projections.",
+       "<b>Overview</b> — les deux canaux échangent leurs positions.",
+       "<b>Corps 1</b> — la période observée (passé).",
+       "<b>Corps 2</b> — les projections (futur de prévision)."],
+ traps:["Décrire 2026 et 2030 au passé.",
+        "Traiter les deux courbes séparément sans jamais les comparer.",
+        "Oublier le croisement des courbes, qui est le fait majeur."],
+ weak:{band:"5.5", text:"The line graph shows the online and in-store sales in Country Z from 2010 to 2030.\n\nIn-store sales were 210 billion in 2010. They decreased to 200 in 2014, 185 in 2018, 160 in 2022, 140 in 2026 and 125 in 2030.\n\nOnline sales were 20 billion in 2010. They increased to 45 in 2014, 90 in 2018, 150 in 2022, 210 in 2026 and 270 in 2030.\n\nOverall in-store sales decreased and online sales increased very much. In 2030 online sales were more than in-store sales because people prefer to buy on internet.",
+  errs:[["from 2010 to 2030","Aucune distinction entre données observées et projections.","TA"],
+        ["140 in 2026 and 125 in 2030","Prévisions décrites comme des faits : is projected to fall to…","GRA · TA"],
+        ["(une courbe par paragraphe, valeur après valeur)","Aucune comparaison entre les deux séries, et le croisement n’est jamais mentionné.","TA · CC"],
+        ["210 billion… 200… 185…","Unité incomplète puis absente ($ billions).","TA"],
+        ["In 2030 online sales were more than in-store sales","Passé pour une prévision, et structure fautive : were higher than.","GRA"],
+        ["because people prefer to buy on internet","Spéculation, et erreur : on the internet / online.","TA · GRA"],
+        ["(94 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Opinion — « To what extent do you agree or disagree? » : un degré d’accord explicite.",
+ spot:["✅ La technologie a supprimé des tâches longues (factures, démarches, rendez-vous) — argument principal.",
+       "✅ Gain d’accessibilité : ce qui exigeait d’être présent aux heures de bureau se fait à toute heure.",
+       "⚖️ Concession : notifications, mots de passe, frontière travail / vie privée.",
+       "Réfutation : ce sont des coûts d’usage, pas de la technologie ; la complexité est souvent le prix du choix.",
+       "<b>Position</b> : largely disagree."],
+ plan:["<b>Intro</b> — paraphrase + « I largely disagree » + nuance.",
+       "<b>Corps 1</b> — la simplification concrète des tâches, avec un exemple.",
+       "<b>Corps 2</b> — concession, puis recadrage.",
+       "<b>Conclusion</b> — verdict + condition (« provided that… »)."],
+ traps:["Répondre « technology has advantages and disadvantages » : ce n’est pas un degré d’accord.",
+        "Rester abstrait (« technology makes life easier ») sans exemple concret.",
+        "Finir sur une question rhétorique."],
+ weak:{band:"6", text:"Technology is everywhere in our life today. Some people think it makes our life more complex. I partly agree with this opinion.\n\nOn the one hand, technology makes life easier. We can do a lot of things with our smartphone like paying, buying, talking with friends or finding information. It saves a lot of time. For example, before we had to go to the bank but now we can do everything online.\n\nOn the other hand, technology makes life more complicated. There are too many applications and passwords and elderly people don't understand how to use them. Also we receive a lot of notifications and we are always connected so we are stressed.\n\nIn conclusion, technology has advantages and disadvantages. It depends how we use it. We should use technology in a good way.",
+  errs:[["I partly agree with this opinion.","Position trop floue : partly agree, puis deux paragraphes équilibrés et aucun côté ne l’emporte.","TR"],
+        ["We can do a lot of things… like paying, buying, talking with friends or finding information.","Énumération au lieu d’un argument développé.","TR"],
+        ["before we had to go to the bank","Exemple juste, mais expédié en une phrase.","TR"],
+        ["elderly people don't understand how to use them","Généralisation et contraction.","TR · LR"],
+        ["technology has advantages and disadvantages","Conclusion qui répond à une autre question que celle posée.","TR"],
+        ["It depends how we use it.","Préposition manquante : It depends on how we use it.","GRA"],
+        ["We should use technology in a good way.","Formule vide.","LR"],
+        ["(134 mots)","Toujours loin des 250 mots.","TR"]]}}
+},
+/* ---------- EXERCICE 9 ---------- */
+{
+t1:{type:"Bar chart · 5 pays × 2 années (2005, 2020) · pourcentage des ménages connectés.",
+ spot:["<b>Hausse générale</b> : tous les pays progressent.",
+       "<b>Écart qui se resserre</b> : les pays déjà connectés approchent la saturation, les autres rattrapent.",
+       "Progression <b>absolue</b> la plus faible : Corée du Sud, +26 points (72 → 98 %).",
+       "Progression <b>relative</b> la plus forte : Kenya, × 9 environ (3 → 26 %), qui reste pourtant le dernier.",
+       "Brésil × 5 (14 → 71 %), Égypte × 7 (8 → 57 %)."],
+ plan:["<b>Intro</b> — the bar chart compares the percentage of households with internet access…",
+       "<b>Overview</b> — hausse partout ; l’écart entre pays se réduit.",
+       "<b>Corps 1</b> — les pays déjà connectés (Corée, Allemagne).",
+       "<b>Corps 2</b> — les pays en rattrapage (Brésil, Égypte, Kenya)."],
+ traps:["Confondre points et pourcentage : « Korea increased by 26% » → 26 percentage points.",
+        "Décrire les cinq pays dans l’ordre du graphique.",
+        "Passer à côté de l’idée de rattrapage, qui est le fait majeur."],
+ weak:{band:"5.5", text:"The bar chart shows the percentage of households with internet in five countries in 2005 and 2020.\n\nIn 2005, South Korea had the highest percentage with 72%, then Germany 55%, Brazil 14%, Egypt 8% and Kenya only 3%. In 2020 all countries increased. South Korea was 98%, Germany 93%, Brazil 71%, Egypt 57% and Kenya 26%.\n\nThe biggest increase was Brazil with 57% and the smallest was South Korea with 26%. Kenya is still the lowest. Maybe in the future all the countries will have 100% of internet.",
+  errs:[["with internet","Paraphrase minimale de la consigne.","LR"],
+        ["In 2005… In 2020…","Une année puis l’autre : les pays ne sont jamais comparés directement.","TA · CC"],
+        ["In 2020 all countries increased.","Ce sont les taux d’accès qui augmentent, pas les pays.","LR"],
+        ["The biggest increase was Brazil with 57%","Écart entre pourcentages : 57 percentage points ; et « Brazil recorded the biggest increase ».","TA · GRA"],
+        ["(aucun overview)","Le resserrement de l’écart, fait majeur du graphique, n’est jamais dégagé.","TA"],
+        ["Maybe in the future all the countries will have 100%","Prédiction non donnée par le graphique : spéculation.","TA"],
+        ["(88 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Avantages / inconvénients <b>sans</b> « outweigh » : exposer les deux côtés de façon équilibrée ; trancher n’est pas exigé.",
+ spot:["Avantage 1 : accès au savoir, apprentissage à son rythme.",
+       "Avantage 2 : compétences numériques acquises tôt (chercher, vérifier, trier l’information).",
+       "Inconvénient 1 : contenus inadaptés, plateformes conçues pour capter l’attention.",
+       "Inconvénient 2 : coût d’opportunité — moins de sport, de lecture, de sommeil.",
+       "Critère de départage (pour la conclusion) : la supervision parentale."],
+ plan:["<b>Intro</b> — paraphrase + annonce d’un examen des deux côtés.",
+       "<b>Corps 1</b> — les avantages.",
+       "<b>Corps 2</b> — les inconvénients, avec le même soin.",
+       "<b>Conclusion</b> — synthèse des deux côtés + critère de départage."],
+ traps:["Transformer le sujet en essai d’opinion et ne défendre qu’un côté.",
+        "Déséquilibrer les deux paragraphes.",
+        "Affirmer sans expliquer (« internet is dangerous »)."],
+ weak:{band:"5.5", text:"Nowadays children use internet very young. This has advantages and disadvantages.\n\nThe main advantage is that children can learn a lot of things on internet. They can watch videos, do their homework and learn languages. Internet is also useful to communicate with family who live far.\n\nThe disadvantages are more important. Internet is very dangerous for children. They can see violent videos and meet bad people. They also spend too much time on screens and they don't do sport, so they become fat. It is also bad for their eyes.\n\nIn conclusion, internet has advantages and disadvantages but I think the disadvantages are more important, so parents must control their children.",
+  errs:[["children use internet very young","Article : the internet ; et « at a very young age ».","GRA"],
+        ["They can watch videos, do their homework and learn languages.","Liste d’activités, aucune analyse de ce que l’enfant y gagne.","TR"],
+        ["Internet is very dangerous for children.","Affirmation absolue et non expliquée.","TR"],
+        ["so they become fat","Registre inapproprié et généralisation.","LR · TR"],
+        ["It is also bad for their eyes.","Idée ajoutée en une phrase, jamais développée.","TR"],
+        ["The disadvantages are more important.","Verdict non demandé et non justifié : déséquilibre entre les deux côtés.","TR"],
+        ["(111 mots)","La moitié du minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 10 ---------- */
+{
+t1:{type:"Line graph · 3 pays · 5 dates (2008 → 2024) · taux de chômage en %.",
+ spot:["<b>Trois trajectoires</b> : une crise (Espagne), une baisse continue (Allemagne), des fluctuations (États-Unis).",
+       "<b>Maximum</b> : Espagne, 25 % en 2012 — plus du double de 2008.",
+       "<b>Minimum</b> : Allemagne, 3 % en 2024.",
+       "États-Unis : deux pics à 8 % (2012 et 2020), 4 % en 2024.",
+       "Fin de période : les trois pays sont plus bas qu’au départ, mais l’Espagne reste quatre fois au-dessus de l’Allemagne."],
+ plan:["<b>Intro</b> — the line graph shows how the unemployment rate changed…",
+       "<b>Overview</b> — baisse finale partout ; trois profils très différents.",
+       "<b>Corps 1</b> — l’Espagne, cas extrême.",
+       "<b>Corps 2</b> — Allemagne (baisse continue) et États-Unis (irréguliers) mis en regard."],
+ traps:["Décrire chaque pays année par année.",
+        "Écrire « Spain unemployment increased by 14% » : ce sont 14 points.",
+        "Expliquer par la crise financière ou la pandémie."],
+ weak:{band:"5.5", text:"The graph shows the unemployment in Spain, United States and Germany from 2008 to 2024.\n\nIn Spain the unemployment was 11% in 2008 and it increased to 25% in 2012 because of the economic crisis. After it decreased to 20% in 2016, 16% in 2020 and 12% in 2024.\n\nIn United States it was 6% in 2008, 8% in 2012, 5% in 2016, 8% in 2020 and 4% in 2024. It went up and down.\n\nIn Germany it was 8% in 2008 and it decreased every year to 3% in 2024.\n\nSpain had the highest unemployment and Germany had the lowest.",
+  errs:[["The graph shows the unemployment in Spain, United States and Germany","Consigne à peine reformulée ; « the United States » exige l’article.","LR · GRA"],
+        ["because of the economic crisis","Cause absente du graphique : spéculation.","TA"],
+        ["After it decreased","« After » n’est pas un adverbe : After that / Subsequently.","GRA"],
+        ["(un pays par paragraphe)","Aucune comparaison entre pays avant la dernière phrase.","TA · CC"],
+        ["It went up and down.","Formule orale ; « fluctuated » était attendu.","LR"],
+        ["Spain had the highest unemployment and Germany had the lowest.","Seule synthèse, placée à la fin et trop sommaire pour servir d’overview.","TA"],
+        ["(101 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Problème & solution — deux questions : quelles causes ? quelles mesures des gouvernements ?",
+ spot:["Cause 1 : pas assez de logements construits (urbanisme, main-d’œuvre, opposition locale).",
+       "Cause 2 : le logement devenu un placement (investisseurs, locations touristiques).",
+       "Aggravant : salaires qui progressent bien moins vite que les prix.",
+       "Mesure 1 → cause 1 : construire (simplifier les permis, logement social — exemple de Vienne).",
+       "Mesure 2 → cause 2 : taxer les logements vacants et secondaires, encadrer la location touristique."],
+ plan:["<b>Intro</b> — les deux causes annoncées + « governments can act on both fronts ».",
+       "<b>Corps 1</b> — les causes, chacune avec son mécanisme.",
+       "<b>Corps 2</b> — une mesure par cause.",
+       "<b>Conclusion</b> — causes et mesures refermées dans le même ordre."],
+ traps:["Des mesures qui ne répondent à aucune cause citée.",
+        "Des mesures sans acteur alors que la consigne précise « governments ».",
+        "Blâmer les jeunes (« they spend too much money »)."],
+ weak:{band:"5.5", text:"Today it is very hard for young people to buy a house in big cities. There are several causes and solutions for this problem.\n\nThe first cause is that houses are too expensive. Young people don't have enough money because their salaries are low. Also they spend a lot of money on travel and restaurants. Banks don't want to give them loans.\n\nThe government can do many things. They can build more houses. They can also give money to young people to help them. Another solution is that young people can live with their parents longer to save money.\n\nIn conclusion, it is difficult for young people to buy a house but there are some solutions to solve this problem.",
+  errs:[["The first cause is that houses are too expensive.","Tautologie : le prix élevé est le problème, pas sa cause.","TR"],
+        ["they spend a lot of money on travel and restaurants","Généralisation qui rend les jeunes responsables, non étayée.","TR"],
+        ["The government can do many things. They can…","Accord incohérent (the government… they) et mesures vagues.","GRA · TR"],
+        ["give money to young people","Mesure sans mécanisme, qui pourrait même faire monter les prix.","TR"],
+        ["young people can live with their parents longer","Ce n’est pas une mesure gouvernementale : hors de la consigne.","TR"],
+        ["there are some solutions to solve this problem","Formule vide, redondante (solutions to solve).","LR"],
+        ["(120 mots)","La moitié du minimum.","TR"]]}}
+},
+/* ---------- EXERCICE 11 ---------- */
+{
+t1:{type:"Diagramme de process · 9 étapes · <b>linéaire</b> (il ne boucle pas) · une seule durée indiquée.",
+ spot:["<b>Nombre d’étapes</b> : 9, de la cueillette à l’expédition vers les détaillants.",
+       "<b>Linéaire</b>, contrairement au recyclage du verre : pas de retour au début.",
+       "<b>Deux transformations</b> : séchage et nettoyage d’abord, torréfaction et mouture ensuite.",
+       "Seule donnée chiffrée : le séchage dure environ dix jours."],
+ plan:["<b>Intro</b> — the stages involved in the production of coffee, from harvesting to distribution.",
+       "<b>Overview</b> — 9 étapes, début et fin, process linéaire, deux transformations.",
+       "<b>Corps 1</b> — la préparation : cueillette → tri.",
+       "<b>Corps 2</b> — la transformation et la distribution : torréfaction → expédition."],
+ traps:["Inventer des détails absents du schéma (machines, températures, pays).",
+        "Voix active et acteurs inventés (« farmers pick… »).",
+        "Oublier le caractère linéaire dans l’overview."],
+ weak:{band:"5.5", text:"The diagram shows how coffee is produced.\n\nFirst, farmers pick the coffee berries from the trees in countries like Brazil or Colombia. Then they put the berries in the sun for 10 days to dry them. After, a machine removes the skin of the berries. Then workers sort the beans by size. Then the beans are roasted. Then they are ground. Then they are packed in bags and stored in a warehouse. Finally the coffee is sent to the shops and people can drink it.\n\nThis process is long and needs a lot of work.",
+  errs:[["The diagram shows how coffee is produced.","Consigne recopiée.","LR"],
+        ["in countries like Brazil or Colombia","Information inventée : absente du diagramme.","TA"],
+        ["farmers pick… they put… a machine removes… workers sort…","Voix active avec des acteurs inventés ; le passif n’arrive qu’au milieu.","GRA"],
+        ["After, a machine removes","« After » seul n’est pas un connecteur : After this / Next.","GRA"],
+        ["Then… Then… Then…","Connecteur répété : cohésion mécanique.","CC · LR"],
+        ["(aucun overview)","Ni nombre d’étapes, ni caractère linéaire.","TA"],
+        ["This process is long and needs a lot of work.","Commentaire personnel au lieu d’une synthèse.","TA"],
+        ["(95 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Two-part question — pourquoi les écrans dominent-ils les loisirs ? quels effets sur la vie familiale ?",
+ spot:["Cause 1 : commodité extrême — instantané, gratuit, sans effort, à toute heure.",
+       "Cause 2 : contraintes économiques — horaires longs, écran comme garde d’enfant bon marché ; espaces publics gratuits en recul.",
+       "Effet positif : visionnage partagé, appels vidéo avec la famille éloignée.",
+       "Effet négatif : chacun dans son fil, repas partagé interrompu.",
+       "Nuance : l’effet dépend des règles de la famille."],
+ plan:["<b>Intro</b> — une annonce par question.",
+       "<b>Corps 1</b> — répond à « why? » : causes structurelles, pas morales.",
+       "<b>Corps 2</b> — répond à « what effects? » : un effet positif, puis le négatif développé.",
+       "<b>Conclusion</b> — une proposition par question."],
+ traps:["Réduire le sujet aux enfants alors qu’il concerne tout le monde.",
+        "Une explication moralisatrice (« people are lazy »).",
+        "Répondre à « what effects » par des solutions : ce n’est pas la question posée."],
+ weak:{band:"5.5", text:"Nowadays people spend a lot of time on screens like phones, computers and TV. This essay will explain why and the effects on family.\n\nThere are many reasons. First, screens are very entertaining, there are many films, games and social networks. Second, people are tired after work so they prefer to stay at home. Third, it is cheap.\n\nThis has bad effects on family life. Families don't talk together anymore because everybody looks at his phone. Children don't play with their parents. Also at dinner people use their phone and it is very rude.\n\nTo solve this problem, parents should limit the screen time and families should do more activities together like sport or board games.\n\nIn conclusion screens are very popular but they are bad for family life.",
+  errs:[["First, screens are very entertaining, there are many films…","Comma splice, et trois causes listées sans explication.","GRA · TR"],
+        ["Third, it is cheap.","Idée pertinente, expédiée en quatre mots.","TR"],
+        ["Families don't talk together anymore","Généralisation absolue et contraction.","TR · LR"],
+        ["everybody looks at his phone","Accord : everybody looks at their phone.","GRA"],
+        ["it is very rude","Jugement personnel sans intérêt argumentatif.","TR"],
+        ["To solve this problem, parents should limit…","Paragraphe de solutions : la consigne ne les demandait pas.","TR"],
+        ["(effets uniquement négatifs)","Aucune nuance : l’effet positif (appels vidéo, visionnage partagé) est ignoré.","TR"],
+        ["(129 mots)","Loin des 250 mots.","TR"]]}}
+},
+/* ---------- EXERCICE 12 ---------- */
+{
+t1:{type:"Deux cartes · une île avant et après la construction d’un complexe touristique · aucun chiffre.",
+ spot:["<b>Changement de caractère</b> : île inhabitée et boisée → petit complexe touristique.",
+       "<b>Centre</b> : arbres en partie abattus ; réception, restaurant, deux groupes de bungalows, sentiers.",
+       "<b>Côte</b> : un ponton au sud, une zone de baignade délimitée au large de la plage.",
+       "<b>Inchangé</b> : la plage et le littoral est — à signaler, c’est souvent oublié."],
+ plan:["<b>Intro</b> — the two maps show a small island as it was before… and as it appears afterwards.",
+       "<b>Overview</b> — d’inhabitée à touristique ; limites naturelles préservées.",
+       "<b>Corps 1</b> — le centre de l’île.",
+       "<b>Corps 2</b> — la côte, puis ce qui n’a pas changé."],
+ traps:["Décrire uniquement la carte « après » sans comparer.",
+        "Voix active (« they built cabins »).",
+        "Juger le projet (« it is bad for nature »)."],
+ weak:{band:"5.5", text:"The maps show an island before and after the construction of a tourist resort.\n\nBefore, the island had only trees and a beach. There was nothing else.\n\nAfter, there are a lot of buildings. There is a reception and a restaurant in the middle of the island. There are also cabins for the tourists near the reception and the restaurant. They built footpaths between the buildings. There is a pier in the south for the boats and there is a swimming area near the beach.\n\nIn my opinion, the island was more beautiful before because now there are less trees and more tourists, it is bad for nature.",
+  errs:[["The maps show an island before and after the construction of a tourist resort.","Consigne recopiée mot pour mot.","LR"],
+        ["Before, the island had only trees and a beach. There was nothing else.","Paragraphe « avant » isolé, sans lien avec les changements.","CC"],
+        ["After, there are a lot of buildings.","« After » seul ne fonctionne pas comme adverbe ; « a lot of » familier.","GRA · LR"],
+        ["There is… There is… There are…","Structure unique répétée : les transformations ne sont jamais décrites comme telles (has been built, has been cleared…).","GRA · LR"],
+        ["They built footpaths","Voix active avec un « they » indéfini : footpaths have been laid.","GRA"],
+        ["(rien sur ce qui n’a pas changé)","La plage conservée et le littoral est intact ne sont pas signalés.","TA"],
+        ["less trees","« trees » est dénombrable : fewer trees.","GRA"],
+        ["In my opinion, the island was more beautiful before…","Opinion : interdite en Task 1. Et comma splice.","TA · GRA"],
+        ["(108 mots)","Sous les 150 mots.","TA"]]}},
+t2:{type:"Discussion — tourisme destructeur / tourisme indispensable + votre opinion.",
+ spot:["Vue A : logements retirés du marché (locations courtes), eau consommée en été, traditions transformées en spectacle — exemple de Venise.",
+       "Vue B : seule alternative à l’exode dans certaines régions ; emplois, impôts qui financent écoles et dispensaires.",
+       "<b>Position</b> : les dégâts viennent d’une croissance non régulée, pas du tourisme lui-même.",
+       "Preuve de la position : villes qui plafonnent les licences de location, taxes touristiques réinvesties."],
+ plan:["<b>Intro</b> — les deux vues + position (c’est la gestion qui compte).",
+       "<b>Corps 1</b> — la vue critique, avec des exemples concrets.",
+       "<b>Corps 2</b> — la vue favorable, puis la position qui relie les deux paragraphes.",
+       "<b>Conclusion</b> — concession + position identique."],
+ traps:["Deux paragraphes juxtaposés, sans jamais trancher.",
+        "Traiter la vue adverse en une phrase.",
+        "Conclure « both views are right »."],
+ weak:{band:"5.5", text:"Tourism is a very big industry in the world. Some people think it is bad for local communities and other people think it is good because it brings money.\n\nTourism can be bad. There are too many tourists in some cities like Venice or Barcelona and local people are not happy. The prices become very high and the tourists make pollution. Also local culture disappears because everything is for tourists.\n\nBut tourism is also good. It brings a lot of money to the country and it creates jobs for local people like in hotels and restaurants. Without tourism some regions would be very poor.\n\nIn conclusion, tourism has good and bad sides. In my opinion it is more good than bad but governments must control it.",
+  errs:[["Tourism is a very big industry in the world.","Ouverture générale, sans rapport avec la question posée.","TR"],
+        ["local people are not happy","Formulation vague et orale.","LR"],
+        ["the tourists make pollution","Collocation : cause pollution.","LR"],
+        ["Also local culture disappears because everything is for tourists.","Idée intéressante mais affirmée, jamais expliquée ni illustrée.","TR"],
+        ["But tourism is also good.","« But » en tête de phrase dans un essai académique : préférez However.","CC"],
+        ["it is more good than bad","Comparatif fautif : better than bad / more beneficial than harmful.","GRA"],
+        ["(opinion absente de l’introduction)","L’opinion exigée n’apparaît qu’à la dernière ligne.","TR"],
+        ["(126 mots)","Loin des 250 mots.","TR"]]}}
+}];
+
 /* ============================================================
    LOGIQUE
    ============================================================ */
-const LS = "ielts-exam-v1";
+const MODE = window.IELTS_MODE || (location.hash === "#corriges" ? "corrige" : "exam");
+window.addEventListener("hashchange", function(){ location.reload(); });
+const LS = MODE === "corrige" ? "ielts-corrige-v1" : "ielts-exam-v1";
 let S = { exam:0, answers:{}, theme:"dark", showWc:true };
 function load(){ try{ const r = localStorage.getItem(LS); if(r) S = Object.assign(S, JSON.parse(r)); }catch(e){} }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
@@ -1234,6 +1811,25 @@ function renderModel(el, m, task){
   m.reuse.forEach(function(r){ h += "<div>"+r+"</div>"; });
   el.innerHTML = h + "</div>";
 }
+function lis(a){ return "<ul>" + a.map(function(x){ return "<li>"+x+"</li>"; }).join("") + "</ul>"; }
+function renderWalk(el, w, m, task){
+  if(!w || !m){ el.innerHTML = ""; return; }
+  const n = w.weak.text.trim().split(/\s+/).length;
+  el.innerHTML =
+      '<div class="step"><h4><span class="num">1</span>Identifier le sujet</h4><p>'+w.type+'</p></div>'
+    + '<div class="step"><h4><span class="num">2</span>'
+    +   (task===1 ? "Repérer l’essentiel (2 minutes)" : "Trouver et trier les idées (3 minutes)") + '</h4>' + lis(w.spot) + '</div>'
+    + '<div class="step"><h4><span class="num">3</span>Faire le plan</h4>' + lis(w.plan) + '</div>'
+    + '<div class="step warn"><h4><span class="num">4</span>Les pièges propres à ce sujet</h4>' + lis(w.traps) + '</div>'
+    + '<div class="step good"><h4><span class="num">5</span>Rédiger : la copie band 9, commentée</h4><div class="mhost"></div></div>'
+    + '<div class="step bad"><h4><span class="num">✗</span>La même tâche ratée — copie estimée ≈ band '+w.weak.band+'</h4>'
+    +   '<div class="weaktxt">' + w.weak.text.split(/\n\n+/).map(function(p){ return "<p>"+p+"</p>"; }).join("") + '</div>'
+    +   '<div class="mwords" style="margin-top:6px">'+n+' mots — minimum exigé : '+(task===1?150:250)+'</div>'
+    +   '<h4 class="msec">Ce qui fait perdre des points, phrase par phrase</h4><div class="errs">'
+    +   w.weak.errs.map(function(e){ return "<div><i>"+e[0]+"</i><span>"+e[1]+"</span><b>"+e[2]+"</b></div>"; }).join("")
+    +   '</div></div>';
+  renderModel(el.querySelector(".mhost"), m, task);
+}
 function renderExam(){
   const e = EXAMS[S.exam];
   $("t1kind").textContent = e.t1kind;
@@ -1245,6 +1841,11 @@ function renderExam(){
   $("t1dataWrap").open = false;
   $("t2instr").textContent = e.t2;
   const mod = MODELS[S.exam];
+  if(MODE === "corrige"){
+    renderWalk($("w1"), WALK[S.exam] && WALK[S.exam].t1, mod && mod.t1, 1);
+    renderWalk($("w2"), WALK[S.exam] && WALK[S.exam].t2, mod && mod.t2, 2);
+    $("t1dataWrap").open = true;
+  }
   document.querySelectorAll("details.model").forEach(function(d){ d.style.display = mod ? "" : "none"; });
   if(mod){ renderModel($("m1"), mod.t1, 1); renderModel($("m2"), mod.t2, 2); }
   document.querySelectorAll("details.model").forEach(function(d){ d.open = false; });
@@ -1255,7 +1856,8 @@ function renderExam(){
 }
 (function buildSel(){
   $("examSel").innerHTML = EXAMS.map(function(e,i){
-    return '<option value="'+i+'">'+e.n+" — "+e.t1kind+" + "+e.t2kind+"</option>";
+    const name = MODE === "corrige" ? e.n.replace("Examen","Exercice corrigé") : e.n;
+    return '<option value="'+i+'">'+name+" — "+e.t1kind+" + "+e.t2kind+"</option>";
   }).join("");
 })();
 $("examSel").addEventListener("change", function(){ S.exam = parseInt(this.value,10); save(); renderExam(); resetTimer(); });
@@ -1380,6 +1982,12 @@ $("t2copy").addEventListener("click", function(){ copy("t2","t2box"); });
 $("allCopy").addEventListener("click", function(){ copy("all","t1box"); });
 
 /* — démarrage — */
+if(MODE === "corrige"){
+  document.body.classList.add("corrige");
+  document.title = "IELTS Writing — Exercices corrigés";
+  $("pageTitle").innerHTML = "📗 Exercices corrigés<small>La démarche complète, étape par étape, puis la copie band 9 et une copie ratée</small>";
+  $("navCo").classList.add("on"); $("navEx").classList.remove("on");
+}
 load();
 applyTheme();
 $("wcBtn").classList.toggle("on", S.showWc);

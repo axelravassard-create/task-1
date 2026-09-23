@@ -9,13 +9,16 @@ import re, pathlib
 
 ROOT = pathlib.Path(__file__).parent
 PAGES = [
-    ("t1", "index.html", "📊 Task 1"),
-    ("t2", "task2.html", "✍️ Task 2"),
-    ("ex", "exam.html",  "⏱️ Examens"),
+    ("t1", "index.html", "📊 Task 1",  None),
+    ("t2", "task2.html", "✍️ Task 2",  None),
+    ("co", "exam.html",  "📗 Corrigés", "corrige"),
+    ("ex", "exam.html",  "⏱️ Examens", None),
 ]
 
-def embed(path: pathlib.Path) -> str:
+def embed(path: pathlib.Path, mode=None) -> str:
     html = path.read_text(encoding="utf-8")
+    if mode:
+        html = html.replace("<head>", '<head>\n<script>window.IELTS_MODE="%s";</script>' % mode, 1)
     # le sélecteur de pages de l'enfant est masqué : c'est la coque qui le fournit
     html = html.replace("</head>", "<style>.navswitch{display:none!important}</style>\n</head>", 1)
     # échappement pour un littéral de gabarit JS
@@ -24,11 +27,12 @@ def embed(path: pathlib.Path) -> str:
     return html
 
 apps = "\n".join(
-    "APPS.%s = `%s`;" % (key, embed(ROOT / f)) for key, f, _ in PAGES
+    "APPS.%s = `%s`;" % (key, embed(ROOT / f, mode)) for key, f, _, mode in PAGES
 )
 tabs = "\n      ".join(
-    '<button class="tab%s" data-k="%s">%s</button>' % (" on" if i == 0 else "", key, label)
-    for i, (key, _, label) in enumerate(PAGES)
+    '<button class="tab%s" data-k="%s"><span class="ic">%s</span><span>%s</span></button>'
+    % (("" if i else " on"), key, *label.split(" ", 1))
+    for i, (key, _, label, _m) in enumerate(PAGES)
 )
 
 OUT = """<!DOCTYPE html>
@@ -47,11 +51,12 @@ html[data-theme="light"]{--bg:#f4f7fb;--card:#fff;--card2:#eef3fb;--txt:#12203a;
 html,body{margin:0;padding:0;height:100%%;overflow:hidden;background:var(--bg)}
 body{display:flex;flex-direction:column;height:100dvh;
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-#bar{flex:0 0 auto;background:var(--bg);border-bottom:1px solid var(--line);
-  padding:7px 10px calc(7px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;justify-content:center}
-.tab{flex:1 1 0;max-width:180px;background:var(--card);border:1px solid var(--line);color:var(--muted);
-  font-family:inherit;font-size:13px;font-weight:700;padding:9px 6px;border-radius:999px;cursor:pointer;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar{flex:0 0 auto;background:var(--bg);border-top:1px solid var(--line);
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));display:flex;gap:5px;justify-content:center}
+.tab{flex:1 1 0;max-width:170px;background:var(--card);border:1px solid var(--line);color:var(--muted);
+  font-family:inherit;font-size:11.5px;font-weight:700;padding:5px 2px 6px;border-radius:12px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;overflow:hidden}
+.tab .ic{font-size:17px;line-height:1.15}
 .tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
 .tab:active{transform:scale(.97)}
 #frames{flex:1 1 auto;position:relative;background:var(--bg)}
@@ -69,7 +74,7 @@ body{display:flex;flex-direction:column;height:100dvh;
 const APPS = {};
 %(apps)s
 
-const KEYS = {t1:"ielts-t1-v1", t2:"ielts-t2-v1", ex:"ielts-exam-v1"};
+const KEYS = {t1:"ielts-t1-v1", t2:"ielts-t2-v1", co:"ielts-corrige-v1", ex:"ielts-exam-v1"};
 const frames = document.getElementById("frames");
 const made = {};
 let current = null;

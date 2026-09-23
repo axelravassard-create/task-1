@@ -2,8 +2,9 @@
 
 ## Le fichier à ouvrir : `ielts.html`
 
-**`ielts.html` contient tout** — les deux jeux de révision et les examens blancs — dans un
-**seul fichier**, avec un sélecteur Task 1 / Task 2 / Examens en bas d'écran. C'est le fichier
+**`ielts.html` contient tout** — les deux jeux de révision, les exercices corrigés et les examens
+blancs — dans un **seul fichier**, avec un sélecteur Task 1 / Task 2 / Corrigés / Examens en bas
+d'écran. C'est le fichier
 à télécharger : aucun autre n'est nécessaire, rien à installer, tout fonctionne hors connexion.
 
 Il est assemblé par `build.py` à partir des trois pages sources ci-dessous, chacune embarquée
@@ -67,6 +68,22 @@ méthode que la langue.
 
 Même moteur que la Task 1 : répétition espacée, score, séries, thème clair/sombre,
 progression sauvegardée séparément dans le `localStorage`.
+
+## Exercices corrigés — onglet « 📗 Corrigés »
+
+Les 12 sujets des examens blancs, **entièrement résolus**, pour comprendre la démarche avant de
+s'entraîner seul. Pour chacune des 24 tâches, dans l'ordre où on les ferait le jour de l'épreuve :
+
+1. **Identifier le sujet** — type de graphique ou de consigne, et ce qu'il impose.
+2. **Repérer l'essentiel** (Task 1 : les 4 à 6 éléments à retenir, chiffres à l'appui) ou
+   **trouver et trier les idées** (Task 2 : idées retenues, idées écartées et pourquoi, position).
+3. **Faire le plan** — le contenu de chacun des quatre paragraphes.
+4. **Les pièges propres à ce sujet.**
+5. **Rédiger** — la copie band 9 commentée paragraphe par paragraphe, avec l'analyse des 4 critères.
+6. **La même tâche ratée** — une copie réaliste estimée band 5 à 6, puis chacune de ses erreurs :
+   la phrase fautive, le problème, le critère touché (TA/TR, CC, LR, GRA).
+
+Même page que les examens (`exam.html#corriges`), sans chronomètre ni zone de saisie.
 
 ## Examens blancs — `exam.html`
 
