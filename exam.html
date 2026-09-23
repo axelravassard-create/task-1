@@ -208,6 +208,27 @@ textarea:focus{outline:2px solid var(--acc2);outline-offset:1px}
 .copybox{width:100%;min-height:150px;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 details.copyd{margin-top:10px}
 details.copyd>summary{cursor:pointer;font-size:13px;color:var(--muted);padding:6px 0}
+details.model{border:1px solid var(--line);border-radius:14px;background:var(--card2);margin-top:14px;overflow:hidden}
+details.model>summary{cursor:pointer;padding:13px 15px;font-weight:800;font-size:14px;list-style:none;color:var(--acc)}
+details.model>summary::-webkit-details-marker{display:none}
+details.model>summary::after{content:"▾";float:right;color:var(--muted)}
+details.model[open]>summary::after{content:"▴"}
+.modelbody{padding:0 15px 16px}
+.essay{font-size:14.5px;line-height:1.6;text-align:left}
+.essay p{margin:0 0 8px}
+.lbl{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  color:#06202b;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:999px;padding:2px 9px;margin-bottom:5px}
+.note{font-size:12.5px;line-height:1.5;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:0 0 14px}
+.note b{color:var(--acc2)}
+.crit{display:grid;gap:9px;margin:10px 0}
+.crit div{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13px;line-height:1.5}
+.crit b{color:var(--acc2);font-weight:700}
+.crit div>b:first-child{display:block;color:var(--acc);margin-bottom:3px;font-size:12px;letter-spacing:.3px;text-transform:uppercase}
+.reuse{display:grid;gap:7px;margin-top:8px}
+.reuse div{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:9px;
+  padding:8px 11px;font-size:13px;line-height:1.45}
+.mwords{font-size:12px;color:var(--muted);margin-bottom:10px}
+h4.msec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 6px}
 .done{font-size:13px;line-height:1.5;background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--acc);
   border-radius:12px;padding:11px 13px;margin-top:12px}
 </style>
@@ -271,6 +292,8 @@ details.copyd>summary{cursor:pointer;font-size:13px;color:var(--muted);padding:6
     </div>
     <details class="copyd"><summary>Le copier-coller ne marche pas ? Afficher le texte à copier à la main</summary>
       <textarea class="copybox" id="t1box" readonly></textarea></details>
+    <details class="model"><summary>📗 Modèle band 9 commenté — à ouvrir seulement après avoir rédigé</summary>
+      <div class="modelbody" id="m1"></div></details>
   </section>
 
   <!-- ===== TASK 2 ===== -->
@@ -292,6 +315,8 @@ details.copyd>summary{cursor:pointer;font-size:13px;color:var(--muted);padding:6
     </div>
     <details class="copyd"><summary>Le copier-coller ne marche pas ? Afficher le texte à copier à la main</summary>
       <textarea class="copybox" id="t2box" readonly></textarea></details>
+    <details class="model"><summary>📗 Modèle band 9 commenté — à ouvrir seulement après avoir rédigé</summary>
+      <div class="modelbody" id="m2"></div></details>
   </section>
 
   <div class="row">
@@ -624,6 +649,326 @@ const EXAMS = [
  t2:"Some people believe that technology has made our lives more complex, rather than simpler.\n\nTo what extent do you agree or disagree?"
 }];
 
+
+/* ============================================================
+   MODÈLES BAND 9 COMMENTÉS (un par tâche, pour chaque examen)
+   parts = [étiquette, texte, ce que fait ce paragraphe]
+   ============================================================ */
+const MODELS = [
+/* ---------- EXAMEN 1 ---------- */
+{
+t1:{w:191, parts:[
+ ["Introduction","The line graph compares the proportion of electricity generated from four different sources in Country X over the twenty-year period from 2005 to 2025.",
+  "Paraphrase complète : <b>shows → compares</b>, <b>sources of electricity → sources from which electricity was generated</b>, et la période reformulée en <i>over the twenty-year period</i>. Une phrase, aucun chiffre."],
+ ["Overview (obligatoire)","Overall, the country’s electricity mix was transformed over these two decades: renewables replaced coal as the dominant source, while nuclear power remained virtually unchanged. Both of the sources that led the mix in 2005 had lost considerable ground by the end of the period.",
+  "Deux phrases, <b>zéro chiffre précis</b>. Elle donne le mouvement d’ensemble (renversement charbon ↔ renouvelables) et l’exception (le nucléaire stable) : exactement les « main features » que réclame la consigne."],
+ ["Corps 1 — les sources en recul","In 2005, coal accounted for the largest share of generation, at 40%, followed by natural gas at 30%. Coal then declined steadily throughout the period, falling to just 10% by 2025 — a drop of 30 percentage points. Natural gas followed a similar but far gentler downward path, slipping from a peak of 32% in 2010 to 22% by 2025. Together, these two fossil fuels supplied 70% of the country’s electricity in 2005 but only 32% in 2025.",
+  "Les deux sources en baisse sont <b>regroupées</b> dans le même paragraphe, au lieu d’être décrites l’une après l’autre. Noter <b>percentage points</b> pour l’écart, et <i>a similar but far gentler path</i> qui compare au lieu de juxtaposer."],
+ ["Corps 2 — la hausse et l’exception","Renewables moved in the opposite direction. Having supplied only 10% of electricity in 2005, the smallest contribution of any source, they climbed rapidly from 2010 onwards and overtook both gas and coal to reach exactly half of all generation in 2025. Nuclear power, by contrast, was remarkably stable, fluctuating only between 18% and 20%.",
+  "Structure participiale (<i>Having supplied…</i>) et verbe fort (<i>overtook</i>). L’exception — le nucléaire — ferme le paragraphe : elle fait partie des 4 à 6 éléments à sélectionner."]],
+ why:[["Task Achievement","Introduction, overview et deux paragraphes de détails. <b>Quatre éléments sélectionnés</b> (valeur la plus haute, la plus basse, changement le plus marqué, exception) au lieu des vingt valeurs du graphique."],
+      ["Coherence &amp; Cohesion","Un paragraphe = un mouvement (ce qui baisse / ce qui monte). Les liens sont lexicaux — <i>these two decades</i>, <i>the opposite direction</i>, <i>by contrast</i> — et non mécaniques : pas un seul « Firstly »."],
+      ["Lexical Resource","<i>accounted for, share, contribution, slipping, climbed, overtook, fluctuating</i> : sept façons de parler d’une proportion ou d’une variation, sans répétition."],
+      ["Grammatical Range &amp; Accuracy","Passé simple (données datées), participe présent (<i>Having supplied…</i>), apposition (<i>the smallest contribution of any source</i>), comparatif (<i>far gentler</i>) : des structures variées et toutes justes."]],
+ reuse:["The line graph compares the proportion of […] over the […]-year period from […] to […].",
+        "Overall, […] : [A] replaced [B] as the dominant source, while [C] remained virtually unchanged.",
+        "[X] declined steadily throughout the period, falling to just […]% by […] — a drop of […] percentage points.",
+        "Having supplied only […]% in […], [X] climbed rapidly from […] onwards and overtook [Y].",
+        "[Z], by contrast, was remarkably stable, fluctuating only between […] and […]."]},
+t2:{w:286, parts:[
+ ["Introduction","It is increasingly argued that secondary school students should be required to carry out unpaid work for their local communities as a condition of graduating. I strongly agree with this proposal, both because it develops competences that classrooms cannot teach and because it strengthens the bonds between young people and the society they are about to enter.",
+  "Phrase 1 : paraphrase (<i>compulsory → required as a condition of graduating</i>). Phrase 2 : <b>position nette + les deux arguments annoncés</b>. Dès la deuxième ligne, l’examinateur sait où va le texte."],
+ ["Corps 1 — argument principal (PEEL)","The most compelling argument concerns employability. Voluntary work obliges teenagers to operate in an adult environment, where the consequences of poor organisation are immediate and visible. A student who spends a term helping to run a food bank must manage stock, negotiate with suppliers and meet deadlines that no written examination can replicate. Such experience is precisely what employers say school leavers lack, which is why a growing number of universities treat it as evidence of maturity. Employers, for their part, consistently report that reliability and teamwork are harder to find than technical knowledge, and these are precisely the qualities that unpaid work in a demanding setting develops.",
+  "PEEL complet : <b>P</b> topic sentence → <b>E</b> mécanisme (<i>obliges… where the consequences are immediate</i>) → <b>E</b> exemple concret → <b>L</b> retour à la question. Une seule idée, quatre phrases."],
+ ["Corps 2 — concession puis réfutation","Admittedly, critics contend that compulsory schemes place an unfair burden on pupils who are already under considerable academic pressure. This objection is reasonable, but it overlooks the social dividend involved. When young people from very different backgrounds work side by side for a common purpose, mutual suspicion tends to give way to familiarity, and communities become measurably more cohesive. A few hours a month is a modest price for that outcome. Schools that have introduced such schemes report no measurable fall in examination results, which suggests that the two commitments can coexist.",
+  "La <b>concession réfutée</b> : on reconnaît l’objection (<i>This objection is reasonable</i>) puis on la dépasse (<i>but it overlooks…</i>). C’est ce qui sépare un 8 d’un 6.5 — à condition de ne jamais lâcher sa position."],
+ ["Conclusion","In conclusion, although the pressure on students is genuine, I firmly believe that community service should form a compulsory part of the school curriculum, since it equips young people with employable skills and fosters a stronger sense of collective responsibility.",
+  "Thèse reformulée <b>à l’identique</b> + synthèse des deux arguments. Aucune idée nouvelle, aucune question rhétorique."]],
+ why:[["Task Response","La question « to what extent do you agree » reçoit une réponse <b>sans ambiguïté</b>, tenue du début à la fin, avec deux idées réellement développées et un exemple par paragraphe."],
+      ["Coherence &amp; Cohesion","Quatre paragraphes, un rôle chacun. Les liens passent par le <b>lexique</b> (<i>This objection</i>, <i>Such experience</i>, <i>that outcome</i>) plutôt que par des connecteurs plaqués."],
+      ["Lexical Resource","Collocations précises : <i>place an unfair burden on</i>, <i>social dividend</i>, <i>school leavers</i>, <i>evidence of maturity</i>, <i>collective responsibility</i>. Aucun mot rare employé de travers."],
+      ["Grammatical Range &amp; Accuracy","Relative (<i>deadlines that no written examination can replicate</i>), subordonnée temporelle (<i>When young people…</i>), concessive (<i>although…</i>), passif, nominalisation (<i>the consequences of poor organisation</i>)."]],
+ reuse:["It is increasingly argued that […]. I strongly agree with this proposal, both because […] and because […].",
+        "The most compelling argument concerns […].",
+        "A […] who […] must […], […] and […] that no […] can replicate.",
+        "Admittedly, critics contend that […]. This objection is reasonable, but it overlooks […].",
+        "In conclusion, although […], I firmly believe that […], since […] and […]."]}
+},
+/* ---------- EXAMEN 2 ---------- */
+{
+t1:{w:178, parts:[
+ ["Introduction","The bar chart shows how many hours per week three different age groups in one country devoted to four leisure activities in 2023.",
+  "Paraphrase du sujet et de l’année. <i>spent on → devoted to</i> : un seul verbe changé suffit à sortir du recopiage."],
+ ["Overview (obligatoire)","Overall, watching television occupied the most time across the population as a whole, while social media and reading divided the generations most sharply: the former declined steeply with age and the latter rose. Sport accounted for the least time in every age group.",
+  "Aucun chiffre. Elle nomme le maximum global, le <b>contraste le plus frappant</b> entre générations, et le minimum commun aux trois groupes."],
+ ["Corps 1 — le contraste entre générations","The generational gap was widest for social media. Respondents aged 18 to 29 spent 14 hours a week on these platforms, almost twice the figure for the 30-to-49 group, at 8 hours, and more than four times that of the over-fifties, who reported only 3 hours. Reading displayed the mirror image of this pattern, rising from a mere 2 hours among the youngest respondents to 7 hours among the oldest.",
+  "Les chiffres sont mis en <b>rapport</b> (<i>twice</i>, <i>four times</i>) au lieu d’être simplement alignés, et les deux séries opposées sont traitées ensemble (<i>the mirror image of this pattern</i>)."],
+ ["Corps 2 — la tendance régulière et l’exception","Television viewing also increased with age, though more evenly, from 9 hours in the youngest group to 12 and then 18 hours, making it by far the most time-consuming activity for the over-fifties. Sport, by contrast, varied hardly at all, occupying between 3 and 5 hours a week in all three groups.",
+  "Une progression régulière, puis l’exception (le sport, quasi identique partout) : les deux méritent d’être signalées, et elles ferment proprement le texte."]],
+ why:[["Task Achievement","Quatre éléments sélectionnés sur douze valeurs : le maximum, le minimum, le contraste le plus fort et la série stable."],
+      ["Coherence &amp; Cohesion","Regroupement par <b>logique</b> (séries opposées / séries régulières), pas par ordre de lecture du graphique."],
+      ["Lexical Resource","<i>occupied, devoted to, accounted for, displayed, varied hardly at all, time-consuming</i> : la répétition de <i>spent</i> est évitée sept fois sur huit."],
+      ["Grammatical Range &amp; Accuracy","Participiale (<i>making it by far the most…</i>), relative (<i>who reported only 3 hours</i>), comparatifs multiples (<i>almost twice</i>, <i>more than four times</i>)."]],
+ reuse:["The bar chart shows how many […] three different [groupes] devoted to [activités] in […].",
+        "The generational gap was widest for […].",
+        "[X] spent […], almost twice the figure for […] and more than four times that of […].",
+        "[Y] displayed the mirror image of this pattern, rising from a mere […] to […].",
+        "[Z], by contrast, varied hardly at all, occupying between […] and […]."]},
+t2:{w:281, parts:[
+ ["Introduction","Opinions differ as to whether the task of turning children into responsible citizens belongs to their parents or to their schools. This essay will consider both positions before arguing that, although schools play an indispensable supporting role, the primary responsibility rests with the family.",
+  "Les <b>deux vues</b> sont annoncées en une phrase, puis la position personnelle — exigée par « give your own opinion » — est donnée <b>dès l’introduction</b>."],
+ ["Corps 1 — la première vue","Those who defend parental responsibility point out that values are absorbed long before a child enters a classroom. Children imitate the adults they live with: a parent who returns a lost wallet, or who speaks courteously to a stranger, teaches honesty and respect far more effectively than any lesson on citizenship could. Because these habits are formed in early childhood, the home inevitably sets the standard against which later influences are measured. Work on early childhood consistently indicates that attitudes towards honesty and fairness are largely settled well before citizenship appears on any school timetable.",
+  "La vue adverse est exposée <b>sérieusement</b>, avec son propre exemple. Un examinateur repère immédiatement un paragraphe qui bâcle la position qu’on ne partage pas."],
+ ["Corps 2 — la seconde vue et la position","Schools, however, offer something no family can reproduce: a miniature society. In a class of thirty pupils from different backgrounds, children must queue, share, negotiate and settle disputes with people they did not choose, which is precisely the skill that community life demands. For this reason I regard the two influences as complementary rather than competing — though the family remains decisive, since it acts during the years when character is most malleable. A teacher can also correct behaviour that a parent may never witness, and can hold thirty children to a single standard, which no individual household is able to do.",
+  "La seconde vue est développée, <b>puis</b> la position est tranchée dans le même paragraphe. Noter la nuance : <i>complementary rather than competing</i> évite le faux dilemme sans esquiver la question."],
+ ["Conclusion","In conclusion, while schools are well placed to teach children how to live alongside others, I believe that parents, whose influence begins earliest and lasts longest, bear the primary responsibility for raising good members of society.",
+  "Les deux vues sont rappelées en une subordonnée, la position en principale. <b>Identique</b> à celle de l’introduction."]],
+ why:[["Task Response","Les trois composantes exigées sont présentes : vue A, vue B, <b>et</b> une opinion claire, annoncée dès l’introduction puis confirmée."],
+      ["Coherence &amp; Cohesion","Chaque paragraphe traite une position ; <i>however</i>, <i>For this reason</i>, <i>while</i> marquent les bascules sans surcharge."],
+      ["Lexical Resource","<i>absorbed, imitate, courteously, miniature society, settle disputes, malleable, complementary</i> : un registre soutenu mais naturel."],
+      ["Grammatical Range &amp; Accuracy","Relative possessive (<i>whose influence begins earliest</i>), relative non restrictive (<i>which is precisely the skill…</i>), causale (<i>since it acts during the years when…</i>)."]],
+ reuse:["Opinions differ as to whether […] belongs to […] or to […].",
+        "This essay will consider both positions before arguing that, although […], the primary responsibility rests with […].",
+        "Those who defend […] point out that […].",
+        "[X], however, offers something no […] can reproduce : […].",
+        "In conclusion, while […], I believe that […], whose […], bear the primary responsibility for […]."]}
+},
+/* ---------- EXAMEN 3 ---------- */
+{
+t1:{w:189, parts:[
+ ["Introduction","The two pie charts compare the way in which households in Country Y divided their spending between five categories in 2000 and in 2020.",
+  "Un camembert <b>compare des parts d’un tout</b> : le verbe <i>divided their spending between</i> le dit explicitement."],
+ ["Overview (obligatoire)","Overall, housing replaced food as the single largest item of household expenditure over these two decades. Spending also became more concentrated on the home, since the two categories that lost the most ground were food and miscellaneous items.",
+  "Le renversement de hiérarchie, sans aucun pourcentage : c’est exactement ce qu’attend un sujet à deux camemberts."],
+ ["Corps 1 — le renversement","In 2000, food was the dominant category, absorbing almost a third of all household spending, while housing accounted for a quarter. Two decades later this ranking had been reversed: housing had risen to well over a third of the total, an increase of 13 percentage points, whereas food had fallen to a fifth, a decline of 10 points.",
+  "Les <b>fractions</b> (<i>a third, a quarter, a fifth</i>) plutôt que les pourcentages bruts, et surtout <b>percentage points</b> pour les écarts : c’est l’erreur qui coûte le plus cher sur ce type de sujet."],
+ ["Corps 2 — les catégories secondaires","The remaining categories changed far less. Transport was virtually static, slipping from 15% to 14%, and leisure was the only other item to grow, rising from a tenth of spending to roughly one sixth. Expenditure classified as ‘other’ fell from a fifth of the total to just under an eighth, making it the smallest category by 2020. Taken together, these three minor categories absorbed 45% of household spending in 2000 but only 42% two decades later.",
+  "Les trois petites catégories sont <b>regroupées</b> en un paragraphe, hiérarchisées de la plus stable à la plus changeante."]],
+ why:[["Task Achievement","Le renversement (plus haute / plus basse), l’ampleur du changement et la catégorie devenue la plus petite : quatre éléments, pas dix."],
+      ["Coherence &amp; Cohesion","Gros changement d’abord, petits changements ensuite. <i>this ranking had been reversed</i> et <i>The remaining categories</i> assurent la reprise."],
+      ["Lexical Resource","<i>absorbing, accounted for, expenditure, item, slipping, virtually static</i>, et une échelle complète de fractions."],
+      ["Grammatical Range &amp; Accuracy","Plus-que-parfait pour comparer deux dates (<i>had been reversed, had risen, had fallen</i>), <i>whereas</i>, participiale finale (<i>making it the smallest…</i>)."]],
+ reuse:["The two pie charts compare the way in which […] divided […] between […] categories in […] and in […].",
+        "Overall, [A] replaced [B] as the single largest […].",
+        "[X] was the dominant category, absorbing almost a third of […], while [Y] accounted for a quarter.",
+        "Two decades later this ranking had been reversed : [A] had risen to […], an increase of […] percentage points, whereas [B] had fallen to […].",
+        "[Z] was virtually static, slipping from […]% to […]%."]},
+t2:{w:288, parts:[
+ ["Introduction","Every year, millions of people abandon rural areas for large cities in the hope of improving their prospects. Although this movement undeniably strains urban infrastructure, I believe that its benefits — for the migrants themselves and for the wider economy — clearly outweigh its drawbacks.",
+  "Le mot <b>outweigh</b> figure dans la thèse : la consigne demandait un verdict, il est donné avant même le premier argument."],
+ ["Corps 1 — les avantages","The principal advantage is access to opportunity. Cities concentrate employers, hospitals, universities and transport networks, so a family that moves to one typically gains in a single decision what a rural region may take a generation to provide. A young woman who leaves a farming village for the capital may find not only better-paid work but also specialist healthcare and schooling for her children — a combination that simply does not exist where she was born. The same concentration explains why urban wages are higher: firms competing for staff in a dense labour market must pay more to keep them.",
+  "L’argument n’est pas « c’est mieux en ville » : c’est le <b>mécanisme de concentration</b> qui est expliqué, puis illustré par un cas individuel précis."],
+ ["Corps 2 — les inconvénients, puis la pesée","The disadvantages are nonetheless real. Rapid arrivals push up rents, overwhelm public transport and can leave newcomers in informal settlements with little sanitation, while the countryside is drained of its youngest workers. These problems, however, stem largely from inadequate planning rather than from migration itself: cities that invest in housing and transport ahead of demand absorb newcomers without such difficulties. Nor is the movement irreversible: as rural incomes rise and remote work spreads, a proportion of migrants return with capital and skills that their home regions badly need.",
+  "Les inconvénients sont traités <b>honnêtement</b>, puis relativisés par un argument de fond (la cause est la planification, pas la migration). C’est ce qui justifie le verdict au lieu de l’asséner."],
+ ["Conclusion","On balance, therefore, the advantages of urban migration outweigh its disadvantages: the gains in income, health and education are immediate and lasting, whereas the associated problems are largely solvable through better urban planning.",
+  "<i>On balance</i> + verdict explicite + la raison de la pesée. Une conclusion qui dirait « les deux se valent » perdrait des points sur ce sujet précis."]],
+ why:[["Task Response","La question fermée (<i>do the advantages outweigh…?</i>) reçoit un <b>verdict</b> en introduction et en conclusion, avec les deux côtés traités."],
+      ["Coherence &amp; Cohesion","Avantages → inconvénients → pesée. <i>nonetheless</i>, <i>however</i>, <i>On balance, therefore</i> jalonnent le raisonnement sans le saturer."],
+      ["Lexical Resource","<i>strains infrastructure, concentrate employers, informal settlements, drained of its youngest workers, absorb newcomers</i> : des collocations spécifiques au sujet."],
+      ["Grammatical Range &amp; Accuracy","<i>not only … but also</i>, relative (<i>a family that moves…</i>), <i>whereas</i>, et un tiret cadratin employé à bon escient."]],
+ reuse:["Although this […] undeniably […], I believe that its benefits clearly outweigh its drawbacks.",
+        "The principal advantage is access to […].",
+        "A […] who […] may find not only […] but also […].",
+        "These problems, however, stem largely from […] rather than from […] itself.",
+        "On balance, therefore, the advantages of […] outweigh its disadvantages : […], whereas […]."]}
+},
+/* ---------- EXAMEN 4 ---------- */
+{
+t1:{w:196, parts:[
+ ["Introduction","The table gives the populations of five major cities in 1990 and 2010, together with projected figures for 2030.",
+  "Une phrase, et le mot <b>projected</b> annonce d’emblée que la dernière colonne est une prévision : cela conditionne toute la grammaire du texte."],
+ ["Overview (obligatoire)","Overall, every city listed grew considerably between 1990 and 2010, but their paths diverge sharply thereafter: Tokyo, by far the largest at the start of the period, is the only city expected to shrink, while Delhi is projected to overtake it and become the most populous of the five by 2030.",
+  "Le <b>regroupement</b> est fait avant d’écrire : une croissance générale, une exception (Tokyo), un renversement de tête (Delhi). Aucune ligne n’est décrite dans l’ordre du tableau."],
+ ["Corps 1 — Tokyo et Delhi","Tokyo stands apart from the other cities. Its population was already 32.5 million in 1990, more than twice that of São Paulo, the next largest, and it rose only modestly, to 36.9 million in 2010, before edging down to a projected 36.0 million. Delhi, by contrast, more than doubled over the first twenty years, from 9.7 to 22.0 million, and is expected to add a further 17 million by 2030.",
+  "Les deux cas remarquables sont opposés dans le même paragraphe. Noter <i>is expected to</i> / <i>a projected</i> dès qu’on parle de 2030."],
+ ["Corps 2 — les croissances les plus rapides","The fastest relative growth, however, belongs to Lagos, which is projected to expand fivefold over the four decades, from just 4.8 million — the lowest figure in the table — to 24.2 million. Cairo follows a similar if less dramatic path, rising from 9.1 to a projected 25.5 million, whereas São Paulo grows most slowly of these three, reaching 23.8 million.",
+  "Croissance <b>relative</b> et non absolue : c’est la comparaison que l’examinateur attend quand les villes partent de tailles très différentes."]],
+ why:[["Task Achievement","La plus grande, la plus petite, la croissance la plus rapide, l’exception qui décline et le renversement de hiérarchie : cinq éléments sur quinze valeurs."],
+      ["Coherence &amp; Cohesion","Deux groupes logiques (cas atypiques / fortes croissances) au lieu d’un parcours ligne par ligne."],
+      ["Lexical Resource","<i>stands apart, edging down, more than doubled, expand fivefold, a similar if less dramatic path</i>."],
+      ["Grammatical Range &amp; Accuracy","Passé simple pour 1990-2010, <b>is projected to / is expected to</b> pour 2030, relative (<i>which is projected to…</i>), comparatif (<i>more than twice that of…</i>)."]],
+ reuse:["The table gives […] in […] and […], together with projected figures for […].",
+        "[X] stands apart from the other […].",
+        "…more than twice that of [Y], the next largest.",
+        "[Z] is projected to expand fivefold over the four decades, from just […] — the lowest figure in the table — to […].",
+        "[A] follows a similar if less dramatic path, rising from […] to a projected […]."]},
+t2:{w:284, parts:[
+ ["Introduction","Congestion has become a daily reality in most large cities, with commuters spending hours each week in stationary traffic. This essay will examine the damage it causes, in economic and in environmental terms, before proposing two measures that have proved effective where they have been tried.",
+  "La consigne comporte <b>deux questions</b> (quels problèmes ? quelles mesures ?) : l’introduction annonce une réponse à chacune. Le plan du texte est déjà lisible."],
+ ["Corps 1 — les problèmes","The most immediate cost is economic. Time spent in traffic is time not spent working or with one’s family, and the losses are considerable: a city of several million inhabitants can forfeit the equivalent of a full working week per commuter every year, while delivery firms pass their extra fuel costs on to consumers. Congestion also penalises those least able to avoid it: delivery drivers, nurses on shift work and parents on the school run cannot simply choose to travel later. Congestion is also a public health issue, since stationary engines emit disproportionate quantities of nitrogen dioxide precisely where population density is highest.",
+  "Deux problèmes <b>expliqués</b>, pas listés : chacun reçoit son mécanisme (temps perdu → coût ; moteurs à l’arrêt → pollution concentrée)."],
+ ["Corps 2 — des solutions appariées","Both problems point towards the same remedy: making the alternative to driving genuinely attractive. Sustained investment in frequent, reliable public transport is the essential first step, since commuters abandon their cars only when the bus or the metro is faster than the road. This can be reinforced by congestion charging, which London introduced in 2003 and which reduced traffic in the central zone almost immediately, with the revenue reinvested in the bus network. Cycle lanes and staggered working hours complete the picture, since a significant proportion of urban journeys are short enough to be made without a car at all.",
+  "Chaque solution répond à une cause déjà citée, et la <b>condition de réussite</b> est précisée (<i>only when the bus is faster than the road</i>). Une solution non reliée à une cause est hors sujet."],
+ ["Conclusion","In conclusion, traffic congestion imposes heavy economic and health costs on urban populations, and the most effective response combines substantial investment in public transport with financial disincentives to driving in city centres.",
+  "Les deux questions reçoivent leur réponse en une phrase chacune. Rien de neuf n’est introduit."]],
+ why:[["Task Response","Les <b>deux</b> parties de la consigne sont traitées, et les solutions découlent explicitement des problèmes exposés."],
+      ["Coherence &amp; Cohesion","<i>Both problems point towards the same remedy</i> fait la charnière entre les deux paragraphes : la cohésion vient du sens, pas d’un connecteur."],
+      ["Lexical Resource","<i>forfeit, stationary engines, disproportionate quantities, congestion charging, financial disincentives, reinvested</i>."],
+      ["Grammatical Range &amp; Accuracy","Relative double (<i>which London introduced… and which reduced…</i>), causale (<i>since commuters abandon…</i>), passif (<i>can be reinforced by</i>), structure absolue (<i>with the revenue reinvested…</i>)."]],
+ reuse:["This essay will examine […] before proposing two measures that have proved effective where they have been tried.",
+        "The most immediate cost is economic.",
+        "[X] is also a public health issue, since […].",
+        "Both problems point towards the same remedy : […].",
+        "In conclusion, […] imposes heavy […] costs, and the most effective response combines […] with […]."]}
+},
+/* ---------- EXAMEN 5 ---------- */
+{
+t1:{w:176, parts:[
+ ["Introduction","The diagram illustrates the various stages involved in the recycling of used glass bottles.",
+  "Un process se paraphrase avec <i>the stages involved in</i> ou <i>the way in which … is produced</i>. Aucune date, aucun chiffre : ce n’est pas ce type de sujet."],
+ ["Overview (obligatoire)","Overall, the process consists of nine distinct stages, beginning with the collection of empty bottles and ending with their delivery to shops. It is also a cyclical process, since the bottles sold at the final stage re-enter the sequence once they have been used.",
+  "L’overview d’un process donne <b>le nombre d’étapes</b>, le point de départ, le point d’arrivée — et signale ici que le cycle se referme. C’est tout ce qu’on attend, sans détail technique."],
+ ["Corps 1 — première moitié du cycle","At the first stage, used bottles are collected from bottle banks and transported by lorry to a processing plant. There they are sorted by colour before being washed, so that any remaining labels and residues are removed. These opening stages are essentially preparatory: the glass itself is not altered, but simply moved, separated and cleaned.",
+  "<b>Présent simple + voix passive</b> du début à la fin : <i>are collected</i>, <i>are transported</i>, <i>are sorted</i>, <i>are washed</i>. Aucun acteur n’est nommé, ce qui est exactement la norme du genre."],
+ ["Corps 2 — seconde moitié et bouclage","Once the glass has been cleaned, it is crushed into small fragments known as cullet, which are subsequently melted in a furnace at a temperature of approximately 1,500 degrees. The molten glass is then moulded into new bottles, which are filled, sealed and finally delivered to shops, where the cycle begins once more. Only at the melting stage does the material change form, and the remaining steps turn loose fragments into a finished, filled product.",
+  "Connecteurs séquentiels variés (<i>Once…, subsequently, then, finally</i>) et deux relatives qui évitent d’enchaîner des phrases courtes. <i>Once the glass has been cleaned</i> marque qu’une étape doit être achevée avant la suivante."]],
+ why:[["Task Achievement","Les neuf étapes sont couvertes, le caractère cyclique est signalé, et rien n’est inventé sur le fonctionnement des machines."],
+      ["Coherence &amp; Cohesion","Le texte suit l’ordre du diagramme — le seul cas où l’ordre de lecture est le bon plan — avec un paragraphe par moitié de cycle."],
+      ["Lexical Resource","<i>bottle banks, processing plant, sorted by colour, cullet, furnace, molten, moulded, sealed</i> : le lexique technique du diagramme est réemployé, pas recopié au hasard."],
+      ["Grammatical Range &amp; Accuracy","Passif au présent simple, <i>before being washed</i> (gérondif après préposition), <i>Once … has been cleaned</i> (present perfect passif), relatives."]],
+ reuse:["The diagram illustrates the various stages involved in the […] of […].",
+        "Overall, the process consists of […] distinct stages, beginning with […] and ending with […].",
+        "At the first stage, […] are collected and transported to […].",
+        "There they are […] before being […], so that […] are removed.",
+        "Once the […] has been […], it is […], which is subsequently […]."]},
+t2:{w:287, parts:[
+ ["Introduction","Despite years of classroom instruction, a great many adults remain unable to hold a simple conversation in the language they studied at school. In my view, this failure is caused less by a lack of ability than by a lack of genuine exposure, and the remedy lies in changing how languages are taught rather than how long.",
+  "La consigne pose <b>deux questions</b> ; l’introduction répond aux deux en une phrase (cause, puis remède). Noter <i>less … than …</i>, qui hiérarchise au lieu de juxtaposer."],
+ ["Corps 1 — la cause","The central problem is that most learners encounter the language only in artificial conditions. Four hours a week of grammar exercises, addressed to thirty pupils at once, provide almost no opportunity to speak, and what is practised is a set of rules rather than a means of communication. A teenager who can conjugate every irregular verb may therefore freeze when asked a simple question at a railway station, because the two activities have almost nothing in common. Fear compounds the problem: in a class where every mistake is corrected in public, most learners quickly decide that silence is safer than error, and the little speaking time available is lost.",
+  "Le mécanisme est expliqué (<i>artificial conditions</i> → peu de parole → règles au lieu de communication), puis <b>incarné</b> par un exemple précis. C’est le E-E du PEEL."],
+ ["Corps 2 — le remède","The solution follows directly from the diagnosis: exposure must be made frequent, meaningful and low-risk. Lessons should be conducted in the target language and organised around tasks with a real outcome — ordering a meal, resolving a complaint, presenting an argument — so that the language becomes a tool rather than an object of study. Outside the classroom, short daily contact through podcasts, series or conversation exchanges is far more effective than an occasional intensive course, since it is regularity, not duration, that builds fluency. Schools could also assess speaking as seriously as they assess grammar, since learners work towards whatever is examined.",
+  "La solution <b>répond point par point</b> à la cause identifiée. Le cleft final (<i>it is regularity, not duration, that builds fluency</i>) est une structure de haut niveau, placée là où elle porte le plus."],
+ ["Conclusion","In conclusion, learners struggle mainly because school exposes them to rules rather than to the living language, and the most effective response is to make daily, purposeful practice the core of language teaching.",
+  "Une proposition par question posée. La conclusion d’une two-part question doit <b>refermer les deux</b>."]],
+ why:[["Task Response","Les <b>deux</b> questions reçoivent une réponse développée et reliée : le remède découle explicitement de la cause."],
+      ["Coherence &amp; Cohesion","<i>The solution follows directly from the diagnosis</i> : la charnière entre les paragraphes est logique, pas décorative."],
+      ["Lexical Resource","<i>artificial conditions, a means of communication, target language, low-risk, conversation exchanges, fluency</i>."],
+      ["Grammatical Range &amp; Accuracy","<i>less … than …</i>, relative (<i>A teenager who can conjugate…</i>), subordonnée de but (<i>so that…</i>), et une cleft sentence (<i>it is regularity … that builds fluency</i>)."]],
+ reuse:["In my view, this […] is caused less by […] than by […].",
+        "The central problem is that most […] encounter […] only in artificial conditions.",
+        "A […] who can […] may therefore […], because the two activities have almost nothing in common.",
+        "The solution follows directly from the diagnosis : […] must be made […], […] and […].",
+        "…since it is […], not […], that […]."]}
+},
+/* ---------- EXAMEN 6 ---------- */
+{
+t1:{w:183, parts:[
+ ["Introduction","The two maps show how the centre of the town of Newbridge has changed since 1990.",
+  "Une carte « avant / après » se paraphrase par <i>how … has changed</i>. Le present perfect est le temps naturel quand la seconde carte représente aujourd’hui."],
+ ["Overview (obligatoire)","Overall, the town centre has been transformed from a working, industrial area into a largely residential and pedestrian one. Although its main institutions have been retained, the industrial and parking facilities have disappeared, and the built-up area has expanded northwards.",
+  "L’overview d’une carte décrit un <b>changement de caractère</b> (industriel → résidentiel) et le sens de l’extension. Aucune énumération de bâtiments."],
+ ["Corps 1 — le nord et le centre","The most obvious change has occurred in the north, where the farmland that once bordered the town has been replaced by a housing estate. In the centre, Main Street has been widened, the shops along it have been pedestrianised, and the school opposite has been considerably extended. The school is one of the few features to have kept its original function, even though its footprint has grown noticeably.",
+  "Structuration <b>par zone géographique</b> — nord puis centre — et non bâtiment par bâtiment. Toutes les transformations sont à la voix passive, sans acteur."],
+ ["Corps 2 — le sud et la rivière","The southern half of the area has been altered even more radically. The factory that stood beside the river has been converted into apartments, while the car park to its east has given way to a pedestrian square. A footbridge has also been constructed across the River Ness, giving access to the far bank, which could not previously be reached from the town centre.",
+  "Les verbes de map sont tous distincts : <i>replaced by, widened, pedestrianised, extended, converted into, given way to, constructed</i>. Répéter <i>changed</i> huit fois coûterait un point de lexique."]],
+ why:[["Task Achievement","Tous les changements majeurs sont couverts, groupés par zone, avec l’élément conservé (l’école, la rue principale) signalé — un détail que la plupart des candidats oublient."],
+      ["Coherence &amp; Cohesion","Nord → centre → sud → rivière : le lecteur peut suivre sur la carte sans revenir en arrière."],
+      ["Lexical Resource","Sept verbes de transformation différents, plus le vocabulaire de localisation (<i>bordered, opposite, to its east, the far bank</i>)."],
+      ["Grammatical Range &amp; Accuracy","Present perfect passif (<i>has been converted</i>), relatives (<i>the factory that stood…</i>, <i>which could not previously be reached</i>), participiale (<i>giving access to…</i>)."]],
+ reuse:["The two maps show how […] has changed since […].",
+        "Overall, […] has been transformed from a […] area into a largely […] one.",
+        "The most obvious change has occurred in the north, where […] has been replaced by […].",
+        "The factory that stood beside […] has been converted into […], while […] has given way to […].",
+        "A […] has also been constructed across […], giving access to […]."]},
+t2:{w:283, parts:[
+ ["Introduction","In many societies, a growing number of adults now live by themselves rather than with a partner or an extended family. Although this trend brings genuine risks of isolation, I consider it a broadly positive development, since it reflects greater freedom of choice and greater economic independence, particularly for women.",
+  "« Positive or negative » est une <b>question d’opinion</b> : le verdict est donné en introduction, la nuance (<i>Although…</i>) ne l’efface pas."],
+ ["Corps 1 — l’argument principal","Living alone is, above all, the product of choices that were unavailable to previous generations. A young professional who can afford her own flat is no longer obliged to remain in the family home until marriage, and an older person who has been widowed can stay in a familiar neighbourhood instead of moving in with relatives. In both cases, solitude is not imposed by circumstances but selected among several options, which is precisely what makes it a sign of progress. For women in particular, the ability to maintain a household on a single income represents a form of independence that was inconceivable two generations ago.",
+  "L’argument ne se contente pas d’affirmer que c’est positif : il <b>redéfinit</b> le phénomène (vivre seul = résultat d’un choix devenu possible), ce qui est bien plus convaincant."],
+ ["Corps 2 — la concession et sa limite","The risks are nonetheless real. People who live alone are more exposed to loneliness, and the multiplication of single households puts pressure on housing stock in cities where accommodation is already scarce. These are, however, problems of provision rather than arguments against the trend itself: community facilities, affordable one-bedroom housing and active neighbourhood associations address them directly, as several northern European cities have demonstrated. Solitary living, moreover, does not mean social isolation: people who live alone often maintain wider friendship networks than those who do not, precisely because company has to be sought rather than assumed.",
+  "La concession est <b>chiffrable et sérieuse</b>, puis réfutée par une distinction (problème d’offre ≠ argument contre la tendance). La position reste intacte."],
+ ["Conclusion","In conclusion, although solitary living carries a risk of isolation that societies must address, I believe the trend is a positive one overall, as it rests on a degree of personal autonomy that earlier generations simply did not enjoy.",
+  "Concession rappelée, verdict confirmé, raison centrale reprise. La position n’a pas bougé d’un millimètre depuis l’introduction."]],
+ why:[["Task Response","Un verdict clair, maintenu, et deux idées développées ; la concession ne fait pas basculer la position, elle la renforce."],
+      ["Coherence &amp; Cohesion","<i>The risks are nonetheless real</i> puis <i>These are, however, problems of provision rather than…</i> : deux bascules nettes, aucune saturation de connecteurs."],
+      ["Lexical Resource","<i>extended family, economic independence, widowed, housing stock, provision, neighbourhood associations, personal autonomy</i>."],
+      ["Grammatical Range &amp; Accuracy","Relatives (<i>who can afford</i>, <i>who has been widowed</i>), <i>not … but …</i>, relative de commentaire (<i>which is precisely what makes it…</i>), comparatif (<i>a degree of autonomy that earlier generations did not enjoy</i>)."]],
+ reuse:["Although this trend brings genuine risks of […], I consider it a broadly positive development, since […].",
+        "[X] is, above all, the product of choices that were unavailable to previous generations.",
+        "In both cases, […] is not imposed by circumstances but selected among several options.",
+        "The risks are nonetheless real. […] These are, however, problems of provision rather than arguments against the trend itself.",
+        "In conclusion, although […], I believe the trend is a positive one overall, as it rests on […]."]}
+},
+/* ---------- EXAMEN 7 ---------- */
+{
+t1:{w:187, parts:[
+ ["Introduction","The chart shows the number of international students enrolled at one university between 2016 and 2023, together with their overall satisfaction rate over the same period.",
+  "Deux séries, deux unités : l’introduction doit <b>nommer les deux</b>, sinon la moitié du sujet est ignorée."],
+ ["Overview (obligatoire)","Overall, both enrolment and satisfaction rose substantially over the eight years, and the two indicators moved in step: they reached their lowest point in the same year and their highest in the final year shown.",
+  "L’overview d’un sujet à deux graphiques doit <b>relier les deux séries</b>. Ici, le lien est constaté (mêmes creux, mêmes sommets) sans jamais affirmer que l’un cause l’autre — la spéculation est interdite."],
+ ["Corps 1 — croissance puis rupture","Between 2016 and 2019, the university attracted a steadily increasing number of international students, from 1,200 to 1,800, while satisfaction improved gradually from 78% to 83%. This upward trend was interrupted abruptly in 2020, when enrolment halved to 900 and satisfaction fell to 71%, its lowest level in the period. In each of the four years before that rupture, the two indicators had risen together, with no year in which one improved while the other declined.",
+  "Les deux séries sont traitées <b>ensemble</b>, phase par phase. L’anomalie de 2020 est l’« exception notable » de la règle des 4 à 6 éléments : elle doit figurer."],
+ ["Corps 2 — le redressement","The recovery was rapid. Numbers climbed back to 1,600 in 2022 before surging to 2,400 in 2023, double the figure recorded at the start of the period, while satisfaction returned to its pre-2020 level in 2022 and peaked at 86% a year later. Both indicators therefore ended the period at their highest points.",
+  "Le rapport (<i>double the figure recorded at the start</i>) vaut mieux qu’une soustraction, et la phrase finale referme sur le lien entre les deux séries."]],
+ why:[["Task Achievement","Maximum, minimum, changement le plus marqué, exception (2020) et relation entre les deux séries : cinq éléments, et les deux graphiques sont traités conjointement."],
+      ["Coherence &amp; Cohesion","Découpage <b>chronologique par phase</b> (montée / rupture / reprise) plutôt qu’une série puis l’autre."],
+      ["Lexical Resource","<i>enrolment, indicators, moved in step, interrupted abruptly, halved, surging, peaked, pre-2020 level</i>."],
+      ["Grammatical Range &amp; Accuracy","<i>while</i> pour relier deux séries, <i>when</i> pour dater une rupture, apposition (<i>double the figure recorded at the start</i>), <i>before surging</i> (gérondif)."]],
+ reuse:["The chart shows […], together with […] over the same period.",
+        "Overall, both […] and […] rose substantially, and the two indicators moved in step.",
+        "Between […] and […], [A] increased steadily, from […] to […], while [B] improved gradually from […] to […].",
+        "This upward trend was interrupted abruptly in […], when [A] halved to […] and [B] fell to […].",
+        "Both indicators therefore ended the period at their highest points."]},
+t2:{w:289, parts:[
+ ["Introduction","Few questions divide public opinion as sharply as the treatment of offenders: some believe that only long custodial sentences can deter crime, while others argue that prevention and rehabilitation achieve more. This essay will examine both arguments before concluding that, beyond a certain threshold, alternatives to imprisonment are the more effective response.",
+  "Les deux vues <b>et</b> la position en trois lignes. <i>beyond a certain threshold</i> nuance la thèse sans la rendre floue : c’est une position, pas une hésitation."],
+ ["Corps 1 — la première vue, prise au sérieux","The case for longer sentences rests on two ideas: deterrence and incapacitation. A would-be burglar who knows that a conviction carries ten years rather than eighteen months has an obvious reason to reconsider, and an offender who is in prison cannot commit further offences in the meantime. For the most violent crimes, this second argument is difficult to dispute, and public confidence in the justice system depends in part on such sentences being available. Victims’ organisations add that a sentence perceived as too lenient discourages witnesses from coming forward at all.",
+  "La vue que l’auteur ne partage pas est exposée avec ses <b>meilleurs</b> arguments, et même partiellement concédée. Un examinateur distingue immédiatement cela d’un homme de paille."],
+ ["Corps 2 — la seconde vue et la position","The difficulty is that deterrence depends far more on the probability of being caught than on the length of the sentence, and long terms in overcrowded prisons tend to produce hardened rather than reformed offenders. Countries that have invested in education inside prison, supervised release and treatment for addiction consistently report lower reoffending rates than those that have simply extended sentences. Since the great majority of crimes are committed by a small number of repeat offenders, reducing reoffending does more to protect the public than lengthening tariffs. Norway, whose prisons emphasise training and gradual reintegration, records one of the lowest reoffending rates in Europe, whereas jurisdictions that have simply doubled sentence lengths report no comparable fall in crime.",
+  "La réfutation s’appuie sur un <b>mécanisme</b> (probabilité d’être pris > longueur de la peine) et sur une comparaison, puis relie explicitement à l’objectif commun : protéger le public."],
+ ["Conclusion","In conclusion, although imprisonment remains indispensable for the most dangerous offenders, I believe that reducing crime depends primarily on catching offenders reliably and rehabilitating them effectively, rather than on ever longer sentences.",
+  "La concession donne sa place à la vue adverse, la principale confirme la position annoncée en introduction."]],
+ why:[["Task Response","Les deux vues sont développées, l’opinion est annoncée puis maintenue, et la nuance (<i>beyond a certain threshold</i>) est argumentée, pas subie."],
+      ["Coherence &amp; Cohesion","<i>The difficulty is that…</i> articule la bascule d’une vue à l’autre ; chaque paragraphe garde une idée directrice unique."],
+      ["Lexical Resource","<i>custodial sentences, deterrence, incapacitation, a would-be burglar, supervised release, reoffending rates, tariffs</i> : le lexique spécialisé du sujet."],
+      ["Grammatical Range &amp; Accuracy","Comparatif complexe (<i>depends far more on … than on …</i>), relatives (<i>Countries that have invested…</i>), <i>Since</i> causal, gérondifs coordonnés (<i>catching … and rehabilitating …</i>)."]],
+ reuse:["Some believe that […], while others argue that […]. This essay will examine both arguments before concluding that […].",
+        "The case for […] rests on two ideas : […] and […].",
+        "For the most […], this argument is difficult to dispute.",
+        "The difficulty is that […] depends far more on […] than on […].",
+        "In conclusion, although […] remains indispensable for […], I believe that […] rather than […]."]}
+},
+/* ---------- EXAMEN 8 ---------- */
+{
+t1:{w:192, parts:[
+ ["Introduction","The line graph compares online and in-store retail sales in Country Z from 2010 to 2022 and sets out projected figures for the following eight years.",
+  "L’introduction distingue d’emblée <b>ce qui est mesuré</b> de <b>ce qui est prévu</b> : c’est ce qui autorise ensuite deux temps grammaticaux différents."],
+ ["Overview (obligatoire)","Overall, the two channels are expected to exchange positions over the period as a whole. In-store sales, which dominated the market in 2010, have declined continuously and are forecast to fall further, whereas online sales, which began from a very low base, are projected to overtake them shortly after 2022 and to continue rising sharply.",
+  "Le <b>croisement</b> des deux courbes est le fait majeur : c’est lui qui doit occuper l’overview, sans qu’aucune valeur ne soit citée."],
+ ["Corps 1 — la période observée","In 2010, in-store sales stood at $210 billion, more than ten times the $20 billion taken online. Over the following twelve years, high-street sales declined gradually to $160 billion, a loss of roughly a quarter, whereas online sales grew explosively: they had more than doubled by 2014 and reached $150 billion in 2022, by which point the gap between the two channels had almost disappeared.",
+  "<b>Passé simple</b> pour les données datées et observées. Le rapport initial (<i>more than ten times</i>) et la réduction de l’écart donnent au lecteur la dynamique, pas seulement les valeurs."],
+ ["Corps 2 — les projections","The projections point to an acceleration of this trend. Online sales are expected to reach $210 billion in 2026 and $270 billion by 2030, while in-store sales are forecast to slip to $125 billion. If these figures prove accurate, the online channel will be worth more than twice as much as the traditional one by the end of the period.",
+  "<b>is expected to / is forecast to / will be</b> : la grammaire change dès qu’on passe aux prévisions, et un conditionnel (<i>If these figures prove accurate</i>) rappelle qu’il s’agit d’hypothèses."]],
+ why:[["Task Achievement","Valeur la plus haute, la plus basse, croisement des courbes, rapport initial et final : la sélection est complète sans être bavarde."],
+      ["Coherence &amp; Cohesion","Un paragraphe pour l’observé, un pour le prévu : le découpage le plus lisible dès qu’un graphique contient des projections."],
+      ["Lexical Resource","<i>channels, taken online, high-street sales, declined gradually, grew explosively, slip, prove accurate</i>."],
+      ["Grammatical Range &amp; Accuracy","Contraste des temps (passé simple / futur de prévision), plus-que-parfait (<i>had more than doubled</i>), relative (<i>by which point…</i>), conditionnel de type 1."]],
+ reuse:["The line graph compares […] from […] to […] and sets out projected figures for the following […] years.",
+        "Overall, the two […] are expected to exchange positions over the period as a whole.",
+        "In […], [A] stood at […], more than ten times the […] of [B].",
+        "[B] grew explosively : it had more than doubled by […] and reached […] in […].",
+        "[A] is forecast to slip to […], while [B] is expected to reach […] by […]."]},
+t2:{w:285, parts:[
+ ["Introduction","It is often claimed that the technologies designed to simplify daily life have in fact made it more complicated. I largely disagree: while digital tools have undoubtedly created new demands on our attention, they have removed a far greater quantity of routine effort from ordinary life.",
+  "Position <b>nette</b> (<i>I largely disagree</i>) et nuancée (<i>while…</i>) : c’est la combinaison que récompense Task Response, et non un « les deux à la fois » non tranché."],
+ ["Corps 1 — l’argument principal","The tasks that once consumed entire afternoons now take minutes. Paying a bill, renewing a passport, comparing insurance policies or finding a specialist all required queuing, telephoning or travelling a generation ago; today they are completed from a sofa. The gain is not merely one of speed: tasks that once had to be performed in person during office hours can now be fitted around work and childcare, which benefits most those with the least free time. A parent who books a medical appointment online at midnight, having previously had to telephone at eight in the morning and hope for an answer, experiences technology as a straightforward simplification of life.",
+  "L’argument est <b>quantifié en expérience concrète</b> (queuing, telephoning, travelling → quelques minutes), puis incarné. La participiale (<i>having previously had to…</i>) condense deux époques en une phrase."],
+ ["Corps 2 — la concession et sa limite","It would be naive, however, to deny the new burdens that accompany these gains. Constant notifications fragment concentration, passwords and updates multiply, and the boundary between work and private life has become porous. Yet these are costs of use rather than of technology itself: they arise from how the tools are configured, and they can be contained by deliberate choices — switching off alerts, or reserving fixed hours for messages. It is also worth noting that complexity is often the price of choice: a railway offering one train at one fare is simpler than an application comparing twenty, but few travellers would willingly go back.",
+  "La concession est précise et honnête, puis <b>recadrée</b> (coût d’usage ≠ coût de la technologie). La position ne bouge pas, elle gagne en crédibilité."],
+ ["Conclusion","In conclusion, although digital technology has introduced genuine distractions and pressures, I believe it has simplified far more of everyday life than it has complicated, provided that we retain control over how we use it.",
+  "Concession, verdict identique à l’introduction, et une condition finale (<i>provided that…</i>) qui ajoute de la nuance sans ouvrir un nouvel argument."]],
+ why:[["Task Response","La question « to what extent » reçoit un degré explicite (<i>largely disagree</i>) et une justification développée des deux côtés."],
+      ["Coherence &amp; Cohesion","<i>It would be naive, however, to deny…</i> puis <i>Yet these are costs of use rather than of technology itself</i> : la progression est visible sans connecteur mécanique."],
+      ["Lexical Resource","<i>routine effort, fragment concentration, porous, costs of use, contained, deliberate choices</i> — et une énumération de tâches très concrète."],
+      ["Grammatical Range &amp; Accuracy","Participiale parfaite (<i>having previously had to telephone…</i>), <i>It would be naive to…</i>, <i>rather than</i>, <i>provided that</i>, énumération parallèle de quatre groupes nominaux."]],
+ reuse:["It is often claimed that […]. I largely disagree : while […], […].",
+        "The tasks that once consumed entire afternoons now take minutes.",
+        "A […] who […], having previously had to […], experiences […] as a straightforward […].",
+        "It would be naive, however, to deny the new burdens that accompany these gains.",
+        "Yet these are costs of use rather than of […] itself.",
+        "In conclusion, although […], I believe […], provided that […]."]}
+}];
+
 /* ============================================================
    LOGIQUE
    ============================================================ */
@@ -645,6 +990,20 @@ function words(t){ const a = t.trim().split(/\s+/).filter(Boolean); return a.len
 function ansKey(i){ return "e"+i; }
 function curAns(){ return S.answers[ansKey(S.exam)] || {t1:"",t2:""}; }
 
+function renderModel(el, m, task){
+  const full = m.parts.map(function(p){ return p[1]; }).join(" ");
+  const n = full.trim().split(/\s+/).length;
+  let h = '<div class="mwords">Modèle de <b>'+n+' mots</b> · minimum exigé : '+(task===1?150:250)
+        + ' · rédigé dans le temps imparti ('+(task===1?"20":"40")+' min)</div><div class="essay">';
+  m.parts.forEach(function(p){
+    h += '<span class="lbl">'+p[0]+'</span><p>'+p[1]+'</p><div class="note">'+p[2]+"</div>";
+  });
+  h += '</div><h4 class="msec">Pourquoi ce texte vaudrait un band 9</h4><div class="crit">';
+  m.why.forEach(function(w){ h += "<div><b>"+w[0]+"</b>"+w[1]+"</div>"; });
+  h += '</div><h4 class="msec">Structures à réutiliser telles quelles</h4><div class="reuse">';
+  m.reuse.forEach(function(r){ h += "<div>"+r+"</div>"; });
+  el.innerHTML = h + "</div>";
+}
 function renderExam(){
   const e = EXAMS[S.exam];
   $("t1kind").textContent = e.t1kind;
@@ -655,6 +1014,9 @@ function renderExam(){
   $("t1data").innerHTML = "<pre style=\"white-space:pre-wrap;font-size:12.5px;margin:6px 0 0\">"+dataText(e.chart)+"</pre>";
   $("t1dataWrap").open = false;
   $("t2instr").textContent = e.t2;
+  renderModel($("m1"), MODELS[S.exam].t1, 1);
+  renderModel($("m2"), MODELS[S.exam].t2, 2);
+  document.querySelectorAll("details.model").forEach(function(d){ d.open = false; });
   const a = curAns();
   $("t1txt").value = a.t1; $("t2txt").value = a.t2;
   updateWc();

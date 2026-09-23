@@ -78,6 +78,13 @@ légendes et valeurs, **correcteur orthographique désactivé** comme dans le vr
 chronomètre de 60 minutes qui rappelle de passer à la Task 2 à 20:00, compteur de mots
 masquable (mode papier).
 
+**Modèle band 9 commenté** — chaque tâche des 8 examens dispose de sa propre réponse modèle,
+repliée par défaut (à n'ouvrir qu'après avoir rédigé). Chacune donne : le texte paragraphe par
+paragraphe avec, sous chaque paragraphe, **ce qu'il fait et pourquoi** ; une analyse des
+**4 critères officiels** citant le texte (pourquoi ce passage vaut un band 9) ; et 5 à 6
+**structures réutilisables** avec des trous à remplir. Les 16 modèles dépassent tous le minimum
+de mots (Task 1 : 188-206 mots ; Task 2 : 266-302 mots).
+
 **Correction** : le bouton « Copier pour correction » place dans le presse-papier la consigne
 officielle, **les données chiffrées du graphique** (pour que la correction vérifie vos chiffres),
 votre réponse avec son nombre de mots et le temps écoulé, ainsi que la grille de correction :
