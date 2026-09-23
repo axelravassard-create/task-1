@@ -51,13 +51,18 @@ html[data-theme="light"]{--bg:#f4f7fb;--card:#fff;--card2:#eef3fb;--txt:#12203a;
 html,body{margin:0;padding:0;height:100%%;overflow:hidden;background:var(--bg)}
 body{display:flex;flex-direction:column;height:100dvh;
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-#bar{flex:0 0 auto;background:var(--bg);border-top:1px solid var(--line);
-  padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));display:flex;gap:5px;justify-content:center}
-.tab{flex:1 1 0;max-width:170px;background:var(--card);border:1px solid var(--line);color:var(--muted);
+#bar{flex:0 0 auto;background:var(--card);border-bottom:2px solid var(--acc2);
+  padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px;display:flex;gap:6px;justify-content:center;align-items:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);position:relative;z-index:5}
+#barlbl{font-weight:800;font-size:14px;color:var(--txt);margin-right:8px;white-space:nowrap}
+@media(max-width:560px){#barlbl{display:none}}
+.tab{flex:1 1 0;max-width:170px;background:var(--card2);border:2px solid var(--acc2);color:var(--txt);
   font-family:inherit;font-size:11.5px;font-weight:700;padding:5px 2px 6px;border-radius:12px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;overflow:hidden}
 .tab .ic{font-size:17px;line-height:1.15}
-.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06202b;border-color:transparent;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 35%%,transparent)}
+.tab:not(.on):hover{background:color-mix(in srgb,var(--acc2) 18%%,var(--card2))}
 .tab:active{transform:scale(.97)}
 #frames{flex:1 1 auto;position:relative;background:var(--bg)}
 #frames iframe{position:absolute;inset:0;width:100%%;height:100%%;border:0;display:none;background:var(--bg)}
@@ -65,10 +70,11 @@ body{display:flex;flex-direction:column;height:100dvh;
 </style>
 </head>
 <body>
-  <div id="frames"></div>
   <nav id="bar">
+      <span id="barlbl">IELTS Writing</span>
       %(tabs)s
   </nav>
+  <div id="frames"></div>
 <script>
 "use strict";
 const APPS = {};
@@ -105,7 +111,7 @@ function syncTheme(){
     const raw = localStorage.getItem(KEYS[current]);
     if(raw) theme = (JSON.parse(raw)||{}).theme;
   }catch(e){}
-  if(!theme) theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if(!theme) theme = "dark";
   document.documentElement.setAttribute("data-theme", theme);
 }
 setInterval(syncTheme, 900);
