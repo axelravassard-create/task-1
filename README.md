@@ -1,7 +1,20 @@
 # IELTS Writing — jeux de révision (Task 1 &amp; Task 2)
 
-Deux pages HTML **autonomes**, sans dépendance ni bibliothèque externe, utilisables hors
-connexion une fois chargées, sur mobile comme sur ordinateur :
+## Le fichier à ouvrir : `ielts.html`
+
+**`ielts.html` contient tout** — les deux jeux de révision et les examens blancs — dans un
+**seul fichier**, avec un sélecteur Task 1 / Task 2 / Examens en bas d'écran. C'est le fichier
+à télécharger : aucun autre n'est nécessaire, rien à installer, tout fonctionne hors connexion.
+
+Il est assemblé par `build.py` à partir des trois pages sources ci-dessous, chacune embarquée
+dans une iframe (ce qui évite toute collision entre les trois applications). Après toute
+modification d'une source, relancer `python3 build.py`.
+
+## Les trois pages sources
+
+Chacune reste utilisable seule, sans dépendance ni bibliothèque externe, sur mobile comme sur
+ordinateur (les liens entre elles ne fonctionnent que si les trois fichiers sont dans le même
+dossier — d'où `ielts.html`) :
 
 - **`index.html`** — Writing **Task 1** (graphiques, process, maps)
 - **`task2.html`** — Writing **Task 2** (essai argumenté)
@@ -57,7 +70,7 @@ progression sauvegardée séparément dans le `localStorage`.
 
 ## Examens blancs — `exam.html`
 
-8 épreuves complètes **au format officiel** (Task 1 + Task 2, 60 minutes), à corriger en
+12 épreuves complètes **au format officiel** (Task 1 + Task 2, 60 minutes), à corriger en
 collant le tout dans une conversation Claude.
 
 | # | Task 1 | Task 2 |
@@ -70,6 +83,10 @@ collant le tout dans une conversation Claude.
 | 6 | Maps — centre-ville avant / après | Opinion (positive or negative) |
 | 7 | Mixed charts — effectifs (barres) + satisfaction (courbe) | Discussion des deux vues |
 | 8 | Line graph avec projections en pointillés | Opinion (agree / disagree) |
+| 9 | Bar chart — accès à internet, cinq pays, 2005 vs 2020 | Avantages / inconvénients |
+| 10 | Line graph — chômage dans trois pays, 2008-2024 | Problème & solution |
+| 11 | Process diagram — production du café | Two-part question |
+| 12 | Maps — une île avant / après un complexe touristique | Discussion des deux vues |
 
 **Conditions réalistes** : formulations officielles mot pour mot (*Summarise the information by
 selecting and reporting the main features…*, *Give reasons for your answer…*), mentions
@@ -78,12 +95,12 @@ légendes et valeurs, **correcteur orthographique désactivé** comme dans le vr
 chronomètre de 60 minutes qui rappelle de passer à la Task 2 à 20:00, compteur de mots
 masquable (mode papier).
 
-**Modèle band 9 commenté** — chaque tâche des 8 examens dispose de sa propre réponse modèle,
+**Modèle band 9 commenté** — chacune des 24 tâches dispose de sa propre réponse modèle,
 repliée par défaut (à n'ouvrir qu'après avoir rédigé). Chacune donne : le texte paragraphe par
 paragraphe avec, sous chaque paragraphe, **ce qu'il fait et pourquoi** ; une analyse des
 **4 critères officiels** citant le texte (pourquoi ce passage vaut un band 9) ; et 5 à 6
-**structures réutilisables** avec des trous à remplir. Les 16 modèles dépassent tous le minimum
-de mots (Task 1 : 188-206 mots ; Task 2 : 266-302 mots).
+**structures réutilisables** avec des trous à remplir. Les 24 modèles dépassent tous le minimum
+de mots (Task 1 : 175-209 mots ; Task 2 : 266-302 mots).
 
 **Correction** : le bouton « Copier pour correction » place dans le presse-papier la consigne
 officielle, **les données chiffrées du graphique** (pour que la correction vérifie vos chiffres),

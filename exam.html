@@ -570,8 +570,47 @@ function mapPanel(x,label,after){
 const MAP_TOWN = '<svg viewBox="0 0 460 300">' + mapPanel(8,"Newbridge in 1990",false)
   + mapPanel(256,"Newbridge today",true) + '</svg>';
 
+/* — diagramme de process : production du café — */
+const PROCESS_COFFEE = '<svg viewBox="0 0 460 300">'
+  + T(230,16,"How coffee is produced",TXT,14,"middle",800)
+  + pbox(6,32,"Ripe berries","are picked",C[0]) + ar(112,55,"right")
+  + pbox(148,32,"Dried in the","sun for 10 days") + ar(254,55,"right")
+  + pbox(290,32,"Hulled to remove","the outer layer") + ar(396,55,"down")
+  + pbox(290,118,"Sorted by size","and quality") + ar(285,141,"left")
+  + pbox(148,118,"Roasted at","high temperature") + ar(143,141,"left")
+  + pbox(6,118,"Ground into","fine powder") + ar(56,168,"down")
+  + pbox(6,204,"Packed in","sealed bags") + ar(112,227,"right")
+  + pbox(148,204,"Stored in a","warehouse") + ar(254,227,"right")
+  + pbox(290,204,"Shipped to","retailers",C[1])
+  + '</svg>';
+
+/* — cartes avant / après : île touristique — */
+function island(x,label,after){
+  let g = R(x,34,196,218,"var(--card)",10,LINE) + T(x+98,24,label,TXT,13,"middle",800);
+  g += '<path d="M'+(x+20)+' 150 q 40 -70 100 -60 q 60 10 58 70 q -2 60 -80 62 q -80 -2 -78 -72 z" fill="var(--card2)" stroke="'+LINE+'" stroke-width="2"/>';
+  g += T(x+30,246,"sea",C[1],11,"start");
+  g += L("M"+(x+10)+" 232 q 24 -8 48 0 t 48 0 t 48 0 t 34 0",C[1],3);
+  g += T(x+150,196,"beach",MUT,10);
+  if(!after){
+    g += T(x+98,120,"trees",MUT,11) + T(x+98,150,"(uninhabited)",MUT,10);
+  }else{
+    g += R(x+30,96,56,20,"var(--card2)",4,C[0]) + T(x+58,110,"reception",TXT,9);
+    g += R(x+98,96,58,20,"var(--card2)",4,C[0]) + T(x+127,110,"restaurant",TXT,9);
+    g += R(x+34,130,42,18,"var(--card2)",4,C[0]) + T(x+55,143,"cabins",TXT,9);
+    g += R(x+116,130,42,18,"var(--card2)",4,C[0]) + T(x+137,143,"cabins",TXT,9);
+    g += L("M"+(x+86)+" 106 H"+(x+98),MUT,2,"3 3") + L("M"+(x+58)+" 116 V130",MUT,2,"3 3") + L("M"+(x+137)+" 116 V130",MUT,2,"3 3");
+    g += T(x+98,168,"footpaths",MUT,9.5);
+    g += L("M"+(x+98)+" 206 V232",C[0],3) + T(x+98,222,"",MUT,9);
+    g += T(x+74,222,"pier",C[0],10,"end");
+    g += T(x+150,214,"swimming",C[1],9.5) + T(x+150,225,"area",C[1],9.5);
+  }
+  return g;
+}
+const MAP_ISLAND = '<svg viewBox="0 0 460 300">' + island(8,"The island before",false)
+  + island(256,"The island after",true) + '</svg>';
+
 /* ============================================================
-   LES 8 EXAMENS BLANCS (formulations officielles IELTS)
+   LES EXAMENS BLANCS (formulations officielles IELTS)
    ============================================================ */
 const EXAMS = [
 {
@@ -647,6 +686,41 @@ const EXAMS = [
    {name:"In-store sales", data:[210,200,185,160,140,125]},
    {name:"Online sales",   data:[20,45,90,150,210,270]}]},
  t2:"Some people believe that technology has made our lives more complex, rather than simpler.\n\nTo what extent do you agree or disagree?"
+},
+{
+ n:"Examen 9", t1kind:"Bar chart", t2kind:"Avantages / inconvénients",
+ t1:"The chart below shows the percentage of households with internet access in five countries in 2005 and in 2020.",
+ cap:"Households with internet access, five countries, 2005 and 2020 (%)",
+ chart:{kind:"bar", unit:"% of households", cats:["South Korea","Germany","Brazil","Egypt","Kenya"], series:[
+   {name:"2005", data:[72,55,14,8,3]},
+   {name:"2020", data:[98,93,71,57,26]}]},
+ t2:"Many children now have access to the internet at home from a very early age.\n\nWhat are the advantages and disadvantages of this development?"
+},
+{
+ n:"Examen 10", t1kind:"Line graph", t2kind:"Problème & solution",
+ t1:"The graph below shows the unemployment rate in three countries between 2008 and 2024.",
+ cap:"Unemployment rate, three countries, 2008–2024 (% of the labour force)",
+ chart:{kind:"line", unit:"% unemployed", cats:["2008","2012","2016","2020","2024"], series:[
+   {name:"Spain", data:[11,25,20,16,12]},
+   {name:"United States", data:[6,8,5,8,4]},
+   {name:"Germany", data:[8,6,4,4,3]}]},
+ t2:"In many cities, young people find it increasingly difficult to buy their first home.\n\nWhat are the causes of this problem, and what measures could governments take to address it?"
+},
+{
+ n:"Examen 11", t1kind:"Process diagram", t2kind:"Two-part question",
+ t1:"The diagram below shows the process by which coffee is produced.",
+ cap:"The coffee production process",
+ chart:{kind:"custom", svg:PROCESS_COFFEE,
+   dataText:"Diagramme de process linéaire, 9 étapes :\n1. Ripe berries are picked\n2. Dried in the sun for about ten days\n3. Hulled to remove the outer layer\n4. Sorted by size and quality\n5. Roasted at high temperature\n6. Ground into fine powder\n7. Packed in sealed bags\n8. Stored in a warehouse\n9. Shipped to retailers\nProcessus linéaire (il ne boucle pas), une seule indication de durée."},
+ t2:"People in many countries now spend most of their leisure time looking at screens.\n\nWhy has this happened, and what effects does it have on family life?"
+},
+{
+ n:"Examen 12", t1kind:"Maps", t2kind:"Discussion",
+ t1:"The maps below show a small island before and after the construction of a tourist resort.",
+ cap:"A small island before and after development",
+ chart:{kind:"custom", svg:MAP_ISLAND,
+   dataText:"Deux cartes de la même île (avant / après).\nAvant : île inhabitée, couverte d’arbres, entourée par la mer, avec une plage sur la côte ouest.\nAprès : une reception et un restaurant au centre-nord ; deux groupes de cabins (hébergements) de part et d’autre ; des footpaths relient les bâtiments ; un pier (ponton) a été construit au sud ; une swimming area a été délimitée en mer ; la plage a été conservée. Les arbres du centre ont été en partie remplacés par les constructions."},
+ t2:"Some people believe that tourism damages local communities, while others argue that it brings essential income and employment.\n\nDiscuss both views and give your own opinion."
 }];
 
 
@@ -967,6 +1041,162 @@ t2:{w:285, parts:[
         "It would be naive, however, to deny the new burdens that accompany these gains.",
         "Yet these are costs of use rather than of […] itself.",
         "In conclusion, although […], I believe […], provided that […]."]}
+},
+/* ---------- EXAMEN 9 ---------- */
+{
+t1:{parts:[
+ ["Introduction","The bar chart compares the percentage of households with an internet connection in five countries in 2005 and in 2020.",
+  "Une phrase, les deux dates, les cinq pays : la paraphrase est complète sans recopier la consigne."],
+ ["Overview (obligatoire)","Overall, access increased in every country over the fifteen-year period, but the gap between the best- and the least-connected nations narrowed considerably. The two countries that were already well equipped in 2005 approached saturation, whereas the fastest progress in relative terms was made by those that started from the lowest levels.",
+  "Deux idées, aucun chiffre : une hausse générale, et surtout un <b>resserrement de l’écart</b>. C’est le genre de lecture d’ensemble qui distingue un overview d’un résumé."],
+ ["Corps 1 — les pays déjà connectés","In 2005, South Korea was by far the most connected country, with 72% of households online, followed by Germany at 55%. By 2020 both had reached near-universal levels, at 98% and 93% respectively, but their gains were the most modest of the five: 26 percentage points in South Korea and 38 in Germany.",
+  "Les deux pays comparables sont <b>regroupés</b>, et la progression est exprimée en <b>percentage points</b> — obligatoire pour un écart entre deux pourcentages."],
+ ["Corps 2 — les pays en rattrapage","The three remaining countries started far behind but advanced much more quickly in proportional terms. Brazil rose roughly fivefold, from 14% to 71%, and Egypt sevenfold, from 8% to 57%. Kenya remained the least connected country throughout, but its figure still increased from 3% to 26%, almost nine times its 2005 level.",
+  "Distinguer la progression <b>absolue</b> (en points) de la progression <b>relative</b> (en multiples) est exactement la comparaison attendue quand les pays partent de niveaux très différents."]],
+ why:[["Task Achievement","Valeur la plus haute, la plus basse, croissance la plus rapide et resserrement de l’écart : quatre éléments choisis parmi dix valeurs."],
+      ["Coherence &amp; Cohesion","Un paragraphe par groupe de pays (déjà connectés / en rattrapage), et non un pays après l’autre."],
+      ["Lexical Resource","<i>connected, online, near-universal, saturation, gains, advanced, fivefold, proportional terms</i>."],
+      ["Grammatical Range &amp; Accuracy","Superlatif (<i>by far the most connected</i>), passif, relatives (<i>those that started from…</i>), et deux façons de quantifier une hausse."]],
+ reuse:["The bar chart compares the percentage of […] in […] countries in […] and in […].",
+        "Overall, […] increased in every […], but the gap between the best- and the least-[…] narrowed considerably.",
+        "By […] both had reached near-universal levels, at […]% and […]% respectively.",
+        "[X] rose roughly fivefold, from […]% to […]%, and [Y] sevenfold.",
+        "[Z] remained the least […] throughout, but its figure still increased from […] to […]."]},
+t2:{parts:[
+ ["Introduction","Children in many households now go online before they can read fluently. This essay will examine the principal benefits of such early exposure, as well as the risks that accompany it. The question is no longer whether children should be online, but on what terms.",
+  "La consigne ne contient pas <i>outweigh</i> : elle demande d’<b>exposer les deux côtés</b>, pas de trancher. L’introduction annonce donc un plan équilibré, sans thèse tranchée."],
+ ["Corps 1 — les avantages","The clearest advantage is access to knowledge that was once confined to libraries and classrooms. A ten-year-old curious about volcanoes can now watch an eruption filmed by a geologist, and a child struggling with fractions can repeat an explanation as often as necessary, at her own pace and without embarrassment. Early familiarity with digital tools also matters practically: the children who learn to search, verify and organise information young are the ones who will handle it competently as adults. Teachers in several countries now report that pupils arrive at secondary school able to research a topic independently, a skill that used to be acquired years later.",
+  "Deux avantages <b>distincts</b> (accès au savoir, compétence numérique), chacun expliqué et illustré. Noter <i>at her own pace and without embarrassment</i>, qui donne la raison profonde du bénéfice."],
+ ["Corps 2 — les inconvénients","The drawbacks, however, are equally concrete. Unsupervised access exposes children to material they are not equipped to interpret, from violent images to advertising disguised as entertainment, and platforms designed to maximise attention make moderation genuinely difficult. Hours spent scrolling are also hours not spent running, reading or talking, and several countries now report falling levels of physical fitness among primary-school pupils. Sleep suffers as well: a device left in a bedroom tends to postpone bedtime by an hour or more, and a tired child learns badly the following day.",
+  "Les inconvénients sont traités avec <b>le même soin</b> que les avantages : c’est ce qu’exige un sujet sans <i>outweigh</i>. Le coût d’opportunité (<i>hours … not spent running</i>) est un angle souvent oublié."],
+ ["Conclusion","In conclusion, early internet access offers children an unprecedented opportunity to learn independently and to acquire essential digital skills, but it also exposes them to unsuitable content and to sedentary habits; the balance between the two depends less on the technology itself than on the supervision that surrounds it.",
+  "La conclusion <b>résume les deux côtés</b> et ajoute un critère de départage (la supervision) sans introduire d’argument neuf."]],
+ why:[["Task Response","Les deux parties de la consigne sont traitées de façon équilibrée, avec deux idées développées de chaque côté."],
+      ["Coherence &amp; Cohesion","<i>The drawbacks, however, are equally concrete</i> fait basculer le texte d’un côté à l’autre en une phrase."],
+      ["Lexical Resource","<i>early exposure, confined to, at her own pace, unsupervised access, disguised as, maximise attention, sedentary habits</i>."],
+      ["Grammatical Range &amp; Accuracy","Relative (<i>material they are not equipped to interpret</i>), participiale (<i>designed to maximise attention</i>), parallélisme (<i>running, reading or talking</i>), point-virgule employé correctement."]],
+ reuse:["This essay will examine the principal benefits of […], as well as the risks that accompany it.",
+        "The clearest advantage is access to […] that was once confined to […].",
+        "A […] curious about […] can now […], and a […] struggling with […] can […].",
+        "The drawbacks, however, are equally concrete.",
+        "…the balance between the two depends less on […] itself than on […]."]}
+},
+/* ---------- EXAMEN 10 ---------- */
+{
+t1:{parts:[
+ ["Introduction","The line graph shows how the unemployment rate changed in three countries between 2008 and 2024.",
+  "<i>shows how … changed</i> : une paraphrase qui annonce d’emblée qu’il s’agit d’évolutions, donc de tendances."],
+ ["Overview (obligatoire)","Overall, unemployment ended the period lower than it began in all three countries, but the paths taken were very different. Spain suffered by far the most severe crisis and remained the worst affected throughout, whereas Germany declined steadily to the lowest rate of the three, and the United States fluctuated around a much narrower range.",
+  "Trois trajectoires résumées en une phrase chacune, <b>sans aucun chiffre</b> : une crise, un déclin régulier, des fluctuations. L’examinateur voit immédiatement que les données ont été analysées, pas recopiées."],
+ ["Corps 1 — l’Espagne","Spain’s figures dwarf those of the other two countries. Its rate stood at 11% in 2008 and then more than doubled, peaking at 25% in 2012 — more than three times the American figure that year. A steady recovery followed, with unemployment falling to 20% in 2016, 16% in 2020 and 12% in 2024, yet even at the end of the period Spain’s rate was four times that of Germany.",
+  "Le cas extrême occupe son propre paragraphe. La comparaison est faite <b>en rapports</b> (<i>three times</i>, <i>four times</i>), ce qui parle bien plus qu’une soustraction."],
+ ["Corps 2 — l’Allemagne et les États-Unis","Germany, which had the second highest rate in 2008 at 8%, fell continuously throughout the period, to 6% in 2012 and eventually to just 3% in 2024, the lowest point on the graph. The United States followed a far more irregular course: from 6% in 2008 its rate climbed to 8% in 2012, dropped to 5% in 2016, returned to 8% in 2020 and finally fell to 4%.",
+  "Les deux séries restantes sont opposées dans le même paragraphe : une baisse <b>continue</b> contre un parcours <b>irrégulier</b>. C’est la comparaison qui structure, pas l’ordre de la légende."]],
+ why:[["Task Achievement","Le maximum (25%), le minimum (3%), la trajectoire la plus irrégulière et l’écart final : quatre éléments, quinze valeurs disponibles."],
+      ["Coherence &amp; Cohesion","Un paragraphe pour le cas atypique, un pour les deux autres. <i>whereas</i>, <i>yet</i>, <i>far more irregular</i> portent les contrastes."],
+      ["Lexical Resource","<i>dwarf, peaking, a steady recovery, continuously, an irregular course, climbed, returned to</i> — aucune répétition de <i>increase</i> ou <i>decrease</i>."],
+      ["Grammatical Range &amp; Accuracy","Relative en incise (<i>Germany, which had the second highest rate…</i>), <i>more than doubled</i>, séries coordonnées à quatre verbes, tirets et deux-points bien employés."]],
+ reuse:["The line graph shows how […] changed in three countries between […] and […].",
+        "Overall, […] ended the period lower than it began in all three, but the paths taken were very different.",
+        "[X]’s figures dwarf those of the other two countries.",
+        "Its rate stood at […] and then more than doubled, peaking at […] — more than three times […] that year.",
+        "[Y] followed a far more irregular course : from […] its rate climbed to […], dropped to […] and finally fell to […]."]},
+t2:{parts:[
+ ["Introduction","In most large cities, a first home has moved out of reach for people on average salaries. This essay will argue that the problem stems primarily from a shortage of housing and from the treatment of property as an investment, and that governments can act on both fronts.",
+  "L’introduction répond aux <b>deux</b> questions posées (causes, mesures) et annonce déjà les deux causes retenues : le plan est lisible avant même le premier paragraphe."],
+ ["Corps 1 — les causes","The first cause is simply that too few homes are built where people want to live. Planning restrictions, a shortage of skilled construction workers and the reluctance of existing residents to accept new developments combine to keep supply well below demand, and prices rise accordingly. The second is that housing has become an asset class: when investors and short-term rental platforms compete with families for the same flats, the price of a property is no longer set by local wages but by the returns available elsewhere in the economy. Wages, meanwhile, have risen far more slowly than property values, so that a deposit which once represented two years of savings can now demand ten.",
+  "Deux causes, chacune <b>expliquée par son mécanisme</b>. La seconde va au-delà de l’évidence (« les prix montent ») en nommant ce qui fixe réellement le prix."],
+ ["Corps 2 — les mesures","Both causes suggest their own remedy. Governments can accelerate construction by simplifying planning procedures, releasing public land and funding social housing directly, as Vienna has done for a century with notable success. They can also reduce speculative demand through higher taxes on vacant properties and on second homes, and by limiting the conversion of residential flats into short-term tourist accommodation, a measure several European cities have already adopted. Rent controls, by contrast, should be used with caution, since capping prices without increasing supply tends to reduce the number of homes actually available.",
+  "Chaque mesure <b>répond à une cause citée</b> — et chacune est attribuée à un acteur précis. Une solution sans acteur ni mécanisme ne rapporte presque rien."],
+ ["Conclusion","In conclusion, young people are priced out of the housing market because supply has failed to keep pace with demand and because property has become a financial investment; governments should therefore build far more while making speculation less profitable.",
+  "Les deux causes et les deux familles de mesures sont refermées en une phrase, dans le même ordre que dans le corps du texte."]],
+ why:[["Task Response","Les deux questions reçoivent une réponse complète, et les mesures découlent explicitement des causes identifiées."],
+      ["Coherence &amp; Cohesion","<i>Both causes suggest their own remedy</i> : une charnière logique, plus efficace qu’un <i>Secondly</i>."],
+      ["Lexical Resource","<i>out of reach, planning restrictions, an asset class, speculative demand, vacant properties, priced out</i> : le lexique du logement, précis et idiomatique."],
+      ["Grammatical Range &amp; Accuracy","Sujets multiples coordonnés, <i>no longer … but …</i>, apposition finale (<i>a measure several European cities have already adopted</i>), point-virgule."]],
+ reuse:["This essay will argue that the problem stems primarily from […] and from […], and that governments can act on both fronts.",
+        "The first cause is simply that […].",
+        "[A], [B] and [C] combine to keep supply well below demand.",
+        "Both causes suggest their own remedy.",
+        "In conclusion, […] because […] and because […] ; governments should therefore […] while […]."]}
+},
+/* ---------- EXAMEN 11 ---------- */
+{
+t1:{parts:[
+ ["Introduction","The diagram illustrates the stages involved in the production of coffee, from harvesting to distribution.",
+  "<i>from harvesting to distribution</i> annonce les bornes du process : c’est une paraphrase, pas un remplissage."],
+ ["Overview (obligatoire)","Overall, the production of coffee comprises nine stages, beginning with the picking of ripe berries and ending with the delivery of packaged coffee to retailers. The process is linear rather than cyclical, and the beans undergo two distinct transformations: they are first dried and cleaned, and only later roasted and ground.",
+  "Nombre d’étapes, point de départ, point d’arrivée, et une observation d’ensemble (deux transformations distinctes). <b>Aucun détail technique</b> ici : il appartient aux paragraphes de corps."],
+ ["Corps 1 — la préparation","At the first stage, ripe berries are picked from the plants, after which they are spread out and left to dry in the sun for approximately ten days. The dried berries are then hulled, a process which removes their outer layer, before being sorted according to size and quality. Any beans that fail to meet the required standard are eliminated at this point.",
+  "Présent simple passif, connecteurs variés (<i>after which, then, before being</i>), et une relative explicative (<i>a process which removes…</i>) qui évite de juxtaposer deux phrases courtes."],
+ ["Corps 2 — la transformation et la distribution","Once the beans have been selected, they are roasted at high temperature and subsequently ground into a fine powder. The ground coffee is packed into sealed bags, which are stored in a warehouse before being shipped to retailers, where the product is finally sold to consumers.",
+  "<i>Once … have been selected</i> marque qu’une étape doit être achevée avant la suivante ; <i>subsequently</i> et <i>finally</i> ferment la séquence sans répéter <i>then</i>."]],
+ why:[["Task Achievement","Les neuf étapes sont couvertes, la seule durée mentionnée par le diagramme est reprise, et rien n’est inventé sur les machines ou les quantités."],
+      ["Coherence &amp; Cohesion","Deux paragraphes correspondant aux deux transformations annoncées dans l’overview : la structure du texte reflète la structure du process."],
+      ["Lexical Resource","<i>ripe berries, spread out, hulled, outer layer, sorted according to, roasted, ground, sealed bags, shipped</i> : le lexique du diagramme est réemployé avec précision."],
+      ["Grammatical Range &amp; Accuracy","Passif au présent, <i>after which</i>, <i>before being hulled</i>, <i>Once … have been selected</i>, relatives — six structures différentes en huit phrases."]],
+ reuse:["The diagram illustrates the stages involved in the production of […], from […] to […].",
+        "Overall, the process comprises […] stages, beginning with […] and ending with […].",
+        "At the first stage, […] are […], after which they are […].",
+        "The […] are then […], a process which removes […], before being sorted according to […].",
+        "Once the […] have been […], they are […] and subsequently […]."]},
+t2:{parts:[
+ ["Introduction","In a growing number of households, screens have become the default form of relaxation for adults and children alike. This essay will explain why this has happened and consider what it means for family life.",
+  "Deux questions, deux annonces. <i>for adults and children alike</i> évite de réduire le sujet aux enfants, ce que fait la majorité des copies."],
+ ["Corps 1 — les causes","The main reason is that screen-based entertainment has become extraordinarily convenient. A film, a match or an endless stream of short videos is available instantly, at no marginal cost, at any hour and without leaving the sofa, whereas almost every alternative requires planning, money or effort. Economic pressures reinforce this: parents who work long or irregular hours have neither the time nor the energy to organise outings, and a tablet is a cheaper and more reliable form of childcare than any other. Public space has contracted at the same time: in many neighbourhoods there is simply nowhere free to go that is neither a screen nor a shop.",
+  "La cause n’est pas morale (« les gens sont paresseux ») mais <b>structurelle</b> : coût, disponibilité, temps. Le contraste <i>whereas almost every alternative requires…</i> est ce qui rend l’explication convaincante."],
+ ["Corps 2 — les effets sur la famille","The consequences for family life are mixed but significant. On the one hand, shared viewing can be genuinely sociable, and video calls keep distant relatives present in daily life in a way that was impossible a generation ago. On the other, individual screens fragment the household: each member retreats into a personal feed, conversation shrinks to the intervals between notifications, and the shared meal — historically the moment when families exchanged news — is increasingly interrupted or abandoned altogether. The effect is not identical everywhere, however: households that keep screens out of bedrooms and away from the table report far fewer difficulties.",
+  "La réponse à la seconde question est <b>nuancée</b> : un effet positif reconnu, puis l’effet négatif développé. Un raisonnement à sens unique paraît toujours plus faible."],
+ ["Conclusion","In conclusion, screens dominate our leisure time because they are cheap, instant and undemanding, and their main effect on family life is to replace shared activity with parallel solitude — a change that families can resist, but only deliberately.",
+  "Une proposition par question. La formule finale (<i>parallel solitude</i>) résume l’idée du paragraphe 2 sans en ajouter de nouvelle."]],
+ why:[["Task Response","Les deux questions sont traitées à parts égales, avec des causes structurelles et des effets précis plutôt que des généralités."],
+      ["Coherence &amp; Cohesion","<i>On the one hand … On the other …</i> organise le second paragraphe, et chaque paragraphe répond à une question annoncée dans l’introduction."],
+      ["Lexical Resource","<i>the default form of relaxation, at no marginal cost, reinforce, fragment the household, a personal feed, parallel solitude</i>."],
+      ["Grammatical Range &amp; Accuracy","<i>neither … nor …</i>, <i>whereas</i>, relative (<i>parents who work long hours</i>), incise entre tirets, comparatif (<i>cheaper and more reliable than…</i>)."]],
+ reuse:["This essay will explain why this has happened and consider what it means for […].",
+        "The main reason is that […] has become extraordinarily convenient.",
+        "[X] is available instantly, at no marginal cost, whereas almost every alternative requires planning, money or effort.",
+        "The consequences for […] are mixed but significant. On the one hand, […]. On the other, […].",
+        "In conclusion, […] because they are […], and their main effect is to replace […] with […]."]}
+},
+/* ---------- EXAMEN 12 ---------- */
+{
+t1:{parts:[
+ ["Introduction","The two maps show a small island as it was before the construction of a tourist resort and as it appears afterwards.",
+  "<i>as it was … and as it appears afterwards</i> : une paraphrase élégante de « before and after », sans recopier la consigne."],
+ ["Overview (obligatoire)","Overall, the island has been transformed from an uninhabited, wooded area into a small holiday resort, although its natural boundaries have been preserved. Development is concentrated in the centre and along the southern coast, while the beach and the surrounding sea remain unchanged.",
+  "Un <b>changement de caractère</b> (inhabitée → touristique) et la localisation générale des travaux. Aucun bâtiment n’est énuméré : ce sera le rôle des paragraphes de corps."],
+ ["Corps 1 — le centre de l’île","The most extensive changes have taken place in the centre, where a substantial part of the woodland has been cleared to make way for buildings. A reception area and a restaurant have been constructed side by side in the north of this zone, and two groups of cabins for visitors have been built to the west and to the east of them. All of these facilities are linked by a network of footpaths.",
+  "Structuration <b>par zone</b>, et chaque transformation est à la voix passive sans acteur (<i>has been cleared, have been constructed, have been built</i>), comme l’exige ce type de sujet."],
+ ["Corps 2 — la côte et ce qui n’a pas changé","The southern coastline has also been developed: a pier now extends into the sea, allowing boats to reach the island directly, and an area of water off the western beach has been marked out for swimming. The beach itself, however, has been left in its natural state, and no construction has taken place along the eastern shore.",
+  "Le paragraphe se termine sur ce qui <b>n’a pas changé</b> — un point que la plupart des candidats omettent, alors qu’il fait partie de la description complète attendue."]],
+ why:[["Task Achievement","Tous les changements majeurs sont couverts, groupés par zone, et les éléments conservés sont explicitement signalés."],
+      ["Coherence &amp; Cohesion","Centre puis côte sud puis éléments inchangés : le lecteur suit la carte sans jamais revenir en arrière."],
+      ["Lexical Resource","<i>uninhabited, wooded, cleared, to make way for, side by side, a network of footpaths, extends into the sea, marked out, left in its natural state</i>."],
+      ["Grammatical Range &amp; Accuracy","Present perfect passif (<i>has been transformed, have been built</i>), participiale (<i>allowing boats to reach…</i>), relative (<i>where a substantial part…</i>), négation en fin de texte (<i>no construction has taken place</i>)."]],
+ reuse:["The two maps show […] as it was before […] and as it appears afterwards.",
+        "Overall, […] has been transformed from a[n] […] area into a[n] […], although […] have been preserved.",
+        "The most extensive changes have taken place in the centre, where […] has been cleared to make way for […].",
+        "A […] now extends into the sea, allowing […] to reach […] directly.",
+        "The […] itself, however, has been left in its natural state, and no construction has taken place along […]."]},
+t2:{parts:[
+ ["Introduction","Tourism is welcomed in some regions as a source of prosperity and resented in others as a threat to local life. This essay will examine both positions before arguing that the damage attributed to tourism is usually the result of how it is managed, not of its existence.",
+  "Les deux vues <b>et</b> la position, en deux phrases. La thèse est précise : elle ne dit pas « le tourisme est bon », mais déplace le débat vers la gestion — une position bien plus défendable en 250 mots."],
+ ["Corps 1 — la vue critique","Those who condemn tourism can point to genuine harm. In historic cities, short-term rentals remove flats from the local market and push residents towards the periphery; in coastal regions, water consumption doubles in summer, precisely when supplies are scarcest. Traditions are also affected, since a craft performed every evening for paying visitors gradually becomes a performance rather than a practice. Venice, whose resident population has fallen by more than half since the 1970s, shows how a city can be emptied by its own popularity.",
+  "La vue adverse reçoit des exemples <b>concrets et variés</b> (logement, eau, culture). Bâcler le camp qu’on ne défend pas est l’erreur la plus visible dans une discussion."],
+ ["Corps 2 — la vue favorable et la position","Against this, tourism often provides the only realistic alternative to emigration. In regions where agriculture no longer supports a population, visitor spending sustains restaurants, transport and craft workshops, and the tax revenue it generates funds schools and clinics that would otherwise close. Employment matters as much as income: a hotel or a guiding business gives young people a reason to stay in a village that would otherwise lose them to the nearest city. The decisive point, in my view, is that the abuses described above are all consequences of unregulated growth: cities that cap rental licences and regions that invest tourist taxes in local infrastructure obtain the income without the damage.",
+  "La seconde vue est exposée, puis la position tranche en <b>reliant les deux paragraphes</b> : les dégâts cités plus haut sont requalifiés en défauts de régulation. C’est un raisonnement, pas une préférence."],
+ ["Conclusion","In conclusion, although unmanaged tourism can undoubtedly displace residents and erode local traditions, I believe that with firm regulation it remains one of the few reliable sources of income available to rural and coastal communities.",
+  "Concession, puis position identique à celle de l’introduction. La conclusion d’une discussion doit trancher, pas résumer les deux camps à égalité."]],
+ why:[["Task Response","Les deux vues sont développées avec le même sérieux, et l’opinion, annoncée dès l’introduction, est justifiée plutôt qu’affirmée."],
+      ["Coherence &amp; Cohesion","<i>Against this</i> puis <i>The decisive point, in my view, is that…</i> : les bascules sont explicites et le second paragraphe recycle le premier au lieu de l’ignorer."],
+      ["Lexical Resource","<i>resented, short-term rentals, the periphery, a performance rather than a practice, sustains, unregulated growth, cap rental licences</i>."],
+      ["Grammatical Range &amp; Accuracy","Point-virgule pour opposer deux exemples parallèles, <i>since</i> causal, relative (<i>clinics that would otherwise close</i>), conditionnel implicite (<i>would otherwise close</i>)."]],
+ reuse:["[X] is welcomed in some regions as […] and resented in others as […].",
+        "This essay will examine both positions before arguing that […] is usually the result of how it is managed, not of its existence.",
+        "Those who condemn […] can point to genuine harm.",
+        "Against this, […] often provides the only realistic alternative to […].",
+        "The decisive point, in my view, is that the abuses described above are all consequences of […]."]}
 }];
 
 /* ============================================================
@@ -1014,8 +1244,9 @@ function renderExam(){
   $("t1data").innerHTML = "<pre style=\"white-space:pre-wrap;font-size:12.5px;margin:6px 0 0\">"+dataText(e.chart)+"</pre>";
   $("t1dataWrap").open = false;
   $("t2instr").textContent = e.t2;
-  renderModel($("m1"), MODELS[S.exam].t1, 1);
-  renderModel($("m2"), MODELS[S.exam].t2, 2);
+  const mod = MODELS[S.exam];
+  document.querySelectorAll("details.model").forEach(function(d){ d.style.display = mod ? "" : "none"; });
+  if(mod){ renderModel($("m1"), mod.t1, 1); renderModel($("m2"), mod.t2, 2); }
   document.querySelectorAll("details.model").forEach(function(d){ d.open = false; });
   const a = curAns();
   $("t1txt").value = a.t1; $("t2txt").value = a.t2;
