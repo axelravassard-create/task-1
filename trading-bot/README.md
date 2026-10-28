@@ -101,10 +101,16 @@ toujours allumé, un petit serveur VPS à environ 5 €/mois fait l'affaire.
 ```bash
 export KRAKEN_API_KEY="ta_clé"
 export KRAKEN_API_SECRET="ton_secret"
-export MAX_CAPITAL_EUR=200         # le bot ne gère jamais plus que cette somme
 python bot.py --live --dry-run     # montre les ordres SANS les exécuter
 python bot.py --live               # trade pour de vrai
 ```
+
+Le bot gère **tout ton compte Kraken** et **réinvestit automatiquement ses
+gains** : ses positions sont toujours un pourcentage du capital total, donc
+quand le capital grossit, les positions grossissent avec lui (intérêts
+composés). Dépose donc sur Kraken uniquement la somme que tu confies au bot.
+Pour l'empêcher de dépasser un montant, ajoute `export MAX_CAPITAL_EUR=500`.
+Les gains au-delà de ce plafond restent alors en euros, sans être réinvestis.
 
 Ne mets jamais tes clés dans un fichier envoyé sur GitHub.
 

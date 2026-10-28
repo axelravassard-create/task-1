@@ -21,7 +21,10 @@ from strategy import target_weights
 # Actif -> (paire Kraken, code de l'actif dans le solde Kraken)
 ASSETS = {"BTC": ("XBTEUR", "XXBT"), "ETH": ("ETHEUR", "XETH"), "SOL": ("SOLEUR", "SOL")}
 CASH = "ZEUR"
-MAX_CAPITAL_EUR = float(os.environ.get("MAX_CAPITAL_EUR", 1000))  # plafond géré par le bot
+PAPER_CAPITAL_EUR = 1000  # capital de départ de la simulation
+# Plafond optionnel en mode réel. Sans plafond, le bot gère tout le compte et
+# réinvestit donc ses gains : c'est ce que suppose le backtest.
+MAX_CAPITAL_EUR = float(os.environ.get("MAX_CAPITAL_EUR", "inf"))
 REBALANCE_BAND = 0.05   # même seuil que dans le backtest
 MIN_ORDER_EUR = 10      # en dessous, un ordre coûte plus qu'il ne rapporte
 PAPER_FEE = 0.0040
@@ -34,7 +37,7 @@ JOURNAL = HERE / "journal.csv"
 def load_paper() -> dict:
     if PAPER_STATE.exists():
         return json.loads(PAPER_STATE.read_text())
-    return {"cash": MAX_CAPITAL_EUR, "holdings": {name: 0.0 for name in ASSETS}}
+    return {"cash": PAPER_CAPITAL_EUR, "holdings": {name: 0.0 for name in ASSETS}}
 
 
 def log(row: dict):
@@ -111,7 +114,7 @@ def main():
     if not args.live and not args.dry_run:
         PAPER_STATE.write_text(json.dumps({"cash": cash, "holdings": holdings}, indent=2))
         total = cash + sum(holdings[n] * price[n] for n in ASSETS)
-        print(f"  Portefeuille fictif : {total:,.2f} € (départ {MAX_CAPITAL_EUR:,.0f} €)")
+        print(f"  Portefeuille fictif : {total:,.2f} € (départ {PAPER_CAPITAL_EUR:,.0f} €)")
 
 
 if __name__ == "__main__":
