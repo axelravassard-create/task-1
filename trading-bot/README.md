@@ -40,6 +40,25 @@ Pour refaire le calcul : `python backtest.py`
 - **Une chute de -42 % reste possible.** Il faut être prêt à la vivre sans couper le bot au pire moment.
 - **Les performances passées ne garantissent rien.** Le marché crypto de 2026 n'est plus celui de 2017.
 
+## Est-ce que c'est rentable ? Les tests de solidité
+
+Un bon backtest peut venir de la chance. `python robustesse.py` vérifie
+que le résultat tient quand on change les conditions :
+
+| Test | Résultat |
+|---|---|
+| Sans l'année 2017 (2018 à 2026) | Bot **+35 %/an** (pire chute -42 %) contre BTC +22 %/an (pire chute -81 %) |
+| Départ un mois au hasard, bilan après 1 an | Bot gagnant dans **75 %** des cas (pire cas -32 %) |
+| Bilan après 2 ans | Bot gagnant dans **95 %** des cas (pire cas -23 %) |
+| Bilan après 3 ans | Bot gagnant dans **100 %** des cas (pire cas +87 %) |
+| 81 réglages différents (2018 à 2026) | **Tous rentables**, de +30 % à +52 %/an |
+| 7 cryptos jamais utilisées pour le concevoir | Le bot est positif sur 6 sur 7, et sa pire chute est toujours bien plus faible |
+| Frais doublés | Encore +29 %/an sans 2017 |
+
+**La limite :** tous ces tests portent sur l'histoire de la crypto, qui a
+beaucoup monté entre 2016 et 2026. Si le marché crypto stagne pendant des
+années, le bot gagnera peu, mais il devrait limiter les pertes.
+
 ## Mise en route
 
 ### Étape 1 : tester en simulation (aucun compte nécessaire)
